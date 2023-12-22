@@ -38,6 +38,7 @@ function SignIn() {
       console.log(response);
       alert('Check your email!');
     } catch (error: any) {
+      /*Change to another type instead of any!!*/
       console.log(error);
       alert('Registration failed, try again!' + error.message);
     } finally {
