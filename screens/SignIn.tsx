@@ -5,7 +5,7 @@ import {
 import { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
-import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 function SignIn() {
   const [email, setEmail] = useState('');

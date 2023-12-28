@@ -1,7 +1,7 @@
 import { NavigationProp } from '@react-navigation/native';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 interface RouterProps {
   navigation: NavigationProp<
