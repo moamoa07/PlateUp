@@ -1,17 +1,36 @@
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
-import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
+import { useCallback, useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Button, TextInput, Text, useTheme } from 'react-native-paper';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 function SignIn() {
+  const theme = useTheme();
+  const [isLoaded] = useFonts({
+    CrakeRegular: require('../../assets/fonts/craketest-regular.otf'),
+    CrakeBold: require('../../assets/fonts/craketest-bold.otf'),
+    Jost: require('../../assets/fonts/Jost-VariableFont_wght.ttf'),
+  });
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
+
+  const handleOnLayout = useCallback(async () => {
+    if (isLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [isLoaded]);
+
+  if (!isLoaded) {
+    return null;
+  }
 
   const signIn = async () => {
     setLoading(true);
@@ -47,9 +66,12 @@ function SignIn() {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      onLayout={handleOnLayout}
+    >
       <KeyboardAvoidingView behavior="padding">
-        <Text>Sign In</Text>
+        <Text style={[styles.title]}>Sign In</Text>
         <TextInput
           value={email}
           label="Email"
@@ -70,10 +92,10 @@ function SignIn() {
         ) : (
           <>
             <Button mode="outlined" onPress={signIn}>
-              Sign In
+              <Text style={styles.text}>Sign In</Text>
             </Button>
             <Button mode="contained" onPress={createProfile}>
-              Create Profile
+              <Text style={styles.textWhite}>Create Profile</Text>
             </Button>
           </>
         )}
@@ -87,6 +109,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     marginHorizontal: 20,
+  },
+  title: {
+    fontFamily: 'CrakeBold',
+  },
+  text: {
+    fontFamily: 'Jost',
+  },
+  textWhite: {
+    fontFamily: 'Jost',
+    color: '#fff',
   },
 });
 

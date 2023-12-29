@@ -2,11 +2,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { PaperProvider } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import Home from './screens/Home';
 import List from './screens/List';
 import SignIn from './screens/SignIn';
 import Start from './screens/Start';
+import theme from './Theme';
 
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -38,6 +40,8 @@ function App() {
     });
   }, []);
   return (
+
+<PaperProvider theme={theme}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="SignIn">
         {user ? (
@@ -60,6 +64,7 @@ function App() {
         )}
       </Stack.Navigator>
     </NavigationContainer>
+    </PaperProvider>
   );
 }
 
