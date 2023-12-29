@@ -2,7 +2,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { PaperProvider } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
+import theme from './Theme';
 import Home from './app/screens/Home';
 import List from './app/screens/List';
 import SignIn from './app/screens/SignIn';
@@ -37,23 +39,25 @@ function App() {
     });
   }, []);
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignIn">
-        {user ? (
-          <Stack.Screen
-            name="Inside"
-            component={InsideLayout}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          <Stack.Screen
-            name="SignIn"
-            component={SignIn}
-            options={{ headerShown: false }}
-          />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="SignIn">
+          {user ? (
+            <Stack.Screen
+              name="Inside"
+              component={InsideLayout}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            <Stack.Screen
+              name="SignIn"
+              component={SignIn}
+              options={{ headerShown: false }}
+            />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 
