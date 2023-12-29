@@ -1,13 +1,27 @@
-import { useFonts } from 'expo-font';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-function Start() {
-  const [fontsLoaded] = useFonts({
-    CrakeRegular: require('../assets/fonts/craketest-regular.otf'),
-    CrakeBold: require('../assets/fonts/craketest-bold.otf'),
-    Jost: require('../assets/fonts/Jost-VariableFont_wght.ttf'),
-  });
+// const getFonts = () =>
+//   Font.loadAsync({
+//     'Crake-Regular': require('./assets/fonts/craketest-regular.otf'),
+//     'Crake-Bold': require('./assets/fonts/craketest-bold.otf'),
+//     'Jost-Regular': require('./assets/fonts/Jost-VariableFont_wght.ttf'),
+//   });
+
+type RootStackParamList = {
+  Welcome: undefined;
+  SignInScreen: undefined;
+  // Add other screens as needed
+};
+
+interface Props {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
+  // Add other props if needed
+}
+
+function Welcome({ navigation }: Props) {
+  // const [fontsLoaded, setFontsLoaded] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -21,10 +35,15 @@ function Start() {
         buttonColor="#000000"
         style={styles.containedButton}
       >
-        <Text style={styles.textBtn}>Create a profile</Text>
+        <Text>Create a profile</Text>
       </Button>
-      <Button mode="outlined" textColor="#000000" style={styles.outlinedButton}>
-        <Text style={styles.textBtn}>Sign in</Text>
+      <Button
+        mode="outlined"
+        textColor="#000000"
+        style={styles.outlinedButton}
+        onPress={() => navigation.navigate('SignInScreen')}
+      >
+        <Text>Sign in</Text>
       </Button>
     </View>
   );
@@ -43,16 +62,14 @@ const styles = StyleSheet.create({
   h1: {
     fontSize: 40,
     textAlign: 'center',
-    fontFamily: 'CrakeRegular',
   },
   p: {
     fontSize: 15,
     textAlign: 'center',
-    fontFamily: 'Jost',
   },
-  textBtn: {
-    fontFamily: 'Jost',
-  },
+  // textBtn: {
+  //   fontFamily: 'Jost',
+  // },
   containedButton: {
     borderRadius: 10,
   },
@@ -62,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Start;
+export default Welcome;
