@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import theme from './Theme';
-import Home from './app/screens/Home';
-import List from './app/screens/List';
-import SignIn from './app/screens/SignIn';
+import RootNavigator from './navigators/RootNavigator';
+import HomeScreen from './screens/HomeScreen';
+import List from './screens/List';
+import SignInScreen from './screens/SignInScreen';
 
 const Stack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
@@ -21,7 +22,7 @@ function InsideLayout() {
       />
       <InsideStack.Screen
         name="Home"
-        component={Home}
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
       {/* <InsideStack.Screen name="Profile" component={Profile} />
@@ -45,13 +46,14 @@ function App() {
           {user ? (
             <Stack.Screen
               name="Inside"
-              component={InsideLayout}
+              component={RootNavigator}
+              // component={InsideLayout} using Root Navigator instead
               options={{ headerShown: false }}
             />
           ) : (
             <Stack.Screen
               name="SignIn"
-              component={SignIn}
+              component={SignInScreen}
               options={{ headerShown: false }}
             />
           )}
