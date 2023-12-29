@@ -1,17 +1,36 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
-import Home from './screens/Home';
-import List from './screens/List';
-import SignIn from './screens/SignIn';
-import Start from './screens/Start';
 import theme from './Theme';
+import HomeScreen from './screens/HomeScreen';
+import List from './screens/List';
+import SignInScreen from './screens/SignInScreen';
+import WelcomeScreen from './screens/WelcomeScreen';
 
 const Stack = createNativeStackNavigator();
+const StartStack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();
+
+function StartLayout() {
+  return (
+    <StartStack.Navigator>
+      <StartStack.Screen
+        name="WelcomeScreen"
+        component={WelcomeScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="SignInScreen"
+        component={SignInScreen}
+        options={{ headerShown: false }}
+      />
+    </StartStack.Navigator>
+  );
+}
+
 function InsideLayout() {
   return (
     <InsideStack.Navigator>
@@ -22,7 +41,7 @@ function InsideLayout() {
       />
       <InsideStack.Screen
         name="Home"
-        component={Home}
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
       {/* <InsideStack.Screen name="Profile" component={Profile} />
@@ -33,37 +52,32 @@ function InsideLayout() {
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
+
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log('user', user);
       setUser(user);
     });
   }, []);
-  return (
 
-<PaperProvider theme={theme}>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="SignIn">
-        {user ? (
-          <Stack.Screen
-            name="Inside"
-            component={InsideLayout}
-            options={{ headerShown: false }}
-          />
-        ) : (
-          <Stack.Screen
-            name="Start Screen"
-            component={Start}
-            options={{ headerShown: true }}
-          />
-          // <Stack.Screen
-          //   name="SignIn"
-          //   component={SignIn}
-          //   options={{ headerShown: false }}
-          // />
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+  return (
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="StartLayout">
+          {user ? (
+            <Stack.Screen
+              name="InsideLayout"
+              component={InsideLayout}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            <Stack.Screen
+              name="StartLayout"
+              component={StartLayout}
+              options={{ headerShown: false }}
+            />
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
     </PaperProvider>
   );
 }
