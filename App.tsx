@@ -7,6 +7,7 @@ import { FIREBASE_AUTH } from './FirebaseConfig';
 import theme from './Theme';
 import Home from './app/screens/Home';
 import List from './app/screens/List';
+import ProfileScreen from './app/screens/ProfileScreen';
 import SignIn from './app/screens/SignIn';
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +23,11 @@ function InsideLayout() {
       <InsideStack.Screen
         name="Home"
         component={Home}
+        options={{ headerShown: false }}
+      />
+      <InsideStack.Screen
+        name="Profile"
+        component={ProfileScreen}
         options={{ headerShown: false }}
       />
       {/* <InsideStack.Screen name="Profile" component={Profile} />
