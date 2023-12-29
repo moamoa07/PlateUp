@@ -8,6 +8,14 @@ const theme = {
     secondary: '#D6DED1',
     background: '#fff',
   },
+
+  fonts: {
+    ...MD3LightTheme.fonts,
+    regular: {
+      fontFamily: 'Jost',
+      fontWeight: 'normal',
+    },
+  },
 };
 
 export default theme;
