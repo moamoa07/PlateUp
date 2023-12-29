@@ -6,15 +6,21 @@ import {
 } from 'firebase/auth';
 import { useCallback, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button, TextInput, Text, useTheme } from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  Text,
+  TextInput,
+  useTheme,
+} from 'react-native-paper';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 function SignIn() {
   const theme = useTheme();
   const [isLoaded] = useFonts({
-    CrakeRegular: require('../../assets/fonts/craketest-regular.otf'),
-    CrakeBold: require('../../assets/fonts/craketest-bold.otf'),
-    Jost: require('../../assets/fonts/Jost-VariableFont_wght.ttf'),
+    CrakeRegular: require('../assets/fonts/craketest-regular.otf'),
+    CrakeBold: require('../assets/fonts/craketest-bold.otf'),
+    Jost: require('../assets/fonts/Jost-VariableFont_wght.ttf'),
   });
 
   const [email, setEmail] = useState('');
@@ -54,7 +60,7 @@ function SignIn() {
         email,
         password
       );
-      console.log(response);
+      // console.log(response);
       alert('Check your email!');
     } catch (error: any) {
       /*Change to another type instead of any!!*/
