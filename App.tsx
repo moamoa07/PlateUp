@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import { initApp } from './Init';
 import theme from './Theme';
@@ -56,25 +57,27 @@ function App() {
   }
 
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="StartLayout">
-          {user ? (
-            <Stack.Screen
-              name="RootNavigator"
-              component={RootNavigator}
-              options={{ headerShown: false }}
-            />
-          ) : (
-            <Stack.Screen
-              name="StartLayout"
-              component={StartLayout}
-              options={{ headerShown: false }}
-            />
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="StartLayout">
+            {user ? (
+              <Stack.Screen
+                name="RootNavigator"
+                component={RootNavigator}
+                options={{ headerShown: false }}
+              />
+            ) : (
+              <Stack.Screen
+                name="StartLayout"
+                component={StartLayout}
+                options={{ headerShown: false }}
+              />
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 }
 
