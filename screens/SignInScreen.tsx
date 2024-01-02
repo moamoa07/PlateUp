@@ -13,14 +13,14 @@ import {
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 
-function SignIn() {
+function SignInScreen() {
   const theme = useTheme();
   const [isLoaded] = useFonts({
-    CrakeRegular: require('../../assets/fonts/craketest-regular.otf'),
-    CrakeBold: require('../../assets/fonts/craketest-bold.otf'),
-    Jost: require('../../assets/fonts/Jost-VariableFont_wght.ttf'),
+    CrakeRegular: require('../assets/fonts/craketest-regular.otf'),
+    CrakeBold: require('../assets/fonts/craketest-bold.otf'),
+    Jost: require('../assets/fonts/Jost-VariableFont_wght.ttf'),
   });
 
   const [email, setEmail] = useState('');
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default SignInScreen;

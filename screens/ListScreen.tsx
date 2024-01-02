@@ -1,7 +1,7 @@
 import { NavigationProp } from '@react-navigation/native';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 interface RouterProps {
   navigation: NavigationProp<
@@ -10,7 +10,7 @@ interface RouterProps {
   > /*Change to another type instead of any!!*/;
 }
 
-function List({ navigation }: RouterProps) {
+function ListScreen({ navigation }: RouterProps) {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Button mode="outlined" onPress={() => navigation.navigate('Home')}>
@@ -26,4 +26,4 @@ function List({ navigation }: RouterProps) {
   );
 }
 
-export default List;
+export default ListScreen;
