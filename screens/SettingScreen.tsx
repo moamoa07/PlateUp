@@ -3,8 +3,9 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 import ExploreIcon from '../components/icons/ExploreIcon';
 
 function SettingScreen() {
@@ -43,12 +44,17 @@ function SettingScreen() {
             <Text style={styles.text}>Help</Text>
           </View>
         </Link>
-        <Link to={{ screen: 'Home' }} style={styles.link}>
+
+        <Button
+          mode="outlined"
+          onPress={() => FIREBASE_AUTH.signOut()}
+          style={styles.button}
+        >
           <View style={styles.linkContent}>
             <ExploreIcon size={32} fill={'#232323'} />
             <Text style={styles.text}>Sign Out</Text>
           </View>
-        </Link>
+        </Button>
       </View>
     </SafeAreaView>
   );
@@ -84,6 +90,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 10,
+  },
+  button: {
+    marginTop: 40,
+    borderRadius: 10,
   },
 });
 
