@@ -6,6 +6,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImageGrid from '../components/ImageGrid';
+import SettingIcon from '../components/icons/SettingIcon';
 
 function ProfileScreen() {
   const theme = useTheme();
@@ -29,7 +30,8 @@ function ProfileScreen() {
     <SafeAreaView style={styles.container} onLayout={handleOnLayout}>
       <View style={styles.iconContainer}>
         <Link to={{ screen: 'Setting' }}>
-          <Text style={styles.text}>Setting</Text>
+          <SettingIcon size={32} fill={'#232323'} />
+          <Text style={styles.text}>Settings</Text>
         </Link>
         <Link to={{ screen: 'Bookmark' }}>
           <Text style={styles.text}>Bookmark</Text>
@@ -40,20 +42,20 @@ function ProfileScreen() {
           size={140}
           source={require('../assets/cupcakeprofile.png')}
         />
-        <Text style={styles.textBold}>MoaHedendahl</Text>
+        <Text style={styles.textUsername}>MoaHedendahl</Text>
       </View>
       <View style={styles.profileInfo}>
         <View style={styles.profileInfoGroup}>
-          <Text>28</Text>
-          <Text>Recipes</Text>
+          <Text style={styles.textBold}>28</Text>
+          <Text style={styles.text}>Recipes</Text>
         </View>
         <View style={styles.profileInfoGroup}>
-          <Text>38K</Text>
-          <Text>Likes</Text>
+          <Text style={styles.textBold}>38K</Text>
+          <Text style={styles.text}>Likes</Text>
         </View>
         <View style={styles.profileInfoGroup}>
-          <Text>12K</Text>
-          <Text>Followers</Text>
+          <Text style={styles.textBold}>12K</Text>
+          <Text style={styles.text}>Followers</Text>
         </View>
       </View>
 
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
   },
-  textBold: {
+  textUsername: {
     fontFamily: 'Jost',
     fontWeight: '900',
     marginTop: 10,
@@ -82,11 +84,17 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Jost',
   },
+  textBold: {
+    fontFamily: 'Jost',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
   profileInfo: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10,
+    marginBottom: 10,
   },
   profileInfoGroup: {
     display: 'flex',
