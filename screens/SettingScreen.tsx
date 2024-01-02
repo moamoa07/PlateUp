@@ -1,9 +1,11 @@
+import { Link } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ExploreIcon from '../components/icons/ExploreIcon';
 
 function SettingScreen() {
   const theme = useTheme();
@@ -25,25 +27,37 @@ function SettingScreen() {
 
   return (
     <SafeAreaView onLayout={handleOnLayout}>
-      <View>
+      <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Settings</Text>
         </View>
-        <Button icon="account-edit-outline" mode="outlined">
-          Edit profile
-        </Button>
-        <Button icon="help-circle-outline" mode="outlined">
-          Help
-        </Button>
-        <Button icon="logout" mode="outlined">
-          Sign out
-        </Button>
+        <Link to={{ screen: 'Home' }} style={styles.link}>
+          <View style={styles.linkContent}>
+            <ExploreIcon size={32} fill={'#232323'} />
+            <Text style={styles.text}>Edit Profile</Text>
+          </View>
+        </Link>
+        <Link to={{ screen: 'Home' }} style={styles.link}>
+          <View style={styles.linkContent}>
+            <ExploreIcon size={32} fill={'#232323'} />
+            <Text style={styles.text}>Help</Text>
+          </View>
+        </Link>
+        <Link to={{ screen: 'Home' }} style={styles.link}>
+          <View style={styles.linkContent}>
+            <ExploreIcon size={32} fill={'#232323'} />
+            <Text style={styles.text}>Sign Out</Text>
+          </View>
+        </Link>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    margin: 10,
+  },
   title: {
     fontFamily: 'CrakeBold',
     fontSize: 24,
@@ -51,9 +65,25 @@ const styles = StyleSheet.create({
   titleContainer: {
     display: 'flex',
     alignItems: 'center',
+    marginBottom: 10,
   },
   text: {
     fontFamily: 'Jost',
+    marginLeft: 10,
+  },
+  link: {
+    borderColor: '#d9d9d9',
+    borderWidth: 1,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+
+  linkContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
   },
 });
 
