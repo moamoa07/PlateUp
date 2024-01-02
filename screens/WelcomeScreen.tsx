@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, Text } from 'react-native';
+import { Animated, Image, StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 type RootStackParamList = {
@@ -16,20 +16,29 @@ function Welcome({ navigation }: Props) {
   const fadeAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.timing(fadeAnimation, {
+    const fadeInAnimation = Animated.timing(fadeAnimation, {
       toValue: 1,
-      duration: 1500, // Just an example duration, adjust as needed
+      duration: 1200,
       useNativeDriver: true,
-    }).start();
+    });
+
+    fadeInAnimation.start();
+
+    return () => {
+      // Clean up animation on component unmount
+      fadeInAnimation.stop();
+    };
   }, [fadeAnimation]);
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnimation }]}>
-      <Text style={styles.h1}>Welcome to PlateUp</Text>
-      <Text style={styles.p}>
-        Delighted you're joining us! Create an account to save and share your
-        unique recipes with our community. Start your culinary journey now!
-      </Text>
+      <View style={[styles.textContainer]}>
+        <Text style={styles.h1}>Welcome to PlateUp</Text>
+        <Text style={styles.p}>
+          Delighted you're joining us! Create an account to save and share your
+          unique recipes with our community. Start your culinary journey now!
+        </Text>
+      </View>
       <Button
         mode="contained"
         buttonColor="#000000"
@@ -45,6 +54,12 @@ function Welcome({ navigation }: Props) {
       >
         <Text style={[styles.textBtn]}>Sign in</Text>
       </Button>
+      <View style={[styles.imageContainerRight]}>
+        <Image
+          style={[styles.tomatoImg]}
+          source={require('../assets/figmaImages/tomato.png')}
+        />
+      </View>
     </Animated.View>
   );
 }
@@ -53,10 +68,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 20,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 15,
+    width: '100%',
+  },
+  textContainer: {
+    paddingHorizontal: 20,
     gap: 15,
   },
   h1: {
@@ -78,6 +97,18 @@ const styles = StyleSheet.create({
   outlinedButton: {
     borderColor: '#000000',
     borderRadius: 10,
+  },
+  imageContainerRight: {
+    display: 'flex',
+    position: 'absolute',
+    // justifyContent: 'center',
+    alignItems: 'flex-end',
+    width: '100%',
+  },
+  tomatoImg: {
+    width: 200,
+    height: 200,
+    resizeMode: 'cover',
   },
 });
 
