@@ -4,25 +4,16 @@ import {
 } from 'firebase/auth';
 import { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
-import {
-  ActivityIndicator,
-  Button,
-  Text,
-  TextInput,
-  useTheme,
-} from 'react-native-paper';
+import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 function SignInScreen() {
   const theme = useTheme();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
 
   const signIn = async () => {
-    setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log(response);
@@ -30,13 +21,10 @@ function SignInScreen() {
     } catch (error) {
       console.log(error);
       alert('Registration failed, try again!');
-    } finally {
-      setLoading(false);
     }
   };
 
   const createProfile = async () => {
-    setLoading(true);
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
@@ -49,8 +37,6 @@ function SignInScreen() {
       /*Change to another type instead of any!!*/
       console.log(error);
       alert('Registration failed, try again!' + error.message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -75,18 +61,14 @@ function SignInScreen() {
           secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
         />
-        {loading ? (
-          <ActivityIndicator size={'large'} color="#ae45d1" />
-        ) : (
-          <>
-            <Button mode="outlined" onPress={signIn}>
-              <Text style={styles.text}>Sign In</Text>
-            </Button>
-            <Button mode="contained" onPress={createProfile}>
-              <Text style={styles.textWhite}>Create Profile</Text>
-            </Button>
-          </>
-        )}
+        <>
+          <Button mode="outlined" onPress={signIn}>
+            <Text style={styles.text}>Sign In</Text>
+          </Button>
+          <Button mode="contained" onPress={createProfile}>
+            <Text style={styles.textWhite}>Create Profile</Text>
+          </Button>
+        </>
       </KeyboardAvoidingView>
     </View>
   );
