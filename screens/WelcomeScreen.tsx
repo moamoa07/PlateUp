@@ -6,12 +6,10 @@ import { Button } from 'react-native-paper';
 type RootStackParamList = {
   Welcome: undefined;
   SignInScreen: undefined;
-  // Add other screens as needed
 };
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
-  // Add other props if needed
 }
 
 function Welcome({ navigation }: Props) {
