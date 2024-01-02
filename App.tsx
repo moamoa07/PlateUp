@@ -4,7 +4,7 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
-import { initializeApp } from './Init';
+import { initApp } from './Init';
 import theme from './Theme';
 import RootNavigator from './navigators/RootNavigator';
 import SignInScreen from './screens/SignInScreen';
@@ -37,7 +37,7 @@ function App() {
   useEffect(() => {
     const loadAppResources = async () => {
       console.log('Start initializing app');
-      await initializeApp();
+      await initApp();
       console.log('App initialization complete');
       setAppReady(true);
     };
