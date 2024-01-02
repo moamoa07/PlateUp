@@ -1,11 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import * as Font from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
+import { initializeApp } from './Init';
 import theme from './Theme';
 import RootNavigator from './navigators/RootNavigator';
 import SignInScreen from './screens/SignInScreen';
@@ -32,26 +31,14 @@ function StartLayout() {
   );
 }
 
-function InsideLayout() {
-  return (
-    <InsideStack.Navigator>
-      <InsideStack.Screen
-        name="RootNavigator"
-        component={RootNavigator}
-        options={{ headerShown: false }}
-      />
-    </InsideStack.Navigator>
-  );
-}
-
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
     const loadAppResources = async () => {
-      await handleLoadFonts();
-      await handleOnLayout();
+      await initializeApp();
+      setAppReady(true);
     };
 
     loadAppResources();
@@ -61,20 +48,7 @@ function App() {
     });
   }, []); // Empty dependency array to run the effect only once on mount
 
-  const handleLoadFonts = async () => {
-    await Font.loadAsync({
-      CrakeRegular: require('./assets/fonts/craketest-regular.otf'),
-      CrakeBold: require('./assets/fonts/craketest-bold.otf'),
-      Jost: require('./assets/fonts/Jost-VariableFont_wght.ttf'),
-    });
-  };
-
-  const handleOnLayout = async () => {
-    await SplashScreen.hideAsync();
-    setIsLoaded(true);
-  };
-
-  if (!isLoaded) {
+  if (!appReady) {
     // You can return a loading indicator here if needed
     return null;
   }
@@ -85,8 +59,8 @@ function App() {
         <Stack.Navigator initialRouteName="StartLayout">
           {user ? (
             <Stack.Screen
-              name="InsideLayout"
-              component={InsideLayout}
+              name="RootNavigator"
+              component={RootNavigator}
               options={{ headerShown: false }}
             />
           ) : (
