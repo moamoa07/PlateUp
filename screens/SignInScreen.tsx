@@ -15,7 +15,7 @@ import {
 } from 'react-native-paper';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 
-function SignIn() {
+function SignInScreen() {
   const theme = useTheme();
   const [isLoaded] = useFonts({
     CrakeRegular: require('../assets/fonts/craketest-regular.otf'),
@@ -128,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default SignInScreen;
