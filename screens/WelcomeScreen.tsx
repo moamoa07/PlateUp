@@ -1,13 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-// const getFonts = () =>
-//   Font.loadAsync({
-//     'Crake-Regular': require('./assets/fonts/craketest-regular.otf'),
-//     'Crake-Bold': require('./assets/fonts/craketest-bold.otf'),
-//     'Jost-Regular': require('./assets/fonts/Jost-VariableFont_wght.ttf'),
-//   });
+import React, { useEffect, useRef } from 'react';
+import { Animated, StyleSheet, Text } from 'react-native';
+import { Button } from 'react-native-paper';
 
 type RootStackParamList = {
   Welcome: undefined;
@@ -21,10 +15,18 @@ interface Props {
 }
 
 function Welcome({ navigation }: Props) {
-  // const [fontsLoaded, setFontsLoaded] = useState(false);
+  const fadeAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnimation, {
+      toValue: 1,
+      duration: 1500, // Just an example duration, adjust as needed
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnimation]);
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: fadeAnimation }]}>
       <Text style={styles.h1}>Welcome to PlateUp</Text>
       <Text style={styles.p}>
         Delighted you're joining us! Create an account to save and share your
@@ -35,7 +37,7 @@ function Welcome({ navigation }: Props) {
         buttonColor="#000000"
         style={styles.containedButton}
       >
-        <Text>Create a profile</Text>
+        <Text style={[styles.textBtn]}>Create a profile</Text>
       </Button>
       <Button
         mode="outlined"
@@ -43,9 +45,9 @@ function Welcome({ navigation }: Props) {
         style={styles.outlinedButton}
         onPress={() => navigation.navigate('SignInScreen')}
       >
-        <Text>Sign in</Text>
+        <Text style={[styles.textBtn]}>Sign in</Text>
       </Button>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -61,15 +63,17 @@ const styles = StyleSheet.create({
   },
   h1: {
     fontSize: 40,
+    fontFamily: 'Crake-Regular',
     textAlign: 'center',
   },
   p: {
     fontSize: 15,
+    fontFamily: 'Jost-Regular',
     textAlign: 'center',
   },
-  // textBtn: {
-  //   fontFamily: 'Jost',
-  // },
+  textBtn: {
+    fontFamily: 'Jost-Regular',
+  },
   containedButton: {
     borderRadius: 10,
   },
