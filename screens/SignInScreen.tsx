@@ -1,10 +1,8 @@
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import {
   ActivityIndicator,
@@ -17,26 +15,11 @@ import { FIREBASE_AUTH } from '../FirebaseConfig';
 
 function SignInScreen() {
   const theme = useTheme();
-  const [isLoaded] = useFonts({
-    CrakeRegular: require('../assets/fonts/craketest-regular.otf'),
-    CrakeBold: require('../assets/fonts/craketest-bold.otf'),
-    Jost: require('../assets/fonts/Jost-VariableFont_wght.ttf'),
-  });
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
-
-  const handleOnLayout = useCallback(async () => {
-    if (isLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [isLoaded]);
-
-  if (!isLoaded) {
-    return null;
-  }
 
   const signIn = async () => {
     setLoading(true);
@@ -74,7 +57,6 @@ function SignInScreen() {
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
-      onLayout={handleOnLayout}
     >
       <KeyboardAvoidingView behavior="padding">
         <Text style={[styles.title]}>Sign In</Text>
