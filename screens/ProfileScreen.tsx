@@ -36,7 +36,10 @@ function ProfileScreen() {
         </Link>
       </View>
       <View style={styles.avatar}>
-        <Avatar.Image size={140} source={require('../assets/cupcake.png')} />
+        <Avatar.Image
+          size={140}
+          source={require('../assets/cupcake-profile.png')}
+        />
         <Text style={styles.textBold}>MoaHedendahl</Text>
       </View>
       <View style={styles.profileInfo}>
@@ -64,7 +67,7 @@ function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   avatar: {
     display: 'flex',
