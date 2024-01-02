@@ -28,8 +28,12 @@ function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container} onLayout={handleOnLayout}>
       <View style={styles.iconContainer}>
-        <Link to={{ screen: 'Setting' }}>Setting</Link>
-        <Link to={{ screen: 'Bookmark' }}>Bookmark</Link>
+        <Link to={{ screen: 'Setting' }}>
+          <Text style={styles.text}>Setting</Text>
+        </Link>
+        <Link to={{ screen: 'Bookmark' }}>
+          <Text style={styles.text}>Bookmark</Text>
+        </Link>
       </View>
       <View style={styles.avatar}>
         <Avatar.Image size={140} source={require('../assets/cupcake.png')} />
@@ -71,6 +75,9 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     marginTop: 10,
     fontSize: 24,
+  },
+  text: {
+    fontFamily: 'Jost',
   },
   profileInfo: {
     display: 'flex',
