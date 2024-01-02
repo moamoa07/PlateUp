@@ -81,13 +81,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   title: {
-    fontFamily: 'CrakeBold',
+    fontFamily: 'Crake-Bold',
   },
   text: {
-    fontFamily: 'Jost',
+    fontFamily: 'Jost-Regular',
   },
   textWhite: {
-    fontFamily: 'Jost',
+    fontFamily: 'Jost-Regular',
     color: '#fff',
   },
 });
