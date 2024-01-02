@@ -20,7 +20,7 @@ function StartLayout() {
       <StartStack.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SignInScreen"
@@ -53,11 +53,7 @@ function App() {
   }, []); // Empty dependency array to run the effect only once on mount
 
   if (!appReady) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size={'large'} color="#ae45d1" />
-      </View>
-    );
+    return null;
   }
 
   return (
