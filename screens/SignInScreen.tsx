@@ -60,7 +60,7 @@ function SignInScreen() {
         email,
         password
       );
-      console.log(response);
+      // console.log(response);
       alert('Check your email!');
     } catch (error: any) {
       /*Change to another type instead of any!!*/
