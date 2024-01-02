@@ -38,7 +38,7 @@ function ProfileScreen() {
       <View style={styles.avatar}>
         <Avatar.Image
           size={140}
-          source={require('../assets/cupcake-profile.png')}
+          source={require('../assets/cupcakeprofile.png')}
         />
         <Text style={styles.textBold}>MoaHedendahl</Text>
       </View>
