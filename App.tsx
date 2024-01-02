@@ -2,7 +2,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
-import { PaperProvider } from 'react-native-paper';
+import { View } from 'react-native';
+import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import { initializeApp } from './Init';
 import theme from './Theme';
@@ -12,7 +13,6 @@ import WelcomeScreen from './screens/WelcomeScreen';
 
 const Stack = createNativeStackNavigator();
 const StartStack = createNativeStackNavigator();
-const InsideStack = createNativeStackNavigator();
 
 function StartLayout() {
   return (
@@ -37,11 +37,15 @@ function App() {
 
   useEffect(() => {
     const loadAppResources = async () => {
+      console.log('Start initializing app');
       await initializeApp();
+      console.log('App initialization complete');
       setAppReady(true);
     };
 
+    console.log('Before loading app resources');
     loadAppResources();
+    console.log('After loading app resources');
 
     onAuthStateChanged(FIREBASE_AUTH, (userData) => {
       setUser(userData);
@@ -49,8 +53,11 @@ function App() {
   }, []); // Empty dependency array to run the effect only once on mount
 
   if (!appReady) {
-    // You can return a loading indicator here if needed
-    return null;
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size={'large'} color="#ae45d1" />
+      </View>
+    );
   }
 
   return (
