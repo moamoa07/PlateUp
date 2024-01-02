@@ -1,3 +1,4 @@
+import { Link } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
@@ -26,6 +27,10 @@ function ProfileScreen() {
 
   return (
     <SafeAreaView style={styles.container} onLayout={handleOnLayout}>
+      <View style={styles.iconContainer}>
+        <Link to={{ screen: 'Setting' }}>Setting</Link>
+        <Link to={{ screen: 'Bookmark' }}>Bookmark</Link>
+      </View>
       <View style={styles.avatar}>
         <Avatar.Image size={140} source={require('../assets/cupcake.png')} />
         <Text style={styles.textBold}>MoaHedendahl</Text>
@@ -87,6 +92,12 @@ const styles = StyleSheet.create({
   },
   imageFlex: {
     flex: 1,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginVertical: 10,
+    gap: 10,
   },
 });
 
