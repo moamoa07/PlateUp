@@ -82,18 +82,20 @@ function SignInScreen() {
         <Text style={[styles.passwordText, { color: theme.colors.primary }]}>
           Forgot password?
         </Text>
-        <>
+        <View style={[styles.buttonContainer]}>
           <Button
             mode="contained"
             buttonColor={theme.colors.primary}
+            labelStyle={{ marginHorizontal: 0 }}
+            style={[styles.button]}
             onPress={signIn}
           >
-            <Text style={[styles.textWhite]}>Sign In</Text>
+            <Text style={[styles.textWhite]}>Sign in</Text>
           </Button>
-          {/* <Button mode="contained" onPress={createProfile}>
+        </View>
+        {/* <Button mode="contained" onPress={createProfile}>
             <Text style={styles.textWhite}>Create Profile</Text>
           </Button> */}
-        </>
       </KeyboardAvoidingView>
     </View>
   );
@@ -125,8 +127,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 30,
   },
+  buttonContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  button: {
+    borderRadius: 10,
+  },
   textWhite: {
     fontFamily: 'Jost-Regular',
+    fontSize: 15,
     color: '#fff',
   },
 });
