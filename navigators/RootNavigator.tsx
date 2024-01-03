@@ -14,7 +14,7 @@ import SearchScreen from '../screens/SearchScreen';
 type RootTabsParamList = {
   Home: undefined;
   Search: undefined;
-  AddRecipe: undefined;
+  Recipe: undefined;
   Explore: undefined;
   Profile: undefined;
 };
@@ -34,6 +34,7 @@ function RootNavigator() {
         borderTopWidth: thinBorder,
         borderTopColor: '#232323',
       }}
+      labeled={true}
     >
       <Tab.Screen
         name="Home"
@@ -50,7 +51,7 @@ function RootNavigator() {
         }}
       />
       <Tab.Screen
-        name="AddRecipe"
+        name="Recipe"
         component={AddRecipeScreen}
         options={{
           tabBarIcon: ({ color }) => <AddRecipeIcon size={32} fill={color} />,
