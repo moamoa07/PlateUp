@@ -54,7 +54,7 @@ function Welcome({ navigation }: Props) {
       >
         <Text style={[styles.textBtn]}>Sign in</Text>
       </Button>
-      <View style={[styles.imageContainerRight]}>
+      <View style={[styles.imageContainer]}>
         <Image
           style={[styles.garlicImg]}
           source={require('../assets/figmaImages/garlic.png')}
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 15,
+    gap: 20,
     width: '100%',
   },
   textContainer: {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     zIndex: 20,
   },
-  imageContainerRight: {
+  imageContainer: {
     display: 'flex',
     flexDirection: 'row',
     position: 'absolute',
