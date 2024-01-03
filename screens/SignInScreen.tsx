@@ -9,6 +9,7 @@ function SignInScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth = FIREBASE_AUTH;
+  const [isFocused, setFocused] = useState(false);
 
   const signIn = async () => {
     try {
@@ -39,8 +40,7 @@ function SignInScreen() {
 
   return (
     <View
-      style={[styles.container]}
-      // { backgroundColor: theme.colors.background }
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <KeyboardAvoidingView behavior="padding">
         <Text style={[styles.title]}>Sign In</Text>
@@ -50,7 +50,15 @@ function SignInScreen() {
           mode="outlined"
           autoCapitalize="none"
           contentStyle={{ fontFamily: 'Jost-Regular' }}
-          style={[styles.textInput]}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          outlineStyle={{
+            borderRadius: 10,
+            borderColor: isFocused
+              ? theme.colors.primary
+              : theme.colors.secondary,
+          }}
+          style={[styles.textInput, { marginBottom: 10 }]}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
@@ -59,13 +67,28 @@ function SignInScreen() {
           mode="outlined"
           autoCapitalize="none"
           contentStyle={{ fontFamily: 'Jost-Regular' }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          outlineStyle={{
+            borderRadius: 10,
+            borderColor: isFocused
+              ? theme.colors.primary
+              : theme.colors.secondary,
+          }}
           style={[styles.textInput]}
           secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
         />
+        <Text style={[styles.passwordText, { color: theme.colors.primary }]}>
+          Forgot password?
+        </Text>
         <>
-          <Button mode="outlined" onPress={signIn}>
-            <Text style={styles.text}>Sign In</Text>
+          <Button
+            mode="contained"
+            buttonColor={theme.colors.primary}
+            onPress={signIn}
+          >
+            <Text style={[styles.textWhite]}>Sign In</Text>
           </Button>
           {/* <Button mode="contained" onPress={createProfile}>
             <Text style={styles.textWhite}>Create Profile</Text>
@@ -81,22 +104,26 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 100,
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: 'pink',
   },
   title: {
     fontFamily: 'Crake-Regular',
     textAlign: 'center',
     fontSize: 24,
     height: 30,
+    marginBottom: 15,
   },
   textInput: {
     width: 250,
+    borderRadius: 25,
   },
-  text: {
+  passwordText: {
     fontFamily: 'Jost-Regular',
+    marginLeft: 5,
+    marginTop: 4,
+    marginBottom: 30,
   },
   textWhite: {
     fontFamily: 'Jost-Regular',
