@@ -29,4 +29,3 @@ initializeAuth(FIREBASE_APP, {
 
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
 export const FIREBASE_DB = getFirestore(FIREBASE_APP);
-
