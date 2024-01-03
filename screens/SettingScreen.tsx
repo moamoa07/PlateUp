@@ -57,11 +57,13 @@ function SettingScreen() {
           </View>
         </Link>
 
-        <Button mode="outlined" onPress={showModal} style={styles.button}>
-          <View style={styles.linkContent}>
-            <SignOutIcon size={32} fill={'#232323'} />
-            <Text style={styles.text}>Sign Out</Text>
-          </View>
+        <Button
+          mode="outlined"
+          onPress={showModal}
+          style={styles.button}
+          icon={() => <SignOutIcon size={32} fill={'#232323'} />}
+        >
+          <Text style={[styles.text, { color: '#232323' }]}>Sign Out</Text>
         </Button>
 
         <Portal>
@@ -130,6 +132,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     marginTop: 40,
+    padding: 10,
   },
   modalContainer: {
     backgroundColor: 'white',
