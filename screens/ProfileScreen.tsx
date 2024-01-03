@@ -1,12 +1,13 @@
 import { Link } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImageGrid from '../components/ImageGrid';
-import SettingIcon from '../components/icons/SettingIcon';
+import ExploreIcon from '../components/icons/ExploreIcon';
+import HomeIcon from '../components/icons/HomeIcon';
 
 function ProfileScreen() {
   const theme = useTheme();
@@ -30,11 +31,10 @@ function ProfileScreen() {
     <SafeAreaView style={styles.container} onLayout={handleOnLayout}>
       <View style={styles.iconContainer}>
         <Link to={{ screen: 'Setting' }}>
-          <SettingIcon size={32} fill={'#232323'} />
-          <Text style={styles.text}>Settings</Text>
+          <HomeIcon size={40} fill={'#232323'} />
         </Link>
         <Link to={{ screen: 'Bookmark' }}>
-          <Text style={styles.text}>Bookmark</Text>
+          <ExploreIcon size={40} fill={'#232323'} />
         </Link>
       </View>
       <View style={styles.avatar}>
