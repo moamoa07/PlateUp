@@ -6,6 +6,8 @@ import { PaperProvider } from 'react-native-paper';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import theme from './Theme';
 import RootNavigator from './navigators/RootNavigator';
+import BookmarkScreen from './screens/BookmarkScreen';
+import SettingScreen from './screens/SettingScreen';
 import SignInScreen from './screens/SignInScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 
@@ -56,11 +58,23 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="StartLayout">
           {user ? (
-            <Stack.Screen
-              name="InsideLayout"
-              component={InsideLayout}
-              options={{ headerShown: false }}
-            />
+            <>
+              <Stack.Screen
+                name="InsideLayout"
+                component={InsideLayout}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Setting"
+                component={SettingScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Bookmark"
+                component={BookmarkScreen}
+                options={{ headerShown: false }}
+              />
+            </>
           ) : (
             <Stack.Screen
               name="StartLayout"
