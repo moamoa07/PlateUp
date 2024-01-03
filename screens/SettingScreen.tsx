@@ -1,12 +1,13 @@
 import { Link } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Button, useTheme } from 'react-native-paper';
+import { Button, Modal, Portal, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import ExploreIcon from '../components/icons/ExploreIcon';
+import SignOutIcon from '../components/icons/SignOutIcon';
 
 function SettingScreen() {
   const theme = useTheme();
@@ -15,6 +16,8 @@ function SettingScreen() {
     CrakeBold: require('../assets/fonts/craketest-bold.otf'),
     Jost: require('../assets/fonts/Jost-VariableFont_wght.ttf'),
   });
+
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const handleOnLayout = useCallback(async () => {
     if (isLoaded) {
@@ -25,6 +28,14 @@ function SettingScreen() {
   if (!isLoaded) {
     return null;
   }
+
+  const showModal = () => setModalVisible(true);
+  const hideModal = () => setModalVisible(false);
+
+  const onSignOut = async () => {
+    hideModal(); // Close the modal before signing out
+    await FIREBASE_AUTH.signOut();
+  };
 
   return (
     <SafeAreaView onLayout={handleOnLayout}>
@@ -45,16 +56,40 @@ function SettingScreen() {
           </View>
         </Link>
 
-        <Button
-          mode="outlined"
-          onPress={() => FIREBASE_AUTH.signOut()}
-          style={styles.button}
-        >
+        <Button mode="outlined" onPress={showModal} style={styles.button}>
           <View style={styles.linkContent}>
-            <ExploreIcon size={32} fill={'#232323'} />
+            <SignOutIcon size={32} fill={'#232323'} />
             <Text style={styles.text}>Sign Out</Text>
           </View>
         </Button>
+
+        <Portal>
+          <Modal
+            visible={isModalVisible}
+            onDismiss={hideModal}
+            contentContainerStyle={styles.modalContainer}
+          >
+            <Text style={styles.modalText}>
+              Are you sure you want to sign out?
+            </Text>
+            <View style={styles.modalButtonContainer}>
+              <Button
+                onPress={hideModal}
+                mode="outlined"
+                style={styles.modalButton}
+              >
+                Go back
+              </Button>
+              <Button
+                onPress={onSignOut}
+                mode="contained"
+                style={styles.modalButton}
+              >
+                Sign Out
+              </Button>
+            </View>
+          </Modal>
+        </Portal>
       </View>
     </SafeAreaView>
   );
@@ -92,8 +127,27 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    marginTop: 40,
     borderRadius: 10,
+    marginTop: 40,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    margin: 20,
+  },
+  modalText: {
+    fontFamily: 'Jost',
+    marginBottom: 20,
+  },
+  modalButton: {
+    borderRadius: 10,
+  },
+  modalButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 10,
   },
 });
 
