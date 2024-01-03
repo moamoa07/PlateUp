@@ -97,10 +97,12 @@ const styles = StyleSheet.create({
   },
   containedButton: {
     borderRadius: 10,
+    zIndex: 20,
   },
   outlinedButton: {
     borderColor: '#000000',
     borderRadius: 10,
+    zIndex: 20,
   },
   imageContainerRight: {
     display: 'flex',
