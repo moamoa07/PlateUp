@@ -1,7 +1,4 @@
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
@@ -24,39 +21,40 @@ function SignInScreen() {
     }
   };
 
-  const createProfile = async () => {
-    try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      // console.log(response);
-      alert('Check your email!');
-    } catch (error: any) {
-      /*Change to another type instead of any!!*/
-      console.log(error);
-      alert('Registration failed, try again!' + error.message);
-    }
-  };
+  // const createProfile = async () => {
+  //   try {
+  //     const response = await createUserWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
+  //     // console.log(response);
+  //     alert('Check your email!');
+  //   } catch (error: any) {
+  //     /*Change to another type instead of any!!*/
+  //     console.log(error);
+  //     alert('Registration failed, try again!' + error.message);
+  //   }
+  // };
 
   return (
     <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={[styles.container]}
+      // { backgroundColor: theme.colors.background }
     >
       <KeyboardAvoidingView behavior="padding">
         <Text style={[styles.title]}>Sign In</Text>
         <TextInput
           value={email}
           label="Email"
-          placeholder="Email"
+          mode="outlined"
           autoCapitalize="none"
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
           value={password}
           label="Password"
-          placeholder="Password"
+          mode="outlined"
           autoCapitalize="none"
           secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
@@ -65,9 +63,9 @@ function SignInScreen() {
           <Button mode="outlined" onPress={signIn}>
             <Text style={styles.text}>Sign In</Text>
           </Button>
-          <Button mode="contained" onPress={createProfile}>
+          {/* <Button mode="contained" onPress={createProfile}>
             <Text style={styles.textWhite}>Create Profile</Text>
-          </Button>
+          </Button> */}
         </>
       </KeyboardAvoidingView>
     </View>
@@ -77,11 +75,18 @@ function SignInScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    marginHorizontal: 20,
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'pink',
   },
   title: {
-    fontFamily: 'Crake-Bold',
+    fontFamily: 'Crake-Regular',
+    textAlign: 'center',
+    fontSize: 24,
+    height: 30,
   },
   text: {
     fontFamily: 'Jost-Regular',
