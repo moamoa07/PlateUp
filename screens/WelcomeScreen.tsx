@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Image, StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
+import theme from '../Theme';
 
 type RootStackParamList = {
   Welcome: undefined;
@@ -41,7 +42,7 @@ function Welcome({ navigation }: Props) {
       </View>
       <Button
         mode="contained"
-        buttonColor="#000000"
+        buttonColor={theme.colors.primary}
         style={styles.containedButton}
       >
         <Text style={[styles.textBtn]}>Create a profile</Text>
