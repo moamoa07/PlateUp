@@ -16,6 +16,9 @@ function ListScreen({ navigation }: RouterProps) {
       <Button mode="outlined" onPress={() => navigation.navigate('Home')}>
         Open details
       </Button>
+      <Button mode="outlined" onPress={() => navigation.navigate('Profile')}>
+        Profile
+      </Button>
       <Button mode="outlined" onPress={() => FIREBASE_AUTH.signOut()}>
         Sign Out
       </Button>
