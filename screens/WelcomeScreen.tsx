@@ -56,6 +56,10 @@ function Welcome({ navigation }: Props) {
       </Button>
       <View style={[styles.imageContainerRight]}>
         <Image
+          style={[styles.garlicImg]}
+          source={require('../assets/figmaImages/garlic.png')}
+        />
+        <Image
           style={[styles.tomatoImg]}
           source={require('../assets/figmaImages/tomato.png')}
         />
@@ -100,14 +104,21 @@ const styles = StyleSheet.create({
   },
   imageContainerRight: {
     display: 'flex',
+    flexDirection: 'row',
     position: 'absolute',
-    // justifyContent: 'center',
-    alignItems: 'flex-end',
+    bottom: 90,
+    justifyContent: 'space-between',
     width: '100%',
   },
+  garlicImg: {
+    width: 90,
+    height: 107,
+    resizeMode: 'cover',
+    marginLeft: 10,
+  },
   tomatoImg: {
-    width: 200,
-    height: 200,
+    width: 190,
+    height: 180,
     resizeMode: 'cover',
   },
 });
