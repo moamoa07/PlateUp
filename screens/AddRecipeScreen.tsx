@@ -4,7 +4,7 @@ function AddRecipeScreen() {
   return (
     <SafeAreaView>
       <View>
-        <Text>Profile Screen</Text>
+        <Text>Recipe Screen</Text>
       </View>
     </SafeAreaView>
   );
