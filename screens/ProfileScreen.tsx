@@ -6,8 +6,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImageGrid from '../components/ImageGrid';
-import ExploreIcon from '../components/icons/ExploreIcon';
-import HomeIcon from '../components/icons/HomeIcon';
+import BookmarkIcon from '../components/icons/BookmarkIcon';
+import LikeIcon from '../components/icons/LikeIcon';
+import SettingsIcon from '../components/icons/SettingsIcon';
 
 function ProfileScreen() {
   const theme = useTheme();
@@ -30,11 +31,14 @@ function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container} onLayout={handleOnLayout}>
       <View style={styles.iconContainer}>
-        <Link to={{ screen: 'Setting' }}>
-          <HomeIcon size={40} fill={'#232323'} />
+        <Link to={{ screen: 'Like' }}>
+          <LikeIcon size={32} fill={'#232323'} />
         </Link>
         <Link to={{ screen: 'Bookmark' }}>
-          <ExploreIcon size={40} fill={'#232323'} />
+          <BookmarkIcon size={32} fill={'#232323'} />
+        </Link>
+        <Link to={{ screen: 'Settings' }}>
+          <SettingsIcon size={32} fill={'#232323'} />
         </Link>
       </View>
       <View style={styles.avatar}>
@@ -114,8 +118,9 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginVertical: 10,
-    gap: 10,
+    gap: 4,
   },
 });
 
