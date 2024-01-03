@@ -6,7 +6,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button, Modal, Portal, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
-import ExploreIcon from '../components/icons/ExploreIcon';
+import AccountIcon from '../components/icons/AccountIcon';
+import HelpIcon from '../components/icons/HelpIcon';
 import SignOutIcon from '../components/icons/SignOutIcon';
 
 function SettingScreen() {
@@ -45,13 +46,13 @@ function SettingScreen() {
         </View>
         <Link to={{ screen: 'Home' }} style={styles.link}>
           <View style={styles.linkContent}>
-            <ExploreIcon size={32} fill={'#232323'} />
+            <AccountIcon size={32} fill={'#232323'} />
             <Text style={styles.text}>Edit Profile</Text>
           </View>
         </Link>
         <Link to={{ screen: 'Home' }} style={styles.link}>
           <View style={styles.linkContent}>
-            <ExploreIcon size={32} fill={'#232323'} />
+            <HelpIcon size={32} fill={'#232323'} />
             <Text style={styles.text}>Help</Text>
           </View>
         </Link>
