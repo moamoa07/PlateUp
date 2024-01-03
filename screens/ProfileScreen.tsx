@@ -37,7 +37,7 @@ function ProfileScreen() {
         <Link to={{ screen: 'Bookmark' }}>
           <BookmarkIcon size={32} fill={'#232323'} />
         </Link>
-        <Link to={{ screen: 'Settings' }}>
+        <Link to={{ screen: 'Setting' }}>
           <SettingsIcon size={32} fill={'#232323'} />
         </Link>
       </View>
