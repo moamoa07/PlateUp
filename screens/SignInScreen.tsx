@@ -49,6 +49,8 @@ function SignInScreen() {
           label="Email"
           mode="outlined"
           autoCapitalize="none"
+          contentStyle={{ fontFamily: 'Jost-Regular' }}
+          style={[styles.textInput]}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
@@ -56,6 +58,8 @@ function SignInScreen() {
           label="Password"
           mode="outlined"
           autoCapitalize="none"
+          contentStyle={{ fontFamily: 'Jost-Regular' }}
+          style={[styles.textInput]}
           secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
         />
@@ -87,6 +91,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 24,
     height: 30,
+  },
+  textInput: {
+    width: 250,
   },
   text: {
     fontFamily: 'Jost-Regular',
