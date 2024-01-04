@@ -1,3 +1,4 @@
+import { Link } from '@react-navigation/native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
@@ -59,11 +60,6 @@ function SignInScreen() {
               : theme.colors.secondary,
           }}
           style={[styles.textInput, { marginBottom: 10 }]}
-          // theme={{
-          //   fonts: {
-          //     regular: { fontFamily: 'Jost', fontWeight: 'normal' },
-          //   },
-          // }}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
@@ -106,7 +102,9 @@ function SignInScreen() {
         </View> */}
         <View style={[styles.linkContainer]}>
           <Text style={[styles.linkText1]}>New to PlateUp?</Text>
-          <Text style={[styles.linkText2]}>Create a profile</Text>
+          <Link to={{ screen: 'CreateProfileScreen' }}>
+            <Text style={[styles.linkText2]}>Create a profile</Text>
+          </Link>
         </View>
 
         {/* <Button mode="contained" onPress={createProfile}>
