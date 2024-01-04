@@ -128,11 +128,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#fff',
   },
-  termsTextContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: 40,
-  },
   termsText: {
     color: '#696969',
   },
