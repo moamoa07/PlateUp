@@ -46,7 +46,7 @@ function SignInScreen() {
         <Text style={[styles.title]}>Sign In</Text>
         <TextInput
           value={email}
-          label="Email"
+          label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
           mode="outlined"
           autoCapitalize="none"
           contentStyle={{ fontFamily: 'Jost-Regular' }}
@@ -59,11 +59,16 @@ function SignInScreen() {
               : theme.colors.secondary,
           }}
           style={[styles.textInput, { marginBottom: 10 }]}
+          // theme={{
+          //   fonts: {
+          //     regular: { fontFamily: 'Jost', fontWeight: 'normal' },
+          //   },
+          // }}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
           value={password}
-          label="Password"
+          label={<Text style={{ fontFamily: 'Jost-Regular' }}>Password</Text>}
           mode="outlined"
           autoCapitalize="none"
           contentStyle={{ fontFamily: 'Jost-Regular' }}
