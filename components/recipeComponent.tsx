@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, Text, View } from 'react-native';
 import { Recipe } from '../api/model/recipeModel';
-import { getRecipeById } from '../api/recipeService';
+import { getRecipeById } from '../api/service/recipeService';
 
 interface RecipeComponentProps {
   recipeId: string;

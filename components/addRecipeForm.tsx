@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
-import { addRecipe } from '../api/recipeService';
+import { addRecipe } from '../api/service/recipeService';
 
 const AddRecipeForm = () => {
   const [title, setTitle] = useState('');
