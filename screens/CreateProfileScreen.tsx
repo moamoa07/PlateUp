@@ -33,7 +33,7 @@ function CreateProfileScreen() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <KeyboardAvoidingView behavior="padding">
-        <Text style={[styles.title]}>Sign In</Text>
+        <Text style={[styles.title]}>Create a profile</Text>
         <TextInput
           value={email}
           label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
@@ -69,13 +69,22 @@ function CreateProfileScreen() {
           secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
         />
-        <Text style={[styles.passwordText, { color: theme.colors.primary }]}>
-          Forgot password?
-        </Text>
         <View style={[styles.buttonContainer]}>
-          <Button mode="contained" onPress={createProfile}>
-            <Text style={styles.textWhite}>Create Profile</Text>
+          <Button
+            mode="contained"
+            buttonColor={theme.colors.primary}
+            labelStyle={{ marginHorizontal: 0 }}
+            style={[styles.button]}
+            onPress={createProfile}
+          >
+            <Text style={styles.textWhite}>Sign up</Text>
           </Button>
+        </View>
+        <View style={[styles.termsTextContainer]}>
+          <Text style={[styles.termsText]}>
+            By signing up, you agree to PlateUp's
+          </Text>
+          <Text>Terms of Use & Privacy Policy</Text>
         </View>
         <View style={[styles.linkContainer]}>
           <Text style={[styles.linkText1]}>Already have a profile?</Text>
@@ -83,10 +92,6 @@ function CreateProfileScreen() {
             <Text style={[styles.linkText2]}>Sign in</Text>
           </Link>
         </View>
-        <Text style={[styles.termsText]}>
-          By signing up, you agree to PlateUp's
-        </Text>
-        <Text>Terms of Use & Privacy Policy</Text>
       </KeyboardAvoidingView>
     </View>
   );
@@ -112,16 +117,11 @@ const styles = StyleSheet.create({
     width: 260,
     borderRadius: 25,
   },
-  passwordText: {
-    fontFamily: 'Jost-Regular',
-    marginLeft: 5,
-    marginTop: 4,
-    marginBottom: 30,
-  },
   buttonContainer: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: 50,
+    marginTop: 30,
   },
   button: {
     borderRadius: 10,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   termsTextContainer: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 60,
   },
   termsText: {
     color: '#696969',
