@@ -7,6 +7,7 @@ import theme from '../Theme';
 type RootStackParamList = {
   Welcome: undefined;
   SignInScreen: undefined;
+  CreateProfileScreen: undefined;
 };
 
 interface Props {
@@ -45,6 +46,7 @@ function Welcome({ navigation }: Props) {
         buttonColor={theme.colors.primary}
         style={styles.containedButton}
         labelStyle={{ marginHorizontal: 10 }}
+        onPress={() => navigation.navigate('CreateProfileScreen')}
       >
         <Text style={[styles.textBtn]}>Create a profile</Text>
       </Button>
