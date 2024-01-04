@@ -9,6 +9,7 @@ import { initApp } from './Init';
 import theme from './Theme';
 import RootNavigator from './navigators/RootNavigator';
 import BookmarkScreen from './screens/BookmarkScreen';
+import CreateProfileScreen from './screens/CreateProfileScreen';
 import SettingScreen from './screens/SettingScreen';
 import SignInScreen from './screens/SignInScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
@@ -28,6 +29,11 @@ function StartLayout() {
       <Stack.Screen
         name="SignInScreen"
         component={SignInScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CreateProfileScreen"
+        component={CreateProfileScreen}
         options={{ headerShown: false }}
       />
     </StartStack.Navigator>
