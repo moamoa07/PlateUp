@@ -23,22 +23,6 @@ function SignInScreen() {
     }
   };
 
-  // const createProfile = async () => {
-  //   try {
-  //     const response = await createUserWithEmailAndPassword(
-  //       auth,
-  //       email,
-  //       password
-  //     );
-  //     // console.log(response);
-  //     alert('Check your email!');
-  //   } catch (error: any) {
-  //     /*Change to another type instead of any!!*/
-  //     console.log(error);
-  //     alert('Registration failed, try again!' + error.message);
-  //   }
-  // };
-
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -94,22 +78,12 @@ function SignInScreen() {
             <Text style={[styles.textWhite]}>Sign in</Text>
           </Button>
         </View>
-        {/* <View style={[styles.termsTextContainer]}>
-          <Text style={[styles.termsText]}>
-            By signing up, you agree to PlateUp's
-          </Text>
-          <Text>Terms of Use & Privacy Policy</Text>
-        </View> */}
         <View style={[styles.linkContainer]}>
           <Text style={[styles.linkText1]}>New to PlateUp?</Text>
           <Link to={{ screen: 'CreateProfileScreen' }}>
             <Text style={[styles.linkText2]}>Create a profile</Text>
           </Link>
         </View>
-
-        {/* <Button mode="contained" onPress={createProfile}>
-            <Text style={styles.textWhite}>Create Profile</Text>
-          </Button> */}
       </KeyboardAvoidingView>
     </View>
   );
