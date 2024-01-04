@@ -3,7 +3,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH } from './FirebaseConfig';
+import { initApp } from './Init';
 import theme from './Theme';
 import RootNavigator from './navigators/RootNavigator';
 import BookmarkScreen from './screens/BookmarkScreen';
@@ -18,10 +20,10 @@ const InsideStack = createNativeStackNavigator();
 function StartLayout() {
   return (
     <StartStack.Navigator>
-      <StartStack.Screen
+      <Stack.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}
-        options={{ headerShown: true }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="SignInScreen"
@@ -35,9 +37,19 @@ function StartLayout() {
 function InsideLayout() {
   return (
     <InsideStack.Navigator>
-      <InsideStack.Screen
+      <Stack.Screen
         name="RootNavigator"
         component={RootNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Bookmark"
+        component={BookmarkScreen}
         options={{ headerShown: false }}
       />
     </InsideStack.Navigator>
@@ -46,45 +58,51 @@ function InsideLayout() {
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
+  const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      setUser(user);
+    const loadAppResources = async () => {
+      console.log('Start initializing app');
+      await initApp();
+      console.log('App initialization complete');
+      setAppReady(true);
+    };
+
+    console.log('Before loading app resources');
+    loadAppResources();
+    console.log('After loading app resources');
+
+    onAuthStateChanged(FIREBASE_AUTH, (userData) => {
+      setUser(userData);
     });
-  }, []);
+  }, []); // Empty dependency array to run the effect only once on mount
+
+  if (!appReady) {
+    return null;
+  }
 
   return (
-    <PaperProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="StartLayout">
-          {user ? (
-            <>
+    <SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="StartLayout">
+            {user ? (
               <Stack.Screen
                 name="InsideLayout"
                 component={InsideLayout}
                 options={{ headerShown: false }}
               />
+            ) : (
               <Stack.Screen
-                name="Setting"
-                component={SettingScreen}
+                name="StartLayout"
+                component={StartLayout}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen
-                name="Bookmark"
-                component={BookmarkScreen}
-                options={{ headerShown: false }}
-              />
-            </>
-          ) : (
-            <Stack.Screen
-              name="StartLayout"
-              component={StartLayout}
-              options={{ headerShown: false }}
-            />
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 }
 
