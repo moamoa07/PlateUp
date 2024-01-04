@@ -15,11 +15,12 @@ import WelcomeScreen from './screens/WelcomeScreen';
 
 const Stack = createNativeStackNavigator();
 const StartStack = createNativeStackNavigator();
+const InsideStack = createNativeStackNavigator();
 
 function StartLayout() {
   return (
     <StartStack.Navigator>
-      <StartStack.Screen
+      <Stack.Screen
         name="WelcomeScreen"
         component={WelcomeScreen}
         options={{ headerShown: false }}
@@ -30,6 +31,28 @@ function StartLayout() {
         options={{ headerShown: false }}
       />
     </StartStack.Navigator>
+  );
+}
+
+function InsideLayout() {
+  return (
+    <InsideStack.Navigator>
+      <Stack.Screen
+        name="RootNavigator"
+        component={RootNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Bookmark"
+        component={BookmarkScreen}
+        options={{ headerShown: false }}
+      />
+    </InsideStack.Navigator>
   );
 }
 
@@ -64,23 +87,11 @@ function App() {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="StartLayout">
             {user ? (
-              <>
-                <Stack.Screen
-                  name="RootNavigator"
-                  component={RootNavigator}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="Setting"
-                  component={SettingScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="Bookmark"
-                  component={BookmarkScreen}
-                  options={{ headerShown: false }}
-                />
-              </>
+              <Stack.Screen
+                name="InsideLayout"
+                component={InsideLayout}
+                options={{ headerShown: false }}
+              />
             ) : (
               <Stack.Screen
                 name="StartLayout"
