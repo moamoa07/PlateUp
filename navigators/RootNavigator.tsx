@@ -28,7 +28,7 @@ function RootNavigator() {
     <Tab.Navigator
       initialRouteName="Home"
       activeColor="#232323"
-      inactiveColor="#d1d1d1"
+      inactiveColor="#888"
       barStyle={{
         backgroundColor: 'white',
         borderTopWidth: thinBorder,

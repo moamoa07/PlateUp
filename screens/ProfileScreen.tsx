@@ -1,7 +1,5 @@
 import { Link } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,24 +10,9 @@ import SettingsIcon from '../components/icons/SettingsIcon';
 
 function ProfileScreen() {
   const theme = useTheme();
-  const [isLoaded] = useFonts({
-    CrakeRegular: require('../assets/fonts/craketest-regular.otf'),
-    CrakeBold: require('../assets/fonts/craketest-bold.otf'),
-    Jost: require('../assets/fonts/Jost-VariableFont_wght.ttf'),
-  });
-
-  const handleOnLayout = useCallback(async () => {
-    if (isLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [isLoaded]);
-
-  if (!isLoaded) {
-    return null;
-  }
 
   return (
-    <SafeAreaView style={styles.container} onLayout={handleOnLayout}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.iconContainer}>
         <Link to={{ screen: 'Like' }}>
           <LikeIcon size={32} fill={'#232323'} />
@@ -80,16 +63,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textUsername: {
-    fontFamily: 'Jost',
+    fontFamily: 'Jost-Regular',
     fontWeight: '900',
     marginTop: 10,
     fontSize: 24,
   },
   text: {
-    fontFamily: 'Jost',
+    fontFamily: 'Jost-Regular',
   },
   textBold: {
-    fontFamily: 'Jost',
+    fontFamily: 'Jost-Regular',
     fontWeight: 'bold',
     fontSize: 18,
   },

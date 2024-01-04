@@ -1,51 +1,73 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-// const getFonts = () =>
-//   Font.loadAsync({
-//     'Crake-Regular': require('./assets/fonts/craketest-regular.otf'),
-//     'Crake-Bold': require('./assets/fonts/craketest-bold.otf'),
-//     'Jost-Regular': require('./assets/fonts/Jost-VariableFont_wght.ttf'),
-//   });
+import React, { useEffect, useRef } from 'react';
+import { Animated, Image, StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
+import theme from '../Theme';
 
 type RootStackParamList = {
   Welcome: undefined;
   SignInScreen: undefined;
-  // Add other screens as needed
 };
 
 interface Props {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Welcome'>;
-  // Add other props if needed
 }
 
 function Welcome({ navigation }: Props) {
-  // const [fontsLoaded, setFontsLoaded] = useState(false);
+  const fadeAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const fadeInAnimation = Animated.timing(fadeAnimation, {
+      toValue: 1,
+      duration: 1200,
+      useNativeDriver: true,
+    });
+
+    fadeInAnimation.start();
+
+    return () => {
+      // Clean up animation on component unmount
+      fadeInAnimation.stop();
+    };
+  }, [fadeAnimation]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.h1}>Welcome to PlateUp</Text>
-      <Text style={styles.p}>
-        Delighted you're joining us! Create an account to save and share your
-        unique recipes with our community. Start your culinary journey now!
-      </Text>
+    <Animated.View style={[styles.container, { opacity: fadeAnimation }]}>
+      <View style={[styles.textContainer]}>
+        <Text style={styles.h1}>Welcome to PlateUp</Text>
+        <Text style={styles.p}>
+          Delighted you're joining us! Create an account to save and share your
+          unique recipes with our community. Start your culinary journey now!
+        </Text>
+      </View>
       <Button
         mode="contained"
-        buttonColor="#000000"
+        buttonColor={theme.colors.primary}
         style={styles.containedButton}
+        labelStyle={{ marginHorizontal: 10 }}
       >
-        <Text>Create a profile</Text>
+        <Text style={[styles.textBtn]}>Create a profile</Text>
       </Button>
       <Button
         mode="outlined"
-        textColor="#000000"
+        textColor={theme.colors.primary}
         style={styles.outlinedButton}
+        labelStyle={{ marginHorizontal: 0 }}
         onPress={() => navigation.navigate('SignInScreen')}
       >
-        <Text>Sign in</Text>
+        <Text style={[styles.textBtn]}>Sign in</Text>
       </Button>
-    </View>
+      <View style={[styles.imageContainer]}>
+        <Image
+          style={[styles.garlicImg]}
+          source={require('../assets/figmaImages/garlic.png')}
+        />
+        <Image
+          style={[styles.tomatoImg]}
+          source={require('../assets/figmaImages/tomato.png')}
+        />
+      </View>
+    </Animated.View>
   );
 }
 
@@ -53,29 +75,57 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 20,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 20,
+    width: '100%',
+  },
+  textContainer: {
+    paddingHorizontal: 20,
     gap: 15,
   },
   h1: {
     fontSize: 40,
+    fontFamily: 'Crake-Regular',
     textAlign: 'center',
   },
   p: {
     fontSize: 15,
+    fontFamily: 'Jost-Regular',
     textAlign: 'center',
   },
-  // textBtn: {
-  //   fontFamily: 'Jost',
-  // },
+  textBtn: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
+  },
   containedButton: {
     borderRadius: 10,
+    zIndex: 20,
   },
   outlinedButton: {
-    borderColor: '#000000',
+    borderColor: '#232323',
     borderRadius: 10,
+    zIndex: 20,
+  },
+  imageContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 90,
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  garlicImg: {
+    width: 90,
+    height: 107,
+    resizeMode: 'cover',
+    marginLeft: 10,
+  },
+  tomatoImg: {
+    width: 190,
+    height: 180,
+    resizeMode: 'cover',
   },
 });
 
