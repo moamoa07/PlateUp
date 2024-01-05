@@ -12,6 +12,7 @@ import {
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
 import { addRecipe } from '../api/service/recipeService';
+import TimerIcon from './icons/TimerIcon';
 
 const AddRecipeForm = () => {
   const [title, setTitle] = useState('');
@@ -86,6 +87,7 @@ const AddRecipeForm = () => {
         </View>
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Time</Text>
+          <TimerIcon size={32} fill={'#232323'} />
           <View style={styles.timeInputGroup}>
             <View style={styles.timeInputContainer}>
               <Text style={styles.subLabel}>Prep Time</Text>
