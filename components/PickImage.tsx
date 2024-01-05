@@ -49,12 +49,12 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 10,
-    marginTop: 40,
     padding: 10,
   },
   imageContainer: {
     marginTop: 10,
     width: '100%',
+    // height: 400,
     height: 40,
   },
 });
