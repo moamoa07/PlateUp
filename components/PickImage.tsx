@@ -2,10 +2,13 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import { addImage } from '../api/service/recipeService';
 import ImageViewer from './ImageViewer';
 
-function PickImage() {
+function PickImage({
+  onChange,
+}: {
+  onChange: (imageUrl: string | null) => void;
+}) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const pickImageAsync = async () => {
@@ -16,11 +19,11 @@ function PickImage() {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
+      onChange(result.assets[0].uri);
 
-      // Call addRecipe with the selected image URI
-      await addImage({
-        imageUrl: result.assets[0].uri,
-      });
+      // await addImage({
+      //   imageUrl: result.assets[0].uri,
+      // });
     } else {
       alert('You did not select any image.');
     }
@@ -52,7 +55,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginTop: 10,
     width: '100%',
-    height: 400,
+    height: 40,
   },
 });
 
