@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { Button } from 'react-native-paper';
@@ -86,14 +87,15 @@ const AddRecipeForm = () => {
             onChangeText={setPrepTime}
           />
         </View>
-        <Button
-          mode="contained"
-          onPress={handleSubmit}
-          style={styles.button}
-          labelStyle={styles.buttonLabel}
-        >
-          Add Recipe
-        </Button>
+        <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
+          <Button
+            mode="contained"
+            style={styles.button}
+            labelStyle={styles.buttonLabel}
+          >
+            Add Recipe
+          </Button>
+        </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -141,6 +143,10 @@ const styles = StyleSheet.create({
     height: 100, // Larger height for multi-line input
     textAlignVertical: 'top', // Aligns text to the top for multiline
     paddingTop: 8,
+  },
+  buttonTouchable: {
+    borderRadius: 10, // Match the border radius of the button if any
+    // Add any other styling as needed to match the button's appearance
   },
   button: {
     fontFamily: 'Jost-Regular',
