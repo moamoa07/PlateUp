@@ -19,7 +19,7 @@ function SignInScreen() {
       alert('You signed in!');
     } catch (error) {
       console.log(error);
-      alert('Registration failed, try again!');
+      alert('Sign in failed, try again!');
     }
   };
 
