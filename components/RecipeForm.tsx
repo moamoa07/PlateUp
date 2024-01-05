@@ -27,6 +27,7 @@ const AddRecipeForm = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.h3}>Add new recipe</Text>
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Title</Text>
         <TextInput
@@ -63,6 +64,11 @@ const styles = StyleSheet.create({
     marginTop: 48,
     gap: 24,
   },
+  h3: {
+    fontSize: 32,
+    fontFamily: 'Crake-Regular',
+    textAlign: 'center',
+  },
   inputGroup: {
     display: 'flex',
     gap: 5,
@@ -72,7 +78,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   input: {
-    borderColor: theme.colors.secondary,
+    borderColor: '#D9D9D9',
     borderWidth: 1,
     padding: 10,
     borderRadius: 10,
