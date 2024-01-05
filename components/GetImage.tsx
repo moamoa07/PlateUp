@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { Images } from '../api/model/imageModel';
-import { getImageById } from '../api/recipeService';
+import { getImageById } from '../api/service/recipeService';
 
 function GetImage() {
   const [image, setImage] = useState<Images | null>(null);

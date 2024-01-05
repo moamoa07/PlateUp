@@ -2,7 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
-import { addImage } from '../api/recipeService';
+import { addImage } from '../api/service/recipeService';
 import ImageViewer from './ImageViewer';
 
 function PickImage() {
@@ -50,7 +50,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   imageContainer: {
+    marginTop: 10,
     width: '100%',
+    height: 400,
   },
 });
 
