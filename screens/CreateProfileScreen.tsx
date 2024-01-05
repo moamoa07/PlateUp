@@ -1,5 +1,5 @@
 import { Link } from '@react-navigation/native';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
@@ -10,6 +10,7 @@ function CreateProfileScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth = FIREBASE_AUTH;
+  const [username, setUsername] = useState('');
   const [isFocused, setFocused] = useState(false);
 
   const createProfile = async () => {
@@ -19,7 +20,11 @@ function CreateProfileScreen() {
         email,
         password
       );
-      // console.log(response);
+
+      await updateProfile(response.user, {
+        displayName: username,
+      });
+
       alert('Check your email!');
     } catch (error: any) {
       /*Change to another type instead of any!!*/
@@ -34,6 +39,23 @@ function CreateProfileScreen() {
     >
       <KeyboardAvoidingView behavior="padding">
         <Text style={[styles.title]}>Create a profile</Text>
+        <TextInput
+          value={username}
+          label={<Text style={{ fontFamily: 'Jost-Regular' }}>Username</Text>}
+          mode="outlined"
+          autoCapitalize="none"
+          contentStyle={{ fontFamily: 'Jost-Regular' }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          outlineStyle={{
+            borderRadius: 10,
+            borderColor: isFocused
+              ? theme.colors.primary
+              : theme.colors.secondary,
+          }}
+          style={[styles.textInput, { marginBottom: 10 }]}
+          onChangeText={(text) => setUsername(text)}
+        />
         <TextInput
           value={email}
           label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
