@@ -101,7 +101,7 @@ const AddRecipeForm = () => {
               <Text style={styles.subLabel}>Cook Time</Text>
               <TextInput
                 style={[styles.input, styles.timeInput]}
-                placeholder="e.g., 20 min"
+                placeholder="e.g., 1 h"
                 placeholderTextColor="#888"
                 value={cookTime}
                 onChangeText={setCookTime}
@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontFamily: 'Crake-Regular',
     textAlign: 'center',
+    color: theme.colors.primary,
   },
   inputGroup: {
     display: 'flex',
@@ -143,6 +144,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Medium',
     fontSize: 16,
     marginBottom: 5,
+    color: theme.colors.primary,
   },
   description: {
     fontFamily: 'Jost-Regular',
@@ -164,9 +166,10 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   subLabel: {
-    fontFamily: 'Jost-Medium',
-    fontSize: 14,
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
     marginBottom: 5,
+    color: theme.colors.primary,
   },
   timeInputGroup: {
     flexDirection: 'row',
