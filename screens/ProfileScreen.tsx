@@ -1,8 +1,10 @@
 import { Link } from '@react-navigation/native';
-import React from 'react';
+import { User, onAuthStateChanged } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 import ImageGrid from '../components/ImageGrid';
 import BookmarkIcon from '../components/icons/BookmarkIcon';
 import LikeIcon from '../components/icons/LikeIcon';
@@ -10,6 +12,18 @@ import SettingsIcon from '../components/icons/SettingsIcon';
 
 function ProfileScreen() {
   const theme = useTheme();
+  const auth = FIREBASE_AUTH;
+  const [user, setUser] = React.useState<User | null>(null);
+
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+      setUser(authUser);
+    });
+
+    // Cleanup function to unsubscribe when the component unmounts
+    return () => unsubscribe();
+  }, [auth]);
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,7 +43,7 @@ function ProfileScreen() {
           size={140}
           source={require('../assets/cupcakeprofile.png')}
         />
-        <Text style={styles.textUsername}>MoaHedendahl</Text>
+        <Text style={styles.textUsername}>{user?.displayName}</Text>
       </View>
       <View style={styles.profileInfo}>
         <View style={styles.profileInfoGroup}>
