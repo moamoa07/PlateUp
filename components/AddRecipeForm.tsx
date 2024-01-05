@@ -63,7 +63,6 @@ const AddRecipeForm = () => {
             onChangeText={setTitle}
           />
         </View>
-
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Description</Text>
           <TextInput
@@ -86,22 +85,29 @@ const AddRecipeForm = () => {
           />
         </View>
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Prep Time</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g., 20 min"
-            placeholderTextColor="#888"
-            value={prepTime}
-            onChangeText={setPrepTime}
-          />
-          <Text style={styles.label}>Cook Time</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g., 20 min"
-            placeholderTextColor="#888"
-            value={cookTime}
-            onChangeText={setCookTime}
-          />
+          <Text style={styles.label}>Time</Text>
+          <View style={styles.timeInputGroup}>
+            <View style={styles.timeInputContainer}>
+              <Text style={styles.label}>Prep Time</Text>
+              <TextInput
+                style={[styles.input, styles.timeInput]}
+                placeholder="e.g., 20 min"
+                placeholderTextColor="#888"
+                value={prepTime}
+                onChangeText={setPrepTime}
+              />
+            </View>
+            <View style={styles.timeInputContainer}>
+              <Text style={styles.label}>Cook Time</Text>
+              <TextInput
+                style={[styles.input, styles.timeInput]}
+                placeholder="e.g., 20 min"
+                placeholderTextColor="#888"
+                value={cookTime}
+                onChangeText={setCookTime}
+              />
+            </View>
+          </View>
         </View>
         <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
           <Button
@@ -152,13 +158,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 16,
   },
-  titleInput: {
-    height: 40, // Fixed height for single-line input
-  },
   descriptionInput: {
     height: 100, // Larger height for multi-line input
     textAlignVertical: 'top', // Aligns text to the top for multiline
     paddingTop: 8,
+  },
+  timeInputGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 16,
+  },
+  timeInputContainer: {
+    flex: 1,
+  },
+  timeInput: {
+    // You may adjust styles for time-specific inputs here
   },
   buttonTouchable: {
     borderRadius: 10, // Match the border radius of the button if any
@@ -169,9 +183,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: theme.colors.primary,
     marginTop: 10,
-    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 2,
   },
   buttonLabel: {
     fontFamily: 'Jost-Regular',
