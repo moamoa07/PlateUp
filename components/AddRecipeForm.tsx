@@ -50,6 +50,16 @@ const AddRecipeForm = () => {
           multiline
         />
       </View>
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Serving Details</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="eg. 4 people, 2 portions, 12 cookies"
+          placeholderTextColor="#888"
+          value={title}
+          onChangeText={setTitle}
+        />
+      </View>
       <Button
         mode="contained"
         onPress={handleSubmit}
@@ -79,7 +89,7 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   label: {
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jost-Medium',
     fontSize: 16,
     marginBottom: 5,
   },
