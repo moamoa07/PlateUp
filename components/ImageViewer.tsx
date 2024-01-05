@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: 40,
-    width: 40,
+    height: '100%',
+    width: '100%',
   },
   loadingIndicator: {
     position: 'absolute',
