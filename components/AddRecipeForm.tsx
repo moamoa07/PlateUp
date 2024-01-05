@@ -18,11 +18,18 @@ const AddRecipeForm = () => {
   const [description, setDescription] = useState('');
   const [servingDetails, setServingDetails] = useState('');
   const [prepTime, setPrepTime] = useState('');
+  const [cookTime, setCookTime] = useState('');
 
   const handleSubmit = async () => {
     if (title && description && servingDetails && prepTime) {
       try {
-        const newRecipe = { title, description, servingDetails, prepTime };
+        const newRecipe = {
+          title,
+          description,
+          servingDetails,
+          prepTime,
+          cookTime,
+        };
         await addRecipe(newRecipe);
         console.log('Recipe added successfully');
         // Reset form here
@@ -30,6 +37,7 @@ const AddRecipeForm = () => {
         setDescription('');
         setServingDetails('');
         setPrepTime('');
+        setCookTime('');
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -85,6 +93,14 @@ const AddRecipeForm = () => {
             placeholderTextColor="#888"
             value={prepTime}
             onChangeText={setPrepTime}
+          />
+          <Text style={styles.label}>Cook Time</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g., 20 min"
+            placeholderTextColor="#888"
+            value={cookTime}
+            onChangeText={setCookTime}
           />
         </View>
         <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
