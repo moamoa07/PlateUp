@@ -88,7 +88,7 @@ const AddRecipeForm = () => {
           <Text style={styles.label}>Time</Text>
           <View style={styles.timeInputGroup}>
             <View style={styles.timeInputContainer}>
-              <Text style={styles.label}>Prep Time</Text>
+              <Text style={styles.subLabel}>Prep Time</Text>
               <TextInput
                 style={[styles.input, styles.timeInput]}
                 placeholder="e.g., 20 min"
@@ -98,7 +98,7 @@ const AddRecipeForm = () => {
               />
             </View>
             <View style={styles.timeInputContainer}>
-              <Text style={styles.label}>Cook Time</Text>
+              <Text style={styles.subLabel}>Cook Time</Text>
               <TextInput
                 style={[styles.input, styles.timeInput]}
                 placeholder="e.g., 20 min"
@@ -163,6 +163,11 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top', // Aligns text to the top for multiline
     paddingTop: 8,
   },
+  subLabel: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 14,
+    marginBottom: 5,
+  },
   timeInputGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -176,7 +181,6 @@ const styles = StyleSheet.create({
   },
   buttonTouchable: {
     borderRadius: 10, // Match the border radius of the button if any
-    // Add any other styling as needed to match the button's appearance
   },
   button: {
     fontFamily: 'Jost-Regular',
