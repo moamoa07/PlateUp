@@ -50,7 +50,12 @@ const AddRecipeForm = () => {
           multiline
         />
       </View>
-      <Button mode="contained" onPress={handleSubmit} style={styles.button}>
+      <Button
+        mode="contained"
+        onPress={handleSubmit}
+        style={styles.button}
+        labelStyle={styles.buttonLabel}
+      >
         Add Recipe
       </Button>
     </View>
@@ -61,11 +66,11 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     padding: 16,
-    marginTop: 48,
+    marginTop: 16,
     gap: 24,
   },
   h3: {
-    fontSize: 32,
+    fontSize: 28,
     fontFamily: 'Crake-Regular',
     textAlign: 'center',
   },
@@ -74,14 +79,17 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   label: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
     marginBottom: 5,
-    fontWeight: 'bold',
   },
   input: {
+    fontFamily: 'Jost-Regular',
     borderColor: '#D9D9D9',
     borderWidth: 1,
     padding: 10,
     borderRadius: 10,
+    fontSize: 16,
   },
   titleInput: {
     height: 40, // Fixed height for single-line input
@@ -92,9 +100,14 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   button: {
+    fontFamily: 'Jost-Regular',
     borderRadius: 10,
     backgroundColor: theme.colors.primary,
     marginTop: 10,
+  },
+  buttonLabel: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
   },
 });
 
