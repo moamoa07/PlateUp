@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
 import { addRecipe } from '../api/service/recipeService';
@@ -7,16 +15,20 @@ import { addRecipe } from '../api/service/recipeService';
 const AddRecipeForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [servingDetails, setServingDetails] = useState('');
+  const [prepTime, setPrepTime] = useState('');
 
   const handleSubmit = async () => {
-    if (title && description) {
+    if (title && description && servingDetails && prepTime) {
       try {
-        const newRecipe = { title, description };
+        const newRecipe = { title, description, servingDetails, prepTime };
         await addRecipe(newRecipe);
         console.log('Recipe added successfully');
-        // Optionally reset form here
+        // Reset form here
         setTitle('');
         setDescription('');
+        setServingDetails('');
+        setPrepTime('');
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -26,49 +38,64 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.h3}>Add new recipe</Text>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter the title of the recipe"
-          placeholderTextColor="#888"
-          value={title}
-          onChangeText={setTitle}
-        />
-      </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.h3}>Add new recipe</Text>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter the title of the recipe"
+            placeholderTextColor="#888"
+            value={title}
+            onChangeText={setTitle}
+          />
+        </View>
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Description</Text>
-        <TextInput
-          style={[styles.input, styles.descriptionInput]}
-          placeholder="Describe your recipe"
-          placeholderTextColor="#888"
-          value={description}
-          onChangeText={setDescription}
-          multiline
-        />
-      </View>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Serving Details</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="eg. 4 people, 2 portions, 12 cookies"
-          placeholderTextColor="#888"
-          value={title}
-          onChangeText={setTitle}
-        />
-      </View>
-      <Button
-        mode="contained"
-        onPress={handleSubmit}
-        style={styles.button}
-        labelStyle={styles.buttonLabel}
-      >
-        Add Recipe
-      </Button>
-    </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Description</Text>
+          <TextInput
+            style={[styles.input, styles.descriptionInput]}
+            placeholder="Describe your recipe"
+            placeholderTextColor="#888"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>How much will the recipe make?</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g., 4 servings, 12 cookies"
+            placeholderTextColor="#888"
+            value={servingDetails}
+            onChangeText={setServingDetails}
+          />
+        </View>
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Prep Time</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g., 20 min"
+            placeholderTextColor="#888"
+            value={prepTime}
+            onChangeText={setPrepTime}
+          />
+        </View>
+        <Button
+          mode="contained"
+          onPress={handleSubmit}
+          style={styles.button}
+          labelStyle={styles.buttonLabel}
+        >
+          Add Recipe
+        </Button>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -93,6 +120,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
   },
+  description: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 14,
+    color: '#666', // Optional: Set the color to differentiate from other text
+    marginBottom: 5,
+  },
   input: {
     fontFamily: 'Jost-Regular',
     borderColor: '#D9D9D9',
@@ -114,6 +147,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: theme.colors.primary,
     marginTop: 10,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonLabel: {
     fontFamily: 'Jost-Regular',
