@@ -6,6 +6,7 @@ import { FIREBASE_DB } from '../../FirebaseConfig';
 export async function addRecipe(recipeData: {
   title: string;
   description: string;
+  imageUrl: string | null;
 }) {
   const auth = getAuth();
   const user = auth.currentUser;
