@@ -203,24 +203,34 @@ const AddRecipeForm = () => {
                   />
                 </View>
               ))}
-              <Button
-                mode="outlined"
-                style={styles.ingredientButton}
-                labelStyle={styles.buttonLabel}
+              <TouchableOpacity
                 onPress={() => addIngredientItem(groupIndex)}
+                style={styles.buttonTouchable}
               >
-                Add Ingredient
-              </Button>
+                <Button
+                  mode="outlined"
+                  style={styles.ingredientButton}
+                  labelStyle={styles.buttonLabel}
+                  onPress={() => addIngredientItem(groupIndex)}
+                >
+                  Add Ingredient
+                </Button>
+              </TouchableOpacity>
             </View>
           ))}
-          <Button
-            mode="outlined"
-            style={styles.ingredientButton}
-            labelStyle={styles.buttonLabel}
+          <TouchableOpacity
             onPress={addIngredientGroup}
+            style={styles.buttonTouchable}
           >
-            Add Ingredient Group
-          </Button>
+            <Button
+              mode="outlined"
+              style={styles.ingredientButton}
+              labelStyle={styles.buttonLabel}
+              onPress={addIngredientGroup}
+            >
+              Add Ingredient Group
+            </Button>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
