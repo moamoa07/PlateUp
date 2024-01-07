@@ -86,8 +86,13 @@ const AddRecipeForm = () => {
           />
         </View>
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Time</Text>
-          <TimerIcon size={32} fill={'#232323'} />
+          <View style={styles.timeLabelContainer}>
+            <Text style={styles.label}>Time</Text>
+            <View style={styles.iconWrapper}>
+              <TimerIcon size={28} fill={'#232323'} />
+            </View>
+          </View>
+
           <View style={styles.timeInputGroup}>
             <View style={styles.timeInputContainer}>
               <Text style={styles.subLabel}>Prep Time</Text>
@@ -172,6 +177,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     color: theme.colors.primary,
+  },
+  timeLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  iconWrapper: {
+    paddingBottom: 6, // Adjust as needed
   },
   timeInputGroup: {
     flexDirection: 'row',
