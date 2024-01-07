@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
+import { Recipe } from '../api/model/recipeModel';
 import { addRecipe } from '../api/service/recipeService';
 import TimerIcon from './icons/TimerIcon';
 
@@ -20,9 +21,39 @@ const AddRecipeForm = () => {
   const [servingDetails, setServingDetails] = useState('');
   const [prepTime, setPrepTime] = useState('');
   const [cookTime, setCookTime] = useState('');
-  const [subtitle, setSubtitle] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [ingredients, setIngredients] = useState('');
+  const [ingredientGroups, setIngredientGroups] = useState([
+    { subtitle: '', items: [{ quantity: '', name: '' }] },
+  ]);
+
+  const addIngredientGroup = () => {
+    setIngredientGroups([
+      ...ingredientGroups,
+      { subtitle: '', items: [{ quantity: '', name: '' }] },
+    ]);
+  };
+
+  const addIngredientItem = (groupIndex: number) => {
+    const newGroups = [...ingredientGroups];
+    newGroups[groupIndex].items.push({ quantity: '', name: '' });
+    setIngredientGroups(newGroups);
+  };
+
+  const handleIngredientChange = (
+    groupIndex: number,
+    itemIndex: number,
+    field: 'quantity' | 'name',
+    value: string
+  ) => {
+    const newGroups = [...ingredientGroups];
+    newGroups[groupIndex].items[itemIndex][field] = value;
+    setIngredientGroups(newGroups);
+  };
+
+  const handleSubtitleChange = (groupIndex: number, value: string) => {
+    const newGroups = [...ingredientGroups];
+    newGroups[groupIndex].subtitle = value;
+    setIngredientGroups(newGroups);
+  };
 
   const handleSubmit = async () => {
     if (
@@ -30,20 +61,16 @@ const AddRecipeForm = () => {
       description &&
       servingDetails &&
       prepTime &&
-      subtitle &&
-      quantity &&
-      ingredients
+      ingredientGroups.length > 0
     ) {
       try {
-        const newRecipe = {
+        const newRecipe: Recipe = {
           title,
           description,
           servingDetails,
           prepTime,
           cookTime,
-          subtitle,
-          quantity,
-          ingredients,
+          ingredients: ingredientGroups,
         };
         await addRecipe(newRecipe);
         console.log('Recipe added successfully');
@@ -53,9 +80,9 @@ const AddRecipeForm = () => {
         setServingDetails('');
         setPrepTime('');
         setCookTime('');
-        setSubtitle('');
-        setQuantity('');
-        setIngredients('');
+        setIngredientGroups([
+          { subtitle: '', items: [{ quantity: '', name: '' }] },
+        ]);
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -135,61 +162,67 @@ const AddRecipeForm = () => {
         </View>
         <View style={styles.ingredientsContainer}>
           <Text style={styles.label}>Ingredients</Text>
-          <View style={styles.ingredientsGroup}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.subLabel}>Subtitle</Text>
+          {ingredientGroups.map((group, groupIndex) => (
+            <View key={groupIndex} style={styles.ingredientsGroup}>
               <TextInput
                 style={styles.input}
-                placeholder="Enter a subtitle"
-                placeholderTextColor="#888"
-                value={subtitle}
-                onChangeText={setSubtitle}
+                placeholder="Ingredient group subtitle"
+                value={group.subtitle}
+                onChangeText={(text) => handleSubtitleChange(groupIndex, text)}
               />
+              {group.items.map((item, itemIndex) => (
+                <View
+                  key={itemIndex}
+                  style={styles.quantityAndIngredientsInputGroup}
+                >
+                  <TextInput
+                    style={[styles.input, styles.quantityInput]}
+                    placeholder="Quantity"
+                    value={item.quantity}
+                    onChangeText={(text) =>
+                      handleIngredientChange(
+                        groupIndex,
+                        itemIndex,
+                        'quantity',
+                        text
+                      )
+                    }
+                  />
+                  <TextInput
+                    style={[styles.input, styles.ingredientsInput]}
+                    placeholder="Ingredient"
+                    value={item.name}
+                    onChangeText={(text) =>
+                      handleIngredientChange(
+                        groupIndex,
+                        itemIndex,
+                        'name',
+                        text
+                      )
+                    }
+                  />
+                </View>
+              ))}
+              <Button
+                mode="outlined"
+                style={styles.ingredientButton}
+                labelStyle={styles.buttonLabel}
+                onPress={() => addIngredientItem(groupIndex)}
+              >
+                Add Ingredient
+              </Button>
             </View>
-            <View style={styles.quantityAndIngredientsInputGroup}>
-              <View style={styles.quantityInputContainer}>
-                <Text style={styles.subLabel}>Quantity</Text>
-                <TextInput
-                  style={[styles.input, styles.quantityInput]}
-                  placeholder="200 g"
-                  placeholderTextColor="#888"
-                  value={quantity}
-                  onChangeText={setQuantity}
-                />
-              </View>
-              <View style={styles.ingredientsInputContainer}>
-                <Text style={styles.subLabel}>Ingredients</Text>
-                <TextInput
-                  style={[styles.input, styles.ingredientsInput]}
-                  placeholder="Butter"
-                  placeholderTextColor="#888"
-                  value={ingredients}
-                  onChangeText={setIngredients}
-                />
-              </View>
-            </View>
-            <View style={styles.quantityAndIngredientsInputGroup}>
-              <View style={styles.quantityInputContainer}>
-                <TextInput
-                  style={[styles.input, styles.quantityInput]}
-                  placeholder="200 g"
-                  placeholderTextColor="#888"
-                  value={quantity}
-                  onChangeText={setQuantity}
-                />
-              </View>
-              <View style={styles.ingredientsInputContainer}>
-                <TextInput
-                  style={[styles.input, styles.ingredientsInput]}
-                  placeholder="Butter"
-                  placeholderTextColor="#888"
-                  value={ingredients}
-                  onChangeText={setIngredients}
-                />
-              </View>
-            </View>
-          </View>
+          ))}
+          <Button
+            mode="outlined"
+            style={styles.ingredientButton}
+            labelStyle={styles.buttonLabel}
+            onPress={addIngredientGroup}
+          >
+            Add Ingredient Group
+          </Button>
         </View>
+
         <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
           <Button
             mode="contained"
@@ -280,22 +313,23 @@ const styles = StyleSheet.create({
   quantityAndIngredientsInputGroup: {
     flexDirection: 'row',
     gap: 16,
-    rowGap: 0,
-  },
-  quantityInputContainer: {
-    flex: 1,
-  },
-  ingredientsInputContainer: {
-    flex: 4,
   },
   quantityInput: {
-    //
+    flex: 1,
   },
   ingredientsInput: {
-    //
+    flex: 4,
+  },
+  ingredientButton: {
+    fontFamily: 'Jost-Regular',
+    borderRadius: 10,
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 2,
   },
   buttonTouchable: {
-    borderRadius: 10, // Match the border radius of the button if any
+    borderRadius: 10,
   },
   button: {
     fontFamily: 'Jost-Regular',
