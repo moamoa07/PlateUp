@@ -20,9 +20,20 @@ const AddRecipeForm = () => {
   const [servingDetails, setServingDetails] = useState('');
   const [prepTime, setPrepTime] = useState('');
   const [cookTime, setCookTime] = useState('');
+  const [subtitle, setSubtitle] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [ingredients, setIngredients] = useState('');
 
   const handleSubmit = async () => {
-    if (title && description && servingDetails && prepTime) {
+    if (
+      title &&
+      description &&
+      servingDetails &&
+      prepTime &&
+      subtitle &&
+      quantity &&
+      ingredients
+    ) {
       try {
         const newRecipe = {
           title,
@@ -30,6 +41,9 @@ const AddRecipeForm = () => {
           servingDetails,
           prepTime,
           cookTime,
+          subtitle,
+          quantity,
+          ingredients,
         };
         await addRecipe(newRecipe);
         console.log('Recipe added successfully');
@@ -39,6 +53,9 @@ const AddRecipeForm = () => {
         setServingDetails('');
         setPrepTime('');
         setCookTime('');
+        setSubtitle('');
+        setQuantity('');
+        setIngredients('');
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -116,6 +133,63 @@ const AddRecipeForm = () => {
             </View>
           </View>
         </View>
+        <View style={styles.ingredientsContainer}>
+          <Text style={styles.label}>Ingredients</Text>
+          <View style={styles.ingredientsGroup}>
+            <View style={styles.inputGroup}>
+              <Text style={styles.subLabel}>Subtitle</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter a subtitle"
+                placeholderTextColor="#888"
+                value={subtitle}
+                onChangeText={setSubtitle}
+              />
+            </View>
+            <View style={styles.quantityAndIngredientsInputGroup}>
+              <View style={styles.quantityInputContainer}>
+                <Text style={styles.subLabel}>Quantity</Text>
+                <TextInput
+                  style={[styles.input, styles.quantityInput]}
+                  placeholder="200 g"
+                  placeholderTextColor="#888"
+                  value={quantity}
+                  onChangeText={setQuantity}
+                />
+              </View>
+              <View style={styles.ingredientsInputContainer}>
+                <Text style={styles.subLabel}>Ingredients</Text>
+                <TextInput
+                  style={[styles.input, styles.ingredientsInput]}
+                  placeholder="Butter"
+                  placeholderTextColor="#888"
+                  value={ingredients}
+                  onChangeText={setIngredients}
+                />
+              </View>
+            </View>
+            <View style={styles.quantityAndIngredientsInputGroup}>
+              <View style={styles.quantityInputContainer}>
+                <TextInput
+                  style={[styles.input, styles.quantityInput]}
+                  placeholder="200 g"
+                  placeholderTextColor="#888"
+                  value={quantity}
+                  onChangeText={setQuantity}
+                />
+              </View>
+              <View style={styles.ingredientsInputContainer}>
+                <TextInput
+                  style={[styles.input, styles.ingredientsInput]}
+                  placeholder="Butter"
+                  placeholderTextColor="#888"
+                  value={ingredients}
+                  onChangeText={setIngredients}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
         <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
           <Button
             mode="contained"
@@ -184,7 +258,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   iconWrapper: {
-    paddingBottom: 6, // Adjust as needed
+    paddingBottom: 7, // Adjust as needed
   },
   timeInputGroup: {
     flexDirection: 'row',
@@ -196,6 +270,29 @@ const styles = StyleSheet.create({
   },
   timeInput: {
     // You may adjust styles for time-specific inputs here
+  },
+  ingredientsContainer: {
+    gap: 8,
+  },
+  ingredientsGroup: {
+    gap: 16,
+  },
+  quantityAndIngredientsInputGroup: {
+    flexDirection: 'row',
+    gap: 16,
+    rowGap: 0,
+  },
+  quantityInputContainer: {
+    flex: 1,
+  },
+  ingredientsInputContainer: {
+    flex: 4,
+  },
+  quantityInput: {
+    //
+  },
+  ingredientsInput: {
+    //
   },
   buttonTouchable: {
     borderRadius: 10, // Match the border radius of the button if any
