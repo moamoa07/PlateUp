@@ -30,7 +30,7 @@ const AddRecipeForm = () => {
     { subtitle: '', items: [{ quantity: '', name: '' }] },
   ]);
   const [instructionGroups, setInstructionGroups] = useState([
-    { subtitle: '', steps: [{ direction: '' }] },
+    { subtitle: '', steps: [{ instruction: '' }] },
   ]);
   const [additionalNotes, setAdditionalNotes] = useState('');
 
@@ -78,13 +78,13 @@ const AddRecipeForm = () => {
   const addInstructionGroup = () => {
     setInstructionGroups([
       ...instructionGroups,
-      { subtitle: '', steps: [{ direction: '' }] },
+      { subtitle: '', steps: [{ instruction: '' }] },
     ]);
   };
 
   const addInstructionStep = (groupIndex: number) => {
     const newGroups = [...instructionGroups];
-    newGroups[groupIndex].steps.push({ direction: '' });
+    newGroups[groupIndex].steps.push({ instruction: '' });
     setInstructionGroups(newGroups);
   };
 
@@ -94,7 +94,7 @@ const AddRecipeForm = () => {
     value: string
   ) => {
     const newGroups = [...instructionGroups];
-    newGroups[groupIndex].steps[stepIndex].direction = value;
+    newGroups[groupIndex].steps[stepIndex].instruction = value;
     setInstructionGroups(newGroups);
   };
 
@@ -110,7 +110,7 @@ const AddRecipeForm = () => {
       group.items.some((item) => item.quantity || item.name)
     );
     const isInstructionGroupsValid = instructionGroups.every((group) =>
-      group.steps.some((step) => step.direction.trim() !== '')
+      group.steps.some((step) => step.instruction.trim() !== '')
     );
     if (
       title &&
@@ -143,7 +143,7 @@ const AddRecipeForm = () => {
         setIngredientGroups([
           { subtitle: '', items: [{ quantity: '', name: '' }] },
         ]);
-        setInstructionGroups([{ subtitle: '', steps: [{ direction: '' }] }]);
+        setInstructionGroups([{ subtitle: '', steps: [{ instruction: '' }] }]);
         setAdditionalNotes('');
         setImageUrl(null); // Reset imageUrl
       } catch (error) {
@@ -238,7 +238,7 @@ const AddRecipeForm = () => {
                     handleSubtitleChange(groupIndex, text)
                   }
                 />
-                <View style={styles.subLabelRow}>
+                <View style={styles.subLabelQuantityAndIngredientRow}>
                   <Text style={[styles.subLabel, styles.quantityLabel]}>
                     Quantity *
                   </Text>
@@ -329,15 +329,19 @@ const AddRecipeForm = () => {
                     handleSubtitleChange(groupIndex, text)
                   }
                 />
-                <Text style={[styles.subLabel, styles.directionLabel]}>
-                  Direction *
-                </Text>
+                <View style={styles.subLabelStepsAndInstructionRow}>
+                  <Text style={[styles.subLabel, styles.stepLabel]}>Step</Text>
+                  <Text style={[styles.subLabel, styles.instructionLabel]}>
+                    Instruction *
+                  </Text>
+                </View>
                 {group.steps.map((step, stepIndex) => (
-                  <View key={stepIndex} style={styles.stepAndDirectionGroup}>
+                  <View key={stepIndex} style={styles.stepAndinstructionGroup}>
+                    <Text style={styles.stepNumber}>{stepIndex + 1}.</Text>
                     <TextInput
-                      style={[styles.input, styles.directionInput]}
-                      placeholder="Direction"
-                      value={step.direction}
+                      style={[styles.input, styles.instructionInput]}
+                      placeholder="Instruction"
+                      value={step.instruction}
                       onChangeText={(text) =>
                         handleInstructionChange(groupIndex, stepIndex, text)
                       }
@@ -485,16 +489,16 @@ const styles = StyleSheet.create({
   ingredientsGroup: {
     // gap: 8,
   },
+  subLabelQuantityAndIngredientRow: {
+    marginTop: 16,
+    flexDirection: 'row',
+    gap: 16,
+  },
   quantityAndIngredientsInputGroup: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
     marginBottom: 12,
-  },
-  subLabelRow: {
-    marginTop: 16,
-    flexDirection: 'row',
-    gap: 18,
   },
   quantityLabel: {
     flex: 2,
@@ -533,19 +537,32 @@ const styles = StyleSheet.create({
   instructionGroup: {
     // gap: 8,
   },
-  stepAndDirectionGroup: {
+  subLabelStepsAndInstructionRow: {
+    marginTop: 16,
+    flexDirection: 'row',
+    gap: 8,
+  },
+  stepAndinstructionGroup: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
     marginBottom: 12,
   },
-  stepInputGroup: {},
-  stepInput: {},
-  directionInput: {
+  stepLabel: {
     flex: 1,
   },
-  directionLabel: {
-    marginTop: 16,
+  instructionLabel: {
+    flex: 9,
+  },
+  stepNumber: {
+    // minWidth: 20, // Adjust as needed
+    textAlign: 'right',
+    fontSize: 16,
+    color: theme.colors.primary,
+    flex: 1,
+  },
+  instructionInput: {
+    flex: 9,
   },
   addStepButton: {
     fontFamily: 'Jost-Regular',
