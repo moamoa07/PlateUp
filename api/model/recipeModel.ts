@@ -1,8 +1,8 @@
 export interface Recipe {
-  title: string;
-  description: string;
   imageUrl: string | null;
   // imageUrls: string[]; Om vi ska spara flera bilder längre fram
+  title: string;
+  description: string;
   servingDetails: string;
   prepTime: string;
   cookTime?: string;
@@ -14,7 +14,7 @@ export interface Recipe {
 }
 
 export interface IngredientGroup {
-  subtitle?: string;
+  ingredientSubtitle?: string;
   items: IngredientItem[];
 }
 
@@ -24,7 +24,7 @@ export interface IngredientItem {
 }
 
 export interface InstructionGroup {
-  subtitle?: string;
+  instructionSubtitle?: string;
   steps: InstructionStep[];
 }
 
