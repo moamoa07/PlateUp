@@ -1,7 +1,8 @@
 import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { Button } from 'react-native-paper';
+import theme from '../Theme';
 import ImageViewer from './ImageViewer';
 
 function PickImage({
@@ -37,8 +38,13 @@ function PickImage({
           selectedImage={selectedImage}
         />
       </View>
-      <Button onPress={pickImageAsync} mode="outlined" style={styles.button}>
-        <Text>Add image</Text>
+      <Button
+        onPress={pickImageAsync}
+        mode="contained"
+        style={styles.button}
+        labelStyle={styles.buttonLabel}
+      >
+        Add image
       </Button>
     </View>
   );
@@ -50,6 +56,12 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 10,
     padding: 10,
+    backgroundColor: theme.colors.primary,
+    color: '#fff',
+  },
+  buttonLabel: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
   },
   imageContainer: {
     marginBottom: 10,
