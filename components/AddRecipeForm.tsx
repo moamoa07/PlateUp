@@ -129,7 +129,7 @@ const AddRecipeForm = () => {
             <Text style={styles.label}>Title *</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter the title of the recipe"
+              placeholder="Enter the title of your recipe"
               placeholderTextColor="#888"
               value={title}
               onChangeText={setTitle}
