@@ -1,9 +1,10 @@
 import { Link } from '@react-navigation/native';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
-import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
 
 function CreateProfileScreen() {
   const theme = useTheme();
@@ -15,20 +16,33 @@ function CreateProfileScreen() {
 
   const createProfile = async () => {
     try {
-      const response = await createUserWithEmailAndPassword(
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      await updateProfile(response.user, {
+      const defaultProfileImageUrl = '../assets/img/chokladkaka.jpeg';
+
+      await updateProfile(userCredential.user, {
         displayName: username,
+        photoURL: defaultProfileImageUrl,
       });
 
-      alert('Check your email!');
+      const userDocRef = doc(FIREBASE_DB, 'users', userCredential.user.uid);
+      await setDoc(userDocRef, {
+        displayName: username,
+        email: email,
+        photoURL: defaultProfileImageUrl,
+        postCount: 0,
+        likeCount: 0,
+        followerCount: 0,
+      });
+
+      alert('Profile created successfully. Check your email!');
     } catch (error: any) {
       /*Change to another type instead of any!!*/
-      console.log(error);
+      console.log('Error creating user profile:', error.message);
       alert('Registration failed, try again!' + error.message);
     }
   };
