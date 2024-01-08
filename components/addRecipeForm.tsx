@@ -1,22 +1,34 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
 import { addRecipe } from '../api/service/recipeService';
+import PickImage from './PickImage';
 
 const AddRecipeForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState<string | null>(''); // Change the initial state type
 
   const handleSubmit = async () => {
     if (title && description) {
       try {
-        const newRecipe = { title, description };
+        const newRecipe = { title, description, imageUrl };
         await addRecipe(newRecipe);
         console.log('Recipe added successfully');
         // Optionally reset form here
         setTitle('');
         setDescription('');
+        setImageUrl('');
+
+        Keyboard.dismiss();
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -26,33 +38,38 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter the title of the recipe"
-          placeholderTextColor="#888"
-          value={title}
-          onChangeText={setTitle}
-        />
-      </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <PickImage onChange={setImageUrl} />
 
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Description</Text>
-        <TextInput
-          style={[styles.input, styles.descriptionInput]}
-          placeholder="Describe your recipe"
-          placeholderTextColor="#888"
-          value={description}
-          onChangeText={setDescription}
-          multiline
-        />
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter the title of the recipe"
+            placeholderTextColor="#888"
+            value={title}
+            onChangeText={setTitle}
+          />
+        </View>
+
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Description</Text>
+          <TextInput
+            style={[styles.input, styles.descriptionInput]}
+            placeholder="Describe your recipe"
+            placeholderTextColor="#888"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+          />
+        </View>
+
+        <Button mode="contained" onPress={handleSubmit} style={styles.button}>
+          Add Recipe
+        </Button>
       </View>
-      <Button mode="contained" onPress={handleSubmit} style={styles.button}>
-        Add Recipe
-      </Button>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
