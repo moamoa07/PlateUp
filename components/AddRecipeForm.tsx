@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -164,6 +165,9 @@ const AddRecipeForm = () => {
 
         // Reset the form submission trigger
         setFormSubmitted((prev) => !prev);
+        Alert.alert('Success', 'Your recipe has been shared!', [
+          { text: 'OK' },
+        ]);
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
