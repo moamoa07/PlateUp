@@ -16,6 +16,7 @@ import theme from '../Theme';
 import { Recipe } from '../api/model/recipeModel';
 import { addRecipe } from '../api/service/recipeService';
 import PickImage from './PickImage';
+import RemoveIcon from './icons/RemoveIcon';
 import TimerIcon from './icons/TimerIcon';
 
 const AddRecipeForm = () => {
@@ -32,6 +33,7 @@ const AddRecipeForm = () => {
 
   const isFirstGroup = (groupIndex: number) => groupIndex === 0;
 
+  // Function to add ingredient group
   const addIngredientGroup = () => {
     setIngredientGroups([
       ...ingredientGroups,
@@ -39,6 +41,7 @@ const AddRecipeForm = () => {
     ]);
   };
 
+  // Function to add ingredient item with quantity and name of ingredient
   const addIngredientItem = (groupIndex: number) => {
     const newGroups = [...ingredientGroups];
     newGroups[groupIndex].items.push({ quantity: '', name: '' });
@@ -59,6 +62,13 @@ const AddRecipeForm = () => {
   const handleSubtitleChange = (groupIndex: number, value: string) => {
     const newGroups = [...ingredientGroups];
     newGroups[groupIndex].subtitle = value;
+    setIngredientGroups(newGroups);
+  };
+
+  // Function to handle removal of an ingredient item
+  const removeIngredientItem = (groupIndex: number, itemIndex: number) => {
+    const newGroups = [...ingredientGroups];
+    newGroups[groupIndex].items.splice(itemIndex, 1);
     setIngredientGroups(newGroups);
   };
 
@@ -229,6 +239,13 @@ const AddRecipeForm = () => {
                         )
                       }
                     />
+                    <TouchableOpacity
+                      onPress={() =>
+                        removeIngredientItem(groupIndex, itemIndex)
+                      }
+                    >
+                      <RemoveIcon size={28} fill={'#232323'} />
+                    </TouchableOpacity>
                   </View>
                 ))}
                 <TouchableOpacity
@@ -374,7 +391,7 @@ const styles = StyleSheet.create({
   subLabelRow: {
     marginTop: 16,
     flexDirection: 'row',
-    gap: 32,
+    gap: 18,
   },
   quantityLabel: {
     flex: 2,
