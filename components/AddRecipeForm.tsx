@@ -29,6 +29,9 @@ const AddRecipeForm = () => {
   const [ingredientGroups, setIngredientGroups] = useState([
     { subtitle: '', items: [{ quantity: '', name: '' }] },
   ]);
+  const [instructionGroups, setInstructionGroups] = useState([
+    { subtitle: '', steps: [{ direction: '' }] },
+  ]);
   const [additionalNotes, setAdditionalNotes] = useState('');
 
   const isFirstGroup = (groupIndex: number) => groupIndex === 0;
@@ -72,17 +75,50 @@ const AddRecipeForm = () => {
     setIngredientGroups(newGroups);
   };
 
+  const addInstructionGroup = () => {
+    setInstructionGroups([
+      ...instructionGroups,
+      { subtitle: '', steps: [{ direction: '' }] },
+    ]);
+  };
+
+  const addInstructionStep = (groupIndex: number) => {
+    const newGroups = [...instructionGroups];
+    newGroups[groupIndex].steps.push({ direction: '' });
+    setInstructionGroups(newGroups);
+  };
+
+  const handleInstructionChange = (
+    groupIndex: number,
+    stepIndex: number,
+    value: string
+  ) => {
+    const newGroups = [...instructionGroups];
+    newGroups[groupIndex].steps[stepIndex].direction = value;
+    setInstructionGroups(newGroups);
+  };
+
+  const removeInstructionStep = (groupIndex: number, stepIndex: number) => {
+    const newGroups = [...instructionGroups];
+    newGroups[groupIndex].steps.splice(stepIndex, 1);
+    setInstructionGroups(newGroups);
+  };
+
   const handleSubmit = async () => {
     Keyboard.dismiss();
     const isIngredientGroupsValid = ingredientGroups.every((group) =>
       group.items.some((item) => item.quantity || item.name)
+    );
+    const isInstructionGroupsValid = instructionGroups.every((group) =>
+      group.steps.some((step) => step.direction.trim() !== '')
     );
     if (
       title &&
       description &&
       servingDetails &&
       prepTime &&
-      isIngredientGroupsValid
+      isIngredientGroupsValid &&
+      isInstructionGroupsValid
     ) {
       try {
         const newRecipe: Recipe = {
@@ -92,6 +128,7 @@ const AddRecipeForm = () => {
           prepTime,
           cookTime,
           ingredients: ingredientGroups,
+          instructions: instructionGroups,
           additionalNotes,
           imageUrl,
         };
@@ -106,6 +143,7 @@ const AddRecipeForm = () => {
         setIngredientGroups([
           { subtitle: '', items: [{ quantity: '', name: '' }] },
         ]);
+        setInstructionGroups([{ subtitle: '', steps: [{ direction: '' }] }]);
         setAdditionalNotes('');
         setImageUrl(null); // Reset imageUrl
       } catch (error) {
@@ -254,7 +292,7 @@ const AddRecipeForm = () => {
                 >
                   <Button
                     mode="outlined"
-                    style={styles.ingredientButton}
+                    style={styles.addIngredientButton}
                     labelStyle={styles.buttonLabel}
                   >
                     Add Ingredient
@@ -269,7 +307,7 @@ const AddRecipeForm = () => {
             >
               <Button
                 mode="outlined"
-                style={styles.ingredientGroupButton}
+                style={styles.addIngredientGroupButton}
                 labelStyle={styles.buttonLabel}
                 onPress={addIngredientGroup}
               >
@@ -277,6 +315,70 @@ const AddRecipeForm = () => {
               </Button>
             </TouchableOpacity>
           </View>
+
+          <View style={styles.instructionsContainer}>
+            <Text style={styles.label}>Instructions</Text>
+            {instructionGroups.map((group, groupIndex) => (
+              <View key={groupIndex} style={styles.instructionGroup}>
+                <Text style={styles.subLabel}>Subtitle</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Add a subtitle"
+                  value={group.subtitle}
+                  onChangeText={(text) =>
+                    handleSubtitleChange(groupIndex, text)
+                  }
+                />
+                <Text style={[styles.subLabel, styles.directionLabel]}>
+                  Direction *
+                </Text>
+                {group.steps.map((step, stepIndex) => (
+                  <View key={stepIndex} style={styles.stepAndDirectionGroup}>
+                    <TextInput
+                      style={[styles.input, styles.directionInput]}
+                      placeholder="Direction"
+                      value={step.direction}
+                      onChangeText={(text) =>
+                        handleInstructionChange(groupIndex, stepIndex, text)
+                      }
+                    />
+                    <TouchableOpacity
+                      onPress={() =>
+                        removeInstructionStep(groupIndex, stepIndex)
+                      }
+                    >
+                      <RemoveIcon size={28} fill={'#232323'} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+                <TouchableOpacity
+                  onPress={() => addInstructionStep(groupIndex)}
+                  style={styles.buttonTouchable}
+                >
+                  <Button
+                    mode="outlined"
+                    style={styles.addStepButton}
+                    labelStyle={styles.buttonLabel}
+                  >
+                    Add Instruction
+                  </Button>
+                </TouchableOpacity>
+              </View>
+            ))}
+            <TouchableOpacity
+              onPress={addInstructionGroup}
+              style={styles.buttonTouchable}
+            >
+              <Button
+                mode="outlined"
+                style={styles.addInstructionGroupButton}
+                labelStyle={styles.buttonLabel}
+              >
+                Add Instruction Group
+              </Button>
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Additional notes</Text>
             <TextInput
@@ -406,7 +508,7 @@ const styles = StyleSheet.create({
   ingredientsInput: {
     flex: 6,
   },
-  ingredientButton: {
+  addIngredientButton: {
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
     marginTop: 10,
@@ -415,7 +517,7 @@ const styles = StyleSheet.create({
     padding: 2,
     marginBottom: 10,
   },
-  ingredientGroupButton: {
+  addIngredientGroupButton: {
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
     justifyContent: 'center',
@@ -425,6 +527,43 @@ const styles = StyleSheet.create({
   buttonTouchable: {
     borderRadius: 10,
   },
+  instructionsContainer: {
+    gap: 8,
+  },
+  instructionGroup: {
+    // gap: 8,
+  },
+  stepAndDirectionGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 12,
+  },
+  stepInputGroup: {},
+  stepInput: {},
+  directionInput: {
+    flex: 1,
+  },
+  directionLabel: {
+    marginTop: 16,
+  },
+  addStepButton: {
+    fontFamily: 'Jost-Regular',
+    borderRadius: 10,
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 2,
+    marginBottom: 10,
+  },
+  addInstructionGroupButton: {
+    fontFamily: 'Jost-Regular',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 2,
+  },
+
   button: {
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
