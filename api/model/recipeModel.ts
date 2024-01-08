@@ -1,7 +1,7 @@
 export interface Recipe {
   title: string;
   description: string;
-  imageUrl?: string;
+  imageUrl: string | null;
   // imageUrls: string[]; Om vi ska spara flera bilder längre fram
   servingDetails: string;
   prepTime: string;

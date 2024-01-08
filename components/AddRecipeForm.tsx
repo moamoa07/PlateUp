@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -7,17 +8,20 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
 import { Recipe } from '../api/model/recipeModel';
 import { addRecipe } from '../api/service/recipeService';
+import PickImage from './PickImage';
 import TimerIcon from './icons/TimerIcon';
 
 const AddRecipeForm = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [servingDetails, setServingDetails] = useState('');
   const [prepTime, setPrepTime] = useState('');
   const [cookTime, setCookTime] = useState('');
@@ -59,6 +63,7 @@ const AddRecipeForm = () => {
   };
 
   const handleSubmit = async () => {
+    Keyboard.dismiss();
     const isIngredientGroupsValid = ingredientGroups.every((group) =>
       group.items.some((item) => item.quantity || item.name)
     );
@@ -78,6 +83,7 @@ const AddRecipeForm = () => {
           cookTime,
           ingredients: ingredientGroups,
           additionalNotes,
+          imageUrl,
         };
         await addRecipe(newRecipe);
         console.log('Recipe added successfully');
@@ -91,6 +97,7 @@ const AddRecipeForm = () => {
           { subtitle: '', items: [{ quantity: '', name: '' }] },
         ]);
         setAdditionalNotes('');
+        setImageUrl(null); // Reset imageUrl
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -100,181 +107,189 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
-    >
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.h3}>Add new recipe</Text>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Title *</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter the title of the recipe"
-            placeholderTextColor="#888"
-            value={title}
-            onChangeText={setTitle}
-          />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Description *</Text>
-          <TextInput
-            style={[styles.input, styles.descriptionInput]}
-            placeholder="Describe your recipe"
-            placeholderTextColor="#888"
-            value={description}
-            onChangeText={setDescription}
-            multiline
-          />
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>How much will the recipe make? *</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g., 4 servings, 12 cookies"
-            placeholderTextColor="#888"
-            value={servingDetails}
-            onChangeText={setServingDetails}
-          />
-        </View>
-        <View style={styles.inputGroup}>
-          <View style={styles.timeLabelContainer}>
-            <Text style={styles.label}>Time</Text>
-            <View style={styles.iconWrapper}>
-              <TimerIcon size={28} fill={'#232323'} />
-            </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      >
+        <ScrollView contentContainerStyle={styles.container}>
+          <Text style={styles.h3}>Add new recipe</Text>
+          <PickImage onChange={setImageUrl} />
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Title *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter the title of the recipe"
+              placeholderTextColor="#888"
+              value={title}
+              onChangeText={setTitle}
+            />
           </View>
-
-          <View style={styles.timeInputGroup}>
-            <View style={styles.timeInputContainer}>
-              <Text style={styles.subLabel}>Prep Time *</Text>
-              <TextInput
-                style={[styles.input, styles.timeInput]}
-                placeholder="e.g., 20 min"
-                placeholderTextColor="#888"
-                value={prepTime}
-                onChangeText={setPrepTime}
-              />
-            </View>
-            <View style={styles.timeInputContainer}>
-              <Text style={styles.subLabel}>Cook Time</Text>
-              <TextInput
-                style={[styles.input, styles.timeInput]}
-                placeholder="e.g., 1 h"
-                placeholderTextColor="#888"
-                value={cookTime}
-                onChangeText={setCookTime}
-              />
-            </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Description *</Text>
+            <TextInput
+              style={[styles.input, styles.descriptionInput]}
+              placeholder="Describe your recipe"
+              placeholderTextColor="#888"
+              value={description}
+              onChangeText={setDescription}
+              multiline
+            />
           </View>
-        </View>
-        <View style={styles.ingredientsContainer}>
-          <Text style={styles.label}>Ingredients</Text>
-          {ingredientGroups.map((group, groupIndex) => (
-            <View key={groupIndex} style={styles.ingredientsGroup}>
-              <Text style={styles.subLabel}>Subtitle</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Add a subtitle"
-                value={group.subtitle}
-                onChangeText={(text) => handleSubtitleChange(groupIndex, text)}
-              />
-              <View style={styles.subLabelRow}>
-                <Text style={[styles.subLabel, styles.quantityLabel]}>
-                  Quantity *
-                </Text>
-                <Text style={[styles.subLabel, styles.ingredientLabel]}>
-                  Ingredient *
-                </Text>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>How much will the recipe make? *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="e.g., 4 servings, 12 cookies"
+              placeholderTextColor="#888"
+              value={servingDetails}
+              onChangeText={setServingDetails}
+            />
+          </View>
+          <View style={styles.inputGroup}>
+            <View style={styles.timeLabelContainer}>
+              <Text style={styles.label}>Time</Text>
+              <View style={styles.iconWrapper}>
+                <TimerIcon size={28} fill={'#232323'} />
               </View>
-              {group.items.map((item, itemIndex) => (
-                <View
-                  key={itemIndex}
-                  style={styles.quantityAndIngredientsInputGroup}
-                >
-                  <TextInput
-                    style={[styles.input, styles.quantityInput]}
-                    placeholder="Quantity"
-                    value={item.quantity}
-                    onChangeText={(text) =>
-                      handleIngredientChange(
-                        groupIndex,
-                        itemIndex,
-                        'quantity',
-                        text
-                      )
-                    }
-                  />
-                  <TextInput
-                    style={[styles.input, styles.ingredientsInput]}
-                    placeholder="Ingredient"
-                    value={item.name}
-                    onChangeText={(text) =>
-                      handleIngredientChange(
-                        groupIndex,
-                        itemIndex,
-                        'name',
-                        text
-                      )
-                    }
-                  />
-                </View>
-              ))}
-              <TouchableOpacity
-                onPress={() => addIngredientItem(groupIndex)}
-                style={styles.buttonTouchable}
-              >
-                <Button
-                  mode="outlined"
-                  style={styles.ingredientButton}
-                  labelStyle={styles.buttonLabel}
-                >
-                  Add Ingredient
-                </Button>
-              </TouchableOpacity>
             </View>
-          ))}
 
+            <View style={styles.timeInputGroup}>
+              <View style={styles.timeInputContainer}>
+                <Text style={styles.subLabel}>Prep Time *</Text>
+                <TextInput
+                  style={[styles.input, styles.timeInput]}
+                  placeholder="e.g., 20 min"
+                  placeholderTextColor="#888"
+                  value={prepTime}
+                  onChangeText={setPrepTime}
+                />
+              </View>
+              <View style={styles.timeInputContainer}>
+                <Text style={styles.subLabel}>Cook Time</Text>
+                <TextInput
+                  style={[styles.input, styles.timeInput]}
+                  placeholder="e.g., 1 h"
+                  placeholderTextColor="#888"
+                  value={cookTime}
+                  onChangeText={setCookTime}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={styles.ingredientsContainer}>
+            <Text style={styles.label}>Ingredients</Text>
+            {ingredientGroups.map((group, groupIndex) => (
+              <View key={groupIndex} style={styles.ingredientsGroup}>
+                <Text style={styles.subLabel}>Subtitle</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Add a subtitle"
+                  value={group.subtitle}
+                  onChangeText={(text) =>
+                    handleSubtitleChange(groupIndex, text)
+                  }
+                />
+                <View style={styles.subLabelRow}>
+                  <Text style={[styles.subLabel, styles.quantityLabel]}>
+                    Quantity *
+                  </Text>
+                  <Text style={[styles.subLabel, styles.ingredientLabel]}>
+                    Ingredient *
+                  </Text>
+                </View>
+                {group.items.map((item, itemIndex) => (
+                  <View
+                    key={itemIndex}
+                    style={styles.quantityAndIngredientsInputGroup}
+                  >
+                    <TextInput
+                      style={[styles.input, styles.quantityInput]}
+                      placeholder="Quantity"
+                      value={item.quantity}
+                      onChangeText={(text) =>
+                        handleIngredientChange(
+                          groupIndex,
+                          itemIndex,
+                          'quantity',
+                          text
+                        )
+                      }
+                    />
+                    <TextInput
+                      style={[styles.input, styles.ingredientsInput]}
+                      placeholder="Ingredient"
+                      value={item.name}
+                      onChangeText={(text) =>
+                        handleIngredientChange(
+                          groupIndex,
+                          itemIndex,
+                          'name',
+                          text
+                        )
+                      }
+                    />
+                  </View>
+                ))}
+                <TouchableOpacity
+                  onPress={() => addIngredientItem(groupIndex)}
+                  style={styles.buttonTouchable}
+                >
+                  <Button
+                    mode="outlined"
+                    style={styles.ingredientButton}
+                    labelStyle={styles.buttonLabel}
+                  >
+                    Add Ingredient
+                  </Button>
+                </TouchableOpacity>
+              </View>
+            ))}
+
+            <TouchableOpacity
+              onPress={addIngredientGroup}
+              style={styles.buttonTouchable}
+            >
+              <Button
+                mode="outlined"
+                style={styles.ingredientGroupButton}
+                labelStyle={styles.buttonLabel}
+                onPress={addIngredientGroup}
+              >
+                Add Ingredient Group
+              </Button>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Additional notes</Text>
+            <TextInput
+              style={[styles.input, styles.descriptionInput]}
+              placeholder="Add extra details to your recipe"
+              placeholderTextColor="#888"
+              value={additionalNotes}
+              onChangeText={setAdditionalNotes}
+              multiline
+            />
+          </View>
+          <Text style={styles.message}>
+            Please note: Fields marked with an asterisk (*) must be filled in to
+            complete the submission.
+          </Text>
           <TouchableOpacity
-            onPress={addIngredientGroup}
+            onPress={handleSubmit}
             style={styles.buttonTouchable}
           >
             <Button
-              mode="outlined"
-              style={styles.ingredientGroupButton}
+              mode="contained"
+              style={styles.button}
               labelStyle={styles.buttonLabel}
-              onPress={addIngredientGroup}
             >
-              Add Ingredient Group
+              Share Recipe
             </Button>
           </TouchableOpacity>
-        </View>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Additional notes</Text>
-          <TextInput
-            style={[styles.input, styles.descriptionInput]}
-            placeholder="Add extra details to your recipe"
-            placeholderTextColor="#888"
-            value={additionalNotes}
-            onChangeText={setAdditionalNotes}
-            multiline
-          />
-        </View>
-        <Text style={styles.message}>
-          Please note: Fields marked with an asterisk (*) must be filled in to
-          complete the submission.
-        </Text>
-        <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
-          <Button
-            mode="contained"
-            style={styles.button}
-            labelStyle={styles.buttonLabel}
-          >
-            Share Recipe
-          </Button>
-        </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
