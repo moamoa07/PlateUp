@@ -29,5 +29,5 @@ export interface InstructionGroup {
 }
 
 export interface InstructionStep {
-  direction: string;
+  instruction: string;
 }
