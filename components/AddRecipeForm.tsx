@@ -20,17 +20,17 @@ import RemoveIcon from './icons/RemoveIcon';
 import TimerIcon from './icons/TimerIcon';
 
 const AddRecipeForm = () => {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [servingDetails, setServingDetails] = useState('');
   const [prepTime, setPrepTime] = useState('');
   const [cookTime, setCookTime] = useState('');
   const [ingredientGroups, setIngredientGroups] = useState([
-    { subtitle: '', items: [{ quantity: '', name: '' }] },
+    { ingredientSubtitle: '', items: [{ quantity: '', name: '' }] },
   ]);
   const [instructionGroups, setInstructionGroups] = useState([
-    { subtitle: '', steps: [{ instruction: '' }] },
+    { instructionSubtitle: '', steps: [{ instruction: '' }] },
   ]);
   const [additionalNotes, setAdditionalNotes] = useState('');
 
@@ -40,7 +40,7 @@ const AddRecipeForm = () => {
   const addIngredientGroup = () => {
     setIngredientGroups([
       ...ingredientGroups,
-      { subtitle: '', items: [{ quantity: '', name: '' }] },
+      { ingredientSubtitle: '', items: [{ quantity: '', name: '' }] },
     ]);
   };
 
@@ -62,9 +62,13 @@ const AddRecipeForm = () => {
     setIngredientGroups(newGroups);
   };
 
-  const handleSubtitleChange = (groupIndex: number, value: string) => {
+  // For ingredient subtitle changes
+  const handleIngredientSubtitleChange = (
+    groupIndex: number,
+    value: string
+  ) => {
     const newGroups = [...ingredientGroups];
-    newGroups[groupIndex].subtitle = value;
+    newGroups[groupIndex].ingredientSubtitle = value;
     setIngredientGroups(newGroups);
   };
 
@@ -78,7 +82,7 @@ const AddRecipeForm = () => {
   const addInstructionGroup = () => {
     setInstructionGroups([
       ...instructionGroups,
-      { subtitle: '', steps: [{ instruction: '' }] },
+      { instructionSubtitle: '', steps: [{ instruction: '' }] },
     ]);
   };
 
@@ -104,6 +108,16 @@ const AddRecipeForm = () => {
     setInstructionGroups(newGroups);
   };
 
+  // For instruction subtitle changes
+  const handleInstructionSubtitleChange = (
+    groupIndex: number,
+    value: string
+  ) => {
+    const newGroups = [...instructionGroups];
+    newGroups[groupIndex].instructionSubtitle = value;
+    setInstructionGroups(newGroups);
+  };
+
   const handleSubmit = async () => {
     Keyboard.dismiss();
     const isIngredientGroupsValid = ingredientGroups.every((group) =>
@@ -122,6 +136,7 @@ const AddRecipeForm = () => {
     ) {
       try {
         const newRecipe: Recipe = {
+          imageUrl,
           title,
           description,
           servingDetails,
@@ -130,22 +145,23 @@ const AddRecipeForm = () => {
           ingredients: ingredientGroups,
           instructions: instructionGroups,
           additionalNotes,
-          imageUrl,
         };
         await addRecipe(newRecipe);
         console.log('Recipe added successfully');
         // Reset form here
+        setImageUrl(null); // Reset imageUrl
         setTitle('');
         setDescription('');
         setServingDetails('');
         setPrepTime('');
         setCookTime('');
         setIngredientGroups([
-          { subtitle: '', items: [{ quantity: '', name: '' }] },
+          { ingredientSubtitle: '', items: [{ quantity: '', name: '' }] },
         ]);
-        setInstructionGroups([{ subtitle: '', steps: [{ instruction: '' }] }]);
+        setInstructionGroups([
+          { instructionSubtitle: '', steps: [{ instruction: '' }] },
+        ]);
         setAdditionalNotes('');
-        setImageUrl(null); // Reset imageUrl
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -233,9 +249,9 @@ const AddRecipeForm = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Add a subtitle"
-                  value={group.subtitle}
+                  value={group.ingredientSubtitle}
                   onChangeText={(text) =>
-                    handleSubtitleChange(groupIndex, text)
+                    handleIngredientSubtitleChange(groupIndex, text)
                   }
                 />
                 <View style={styles.subLabelQuantityAndIngredientRow}>
@@ -324,9 +340,9 @@ const AddRecipeForm = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Add a subtitle"
-                  value={group.subtitle}
+                  value={group.instructionSubtitle}
                   onChangeText={(text) =>
-                    handleSubtitleChange(groupIndex, text)
+                    handleInstructionSubtitleChange(groupIndex, text)
                   }
                 />
                 <View style={styles.subLabelStepsAndInstructionRow}>
@@ -475,7 +491,7 @@ const styles = StyleSheet.create({
   timeInputGroup: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 16,
+    gap: 24,
   },
   timeInputContainer: {
     flex: 1,
@@ -497,8 +513,8 @@ const styles = StyleSheet.create({
   quantityAndIngredientsInputGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
     marginBottom: 12,
+    gap: 16,
   },
   quantityLabel: {
     flex: 2,
@@ -555,8 +571,8 @@ const styles = StyleSheet.create({
     flex: 9,
   },
   stepNumber: {
-    // minWidth: 20, // Adjust as needed
-    textAlign: 'right',
+    fontFamily: 'Jost-Regular',
+    textAlign: 'center',
     fontSize: 16,
     color: theme.colors.primary,
     flex: 1,
@@ -580,7 +596,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 2,
   },
-
   button: {
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
