@@ -270,7 +270,7 @@ const AddRecipeForm = () => {
             style={styles.button}
             labelStyle={styles.buttonLabel}
           >
-            Add Recipe
+            Share Recipe
           </Button>
         </TouchableOpacity>
       </ScrollView>
