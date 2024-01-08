@@ -7,7 +7,7 @@ export interface Recipe {
   prepTime: string;
   cookTime?: string;
   ingredients: IngredientGroup[];
-  instructions?: InstructionGroup[];
+  instructions: InstructionGroup[];
   additionalNotes?: string;
   createdAt?: Date;
   updatedAt?: Date;
