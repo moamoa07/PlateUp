@@ -40,6 +40,8 @@ const AddRecipeForm = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
+        <PickImage onChange={setImageUrl} />
+
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Title</Text>
           <TextInput
@@ -62,8 +64,6 @@ const AddRecipeForm = () => {
             multiline
           />
         </View>
-
-        <PickImage onChange={setImageUrl} />
 
         <Button mode="contained" onPress={handleSubmit} style={styles.button}>
           Add Recipe

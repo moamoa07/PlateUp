@@ -31,31 +31,31 @@ function PickImage({
 
   return (
     <View style={styles.container}>
-      <Button onPress={pickImageAsync} mode="outlined" style={styles.button}>
-        <Text>Add image</Text>
-      </Button>
       <View style={styles.imageContainer}>
         <ImageViewer
           placeholderImageSource={require('../assets/waffle.jpg')}
           selectedImage={selectedImage}
         />
       </View>
+      <Button onPress={pickImageAsync} mode="outlined" style={styles.button}>
+        <Text>Add image</Text>
+      </Button>
     </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    margin: 10,
+    // margin: 10,
   },
   button: {
     borderRadius: 10,
     padding: 10,
   },
   imageContainer: {
-    marginTop: 10,
+    marginBottom: 10,
     width: '100%',
-    // height: 400,
-    height: 40,
+    height: 400,
+    // height: 40,
   },
 });
 
