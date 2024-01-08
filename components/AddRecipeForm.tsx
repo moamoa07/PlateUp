@@ -24,6 +24,9 @@ const AddRecipeForm = () => {
   const [ingredientGroups, setIngredientGroups] = useState([
     { subtitle: '', items: [{ quantity: '', name: '' }] },
   ]);
+  const [additionalNotes, setAdditionalNotes] = useState('');
+
+  const isFirstGroup = (groupIndex: number) => groupIndex === 0;
 
   const addIngredientGroup = () => {
     setIngredientGroups([
@@ -31,8 +34,6 @@ const AddRecipeForm = () => {
       { subtitle: '', items: [{ quantity: '', name: '' }] },
     ]);
   };
-
-  const isFirstGroup = (groupIndex: number) => groupIndex === 0;
 
   const addIngredientItem = (groupIndex: number) => {
     const newGroups = [...ingredientGroups];
@@ -58,12 +59,15 @@ const AddRecipeForm = () => {
   };
 
   const handleSubmit = async () => {
+    const isIngredientGroupsValid = ingredientGroups.every((group) =>
+      group.items.some((item) => item.quantity || item.name)
+    );
     if (
       title &&
       description &&
       servingDetails &&
       prepTime &&
-      ingredientGroups.length > 0
+      isIngredientGroupsValid
     ) {
       try {
         const newRecipe: Recipe = {
@@ -73,6 +77,7 @@ const AddRecipeForm = () => {
           prepTime,
           cookTime,
           ingredients: ingredientGroups,
+          additionalNotes,
         };
         await addRecipe(newRecipe);
         console.log('Recipe added successfully');
@@ -85,6 +90,7 @@ const AddRecipeForm = () => {
         setIngredientGroups([
           { subtitle: '', items: [{ quantity: '', name: '' }] },
         ]);
+        setAdditionalNotes('');
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -101,7 +107,7 @@ const AddRecipeForm = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.h3}>Add new recipe</Text>
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Title</Text>
+          <Text style={styles.label}>Title *</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter the title of the recipe"
@@ -111,7 +117,7 @@ const AddRecipeForm = () => {
           />
         </View>
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Description</Text>
+          <Text style={styles.label}>Description *</Text>
           <TextInput
             style={[styles.input, styles.descriptionInput]}
             placeholder="Describe your recipe"
@@ -122,7 +128,7 @@ const AddRecipeForm = () => {
           />
         </View>
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>How much will the recipe make?</Text>
+          <Text style={styles.label}>How much will the recipe make? *</Text>
           <TextInput
             style={styles.input}
             placeholder="e.g., 4 servings, 12 cookies"
@@ -141,7 +147,7 @@ const AddRecipeForm = () => {
 
           <View style={styles.timeInputGroup}>
             <View style={styles.timeInputContainer}>
-              <Text style={styles.subLabel}>Prep Time</Text>
+              <Text style={styles.subLabel}>Prep Time *</Text>
               <TextInput
                 style={[styles.input, styles.timeInput]}
                 placeholder="e.g., 20 min"
@@ -169,16 +175,16 @@ const AddRecipeForm = () => {
               <Text style={styles.subLabel}>Subtitle</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Ingredient group subtitle"
+                placeholder="Add a subtitle"
                 value={group.subtitle}
                 onChangeText={(text) => handleSubtitleChange(groupIndex, text)}
               />
               <View style={styles.subLabelRow}>
                 <Text style={[styles.subLabel, styles.quantityLabel]}>
-                  Quantity
+                  Quantity *
                 </Text>
                 <Text style={[styles.subLabel, styles.ingredientLabel]}>
-                  Ingredient
+                  Ingredient *
                 </Text>
               </View>
               {group.items.map((item, itemIndex) => (
@@ -243,7 +249,21 @@ const AddRecipeForm = () => {
             </Button>
           </TouchableOpacity>
         </View>
-
+        <View style={styles.inputGroup}>
+          <Text style={styles.label}>Additional notes</Text>
+          <TextInput
+            style={[styles.input, styles.descriptionInput]}
+            placeholder="Add extra details to your recipe"
+            placeholderTextColor="#888"
+            value={additionalNotes}
+            onChangeText={setAdditionalNotes}
+            multiline
+          />
+        </View>
+        <Text style={styles.message}>
+          Please note: Fields marked with an asterisk (*) must be filled in to
+          complete the submission.
+        </Text>
         <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
           <Button
             mode="contained"
@@ -342,16 +362,16 @@ const styles = StyleSheet.create({
     gap: 32,
   },
   quantityLabel: {
-    flex: 1,
+    flex: 2,
   },
   ingredientLabel: {
-    flex: 4,
+    flex: 6,
   },
   quantityInput: {
-    flex: 1,
+    flex: 2,
   },
   ingredientsInput: {
-    flex: 4,
+    flex: 6,
   },
   ingredientButton: {
     fontFamily: 'Jost-Regular',
@@ -384,6 +404,10 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
+  },
+  message: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 14,
   },
 });
 
