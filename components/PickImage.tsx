@@ -1,5 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
@@ -7,8 +7,10 @@ import ImageViewer from './ImageViewer';
 
 function PickImage({
   onChange,
+  resetTrigger, // new prop to listen for a reset signal
 }: {
   onChange: (imageUrl: string | null) => void;
+  resetTrigger: boolean; // this could be a number that increments to indicate a reset
 }) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -29,6 +31,14 @@ function PickImage({
       alert('You did not select any image.');
     }
   };
+
+  // Effect to reset the image when the form is submitted
+  useEffect(() => {
+    if (resetTrigger) {
+      setSelectedImage(null); // this clears the local state for the image
+      onChange(null); // this tells the parent component to clear its image state as well
+    }
+  }, [resetTrigger, onChange]);
 
   return (
     <View style={styles.container}>
