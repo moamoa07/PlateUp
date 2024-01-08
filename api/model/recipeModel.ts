@@ -3,8 +3,8 @@ export interface Recipe {
   description: string;
   imageUrl?: string;
   // imageUrls: string[]; Om vi ska spara flera bilder längre fram
-  servingDetails?: string;
-  prepTime?: string;
+  servingDetails: string;
+  prepTime: string;
   cookTime?: string;
   ingredients: IngredientGroup[];
   instructions?: InstructionGroup[];
