@@ -385,6 +385,7 @@ const styles = StyleSheet.create({
   },
   quantityAndIngredientsInputGroup: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 16,
     marginBottom: 12,
   },
