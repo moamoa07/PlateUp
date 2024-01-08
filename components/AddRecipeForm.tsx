@@ -32,6 +32,8 @@ const AddRecipeForm = () => {
     ]);
   };
 
+  const isFirstGroup = (groupIndex: number) => groupIndex === 0;
+
   const addIngredientItem = (groupIndex: number) => {
     const newGroups = [...ingredientGroups];
     newGroups[groupIndex].items.push({ quantity: '', name: '' });
@@ -164,12 +166,21 @@ const AddRecipeForm = () => {
           <Text style={styles.label}>Ingredients</Text>
           {ingredientGroups.map((group, groupIndex) => (
             <View key={groupIndex} style={styles.ingredientsGroup}>
+              <Text style={styles.subLabel}>Subtitle</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Ingredient group subtitle"
                 value={group.subtitle}
                 onChangeText={(text) => handleSubtitleChange(groupIndex, text)}
               />
+              <View style={styles.subLabelRow}>
+                <Text style={[styles.subLabel, styles.quantityLabel]}>
+                  Quantity
+                </Text>
+                <Text style={[styles.subLabel, styles.ingredientLabel]}>
+                  Ingredient
+                </Text>
+              </View>
               {group.items.map((item, itemIndex) => (
                 <View
                   key={itemIndex}
@@ -211,20 +222,20 @@ const AddRecipeForm = () => {
                   mode="outlined"
                   style={styles.ingredientButton}
                   labelStyle={styles.buttonLabel}
-                  onPress={() => addIngredientItem(groupIndex)}
                 >
                   Add Ingredient
                 </Button>
               </TouchableOpacity>
             </View>
           ))}
+
           <TouchableOpacity
             onPress={addIngredientGroup}
             style={styles.buttonTouchable}
           >
             <Button
               mode="outlined"
-              style={styles.ingredientButton}
+              style={styles.ingredientGroupButton}
               labelStyle={styles.buttonLabel}
               onPress={addIngredientGroup}
             >
@@ -318,11 +329,23 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   ingredientsGroup: {
-    gap: 16,
+    // gap: 8,
   },
   quantityAndIngredientsInputGroup: {
     flexDirection: 'row',
     gap: 16,
+    marginBottom: 12,
+  },
+  subLabelRow: {
+    marginTop: 16,
+    flexDirection: 'row',
+    gap: 32,
+  },
+  quantityLabel: {
+    flex: 1,
+  },
+  ingredientLabel: {
+    flex: 4,
   },
   quantityInput: {
     flex: 1,
@@ -334,6 +357,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
     marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 2,
+    marginBottom: 10,
+  },
+  ingredientGroupButton: {
+    fontFamily: 'Jost-Regular',
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 2,
