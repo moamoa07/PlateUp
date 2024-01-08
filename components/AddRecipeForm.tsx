@@ -33,8 +33,7 @@ const AddRecipeForm = () => {
     { instructionSubtitle: '', steps: [{ instruction: '' }] },
   ]);
   const [additionalNotes, setAdditionalNotes] = useState('');
-
-  const isFirstGroup = (groupIndex: number) => groupIndex === 0;
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   // Function to add ingredient group
   const addIngredientGroup = () => {
@@ -162,6 +161,9 @@ const AddRecipeForm = () => {
           { instructionSubtitle: '', steps: [{ instruction: '' }] },
         ]);
         setAdditionalNotes('');
+
+        // Reset the form submission trigger
+        setFormSubmitted((prev) => !prev);
       } catch (error) {
         console.error('Failed to add recipe:', error);
       }
@@ -178,7 +180,7 @@ const AddRecipeForm = () => {
       >
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.h3}>Add new recipe</Text>
-          <PickImage onChange={setImageUrl} />
+          <PickImage onChange={setImageUrl} resetTrigger={formSubmitted} />
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Title *</Text>
             <TextInput
