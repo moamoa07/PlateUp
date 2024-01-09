@@ -3,7 +3,7 @@ import userReducer from './users';
 
 // ...
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     user: userReducer,
     // recipes: recipeReducer,
