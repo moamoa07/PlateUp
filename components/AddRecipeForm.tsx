@@ -17,19 +17,10 @@ import * as Yup from 'yup';
 import theme from '../Theme';
 import { recipeSchema } from '../api/schema/recipeSchema';
 import { addRecipe } from '../api/service/recipeService';
+import { FormErrors } from '../types/FormErrors';
 import PickImage from './PickImage';
 import RemoveIcon from './icons/RemoveIcon';
 import TimerIcon from './icons/TimerIcon';
-
-interface FormErrors {
-  title?: string;
-  description?: string;
-  servingDetails?: string;
-  prepTime?: string;
-  cookTime?: string;
-  // Define types for dynamic fields (ingredients and instructions)
-  [key: string]: string | undefined;
-}
 
 const AddRecipeForm = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -234,6 +225,9 @@ const AddRecipeForm = () => {
               onChangeText={setDescription}
               multiline
             />
+            {formErrors.description && (
+              <Text style={styles.errorMessage}>{formErrors.description}</Text>
+            )}
           </View>
           <View style={styles.inputGroup}>
             <Text style={styles.label}>How much will the recipe make? *</Text>
@@ -244,6 +238,11 @@ const AddRecipeForm = () => {
               value={servingDetails}
               onChangeText={setServingDetails}
             />
+            {formErrors.servingDetails && (
+              <Text style={styles.errorMessage}>
+                {formErrors.servingDetails}
+              </Text>
+            )}
           </View>
           <View style={styles.inputGroup}>
             <View style={styles.timeLabelContainer}>
@@ -263,6 +262,9 @@ const AddRecipeForm = () => {
                   value={prepTime}
                   onChangeText={setPrepTime}
                 />
+                {formErrors.prepTime && (
+                  <Text style={styles.errorMessage}>{formErrors.prepTime}</Text>
+                )}
               </View>
               <View style={styles.timeInputContainer}>
                 <Text style={styles.subLabel}>Cook Time</Text>
@@ -339,6 +341,17 @@ const AddRecipeForm = () => {
                         )
                       }
                     />
+                    {formErrors[
+                      `ingredients[${groupIndex}].items[${itemIndex}].name`
+                    ] && (
+                      <Text style={styles.errorMessage}>
+                        {
+                          formErrors[
+                            `ingredients[${groupIndex}].items[${itemIndex}].name`
+                          ]
+                        }
+                      </Text>
+                    )}
                     <TouchableOpacity
                       onPress={() =>
                         removeIngredientItem(groupIndex, itemIndex)
@@ -408,6 +421,17 @@ const AddRecipeForm = () => {
                         handleInstructionChange(groupIndex, stepIndex, text)
                       }
                     />
+                    {formErrors[
+                      `instructions[${groupIndex}].steps[${stepIndex}].instruction`
+                    ] && (
+                      <Text style={styles.errorMessage}>
+                        {
+                          formErrors[
+                            `instructions[${groupIndex}].steps[${stepIndex}].instruction`
+                          ]
+                        }
+                      </Text>
+                    )}
                     <TouchableOpacity
                       onPress={() =>
                         removeInstructionStep(groupIndex, stepIndex)
