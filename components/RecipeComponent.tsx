@@ -19,11 +19,11 @@ interface RecipeComponentProps {
 const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [isLoading, setLoading] = useState(true);
-  const [showIngredients, setShowIngredients] = useState(true); // Track which section to show
+  const [showIngredients, setShowIngredients] = useState(true);
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      const recipeData = await getRecipeById('JDyEvoJtAQckJh99fRnk');
+      const recipeData = await getRecipeById('YHDXJmf2vSlMPwQiTiQm');
       setRecipe(recipeData as Recipe);
       setLoading(false);
     };
