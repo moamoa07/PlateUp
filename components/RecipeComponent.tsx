@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -44,12 +45,12 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
   }
 
   return (
-    <View>
+    <ScrollView contentContainerStyle={styles.container}>
       <View>
         {recipe.imageUrl && (
           <Image
             source={{ uri: recipe.imageUrl }}
-            style={{ width: 'auto', height: 50 }}
+            style={{ width: 'auto', height: 500 }}
           />
         )}
         <View style={styles.actions}>
@@ -59,12 +60,12 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
       </View>
       <View style={styles.information}>
         <Text style={styles.title}>{recipe.title}</Text>
-        <Text>{recipe.servingDetails}</Text>
+        <Text style={styles.text}>{recipe.servingDetails}</Text>
         <View style={styles.details}>
-          <Text>Preptime: {recipe.prepTime}</Text>
-          <Text>Cooktime: {recipe.cookTime}</Text>
+          <Text style={styles.text}>Preptime: {recipe.prepTime}</Text>
+          <Text style={styles.text}>Cooktime: {recipe.cookTime}</Text>
         </View>
-        <Text>{recipe.description}</Text>
+        <Text style={styles.text}>{recipe.description}</Text>
 
         {/* Buttons to toggle between Ingredients and Instructions */}
         <View style={styles.buttonsContainer}>
@@ -121,14 +122,16 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
                   </Text>
                 )}
                 {group.steps?.map((step, i) => (
-                  <Text key={i}>{`${i + 1}. ${step.instruction}`}</Text>
+                  <Text key={i} style={styles.list}>{`${i + 1}. ${
+                    step.instruction
+                  }`}</Text>
                 ))}
               </View>
             ))}
 
         {/* Render other recipe details here */}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -136,8 +139,9 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     padding: 16,
-    marginTop: 48,
+    // marginTop: 48,
     gap: 24,
+    marginBottom: 300,
   },
   actions: {
     display: 'flex',
@@ -155,7 +159,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontWeight: '700',
-    fontFamily: 'Jost-Regular',
+    fontFamily: 'Jost-Medium',
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -173,11 +177,12 @@ const styles = StyleSheet.create({
     // backgroundColor: '#ccc',
   },
   buttonText: {
-    // fontFamily: 'Jost-Regular',
+    fontFamily: 'Jost-Regular',
     fontSize: 16,
   },
   activeButtonText: {
     fontWeight: 'bold',
+    fontFamily: 'Jost-Medium',
   },
   details: {
     display: 'flex',
@@ -187,6 +192,12 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginHorizontal: 10,
+  },
+  list: {
+    fontFamily: 'Jost-Regular',
+  },
+  text: {
+    fontFamily: 'Jost-Regular',
   },
 });
 
