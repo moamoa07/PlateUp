@@ -101,8 +101,10 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
         {showIngredients
           ? recipe.ingredients?.map((group, index) => (
               <View key={index}>
-                {group.subtitle && (
-                  <Text style={styles.subtitle}>{group.subtitle}</Text>
+                {group.ingredientSubtitle && (
+                  <Text style={styles.subtitle}>
+                    {group.ingredientSubtitle}
+                  </Text>
                 )}
                 {group.items?.map((ingredient, i) => (
                   <Text
@@ -113,11 +115,13 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
             ))
           : recipe.instructions?.map((group, index) => (
               <View key={index}>
-                {group.subtitle && (
-                  <Text style={styles.subtitle}>{group.subtitle}</Text>
+                {group.instructionSubtitle && (
+                  <Text style={styles.subtitle}>
+                    {group.instructionSubtitle}
+                  </Text>
                 )}
                 {group.steps?.map((step, i) => (
-                  <Text key={i}>{`${i + 1}. ${step.direction}`}</Text>
+                  <Text key={i}>{`${i + 1}. ${step.instruction}`}</Text>
                 ))}
               </View>
             ))}
