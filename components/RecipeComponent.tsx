@@ -11,7 +11,9 @@ import {
 import { Recipe } from '../api/model/recipeModel';
 import { getRecipeById } from '../api/service/recipeService';
 import BookmarkIcon from './icons/BookmarkIcon';
+import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
+import TimerIcon from './icons/TimerIcon';
 
 interface RecipeComponentProps {
   recipeId: string;
@@ -60,8 +62,12 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
       </View>
       <View style={styles.information}>
         <Text style={styles.title}>{recipe.title}</Text>
-        <Text style={styles.text}>{recipe.servingDetails}</Text>
         <View style={styles.details}>
+          <EatIcon size={24} fill={'#232323'} />
+          <Text style={styles.text}>{recipe.servingDetails}</Text>
+        </View>
+        <View style={styles.details}>
+          <TimerIcon size={24} fill={'#232323'} />
           <Text style={styles.text}>Preptime: {recipe.prepTime}</Text>
           <Text style={styles.text}>Cooktime: {recipe.cookTime}</Text>
         </View>
@@ -146,6 +152,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginHorizontal: 5,
   },
   title: {
     fontFamily: 'Jost-Regular',
