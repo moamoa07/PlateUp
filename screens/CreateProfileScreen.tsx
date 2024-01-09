@@ -1,10 +1,13 @@
 import { Link } from '@react-navigation/native';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
+import { CustomUser } from '../api/model/userModel';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { setUser } from '../redux/users';
 
 function CreateProfileScreen() {
   const theme = useTheme();
@@ -13,35 +16,49 @@ function CreateProfileScreen() {
   const auth = FIREBASE_AUTH;
   const [username, setUsername] = useState('');
   const [isFocused, setFocused] = useState(false);
+  const dispatch = useAppDispatch();
 
   const createProfile = async () => {
     try {
+      console.log('Before creating user');
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
+      // Check if authentication was successful
+      const user = userCredential.user;
+
+      if (!user) {
+        console.error('Authentication failed');
+        throw new Error('Authentication failed'); // Handle this case appropriately
+      }
+
       const defaultProfileImageUrl = '../assets/img/chokladkaka.jpeg';
 
-      await updateProfile(userCredential.user, {
+      await updateProfile(user, {
         displayName: username,
         photoURL: defaultProfileImageUrl,
       });
 
-      const userDocRef = doc(FIREBASE_DB, 'users', userCredential.user.uid);
-      await setDoc(userDocRef, {
+      const newUser: CustomUser = {
+        id: user.uid,
         displayName: username,
         email: email,
         photoURL: defaultProfileImageUrl,
         postCount: 0,
         likeCount: 0,
         followerCount: 0,
-      });
+      };
+
+      // Write user data to Firestore
+      await addDoc(collection(FIREBASE_DB, 'users'), newUser);
+
+      dispatch(setUser(newUser));
 
       alert('Profile created successfully. Check your email!');
     } catch (error: any) {
-      /*Change to another type instead of any!!*/
       console.log('Error creating user profile:', error.message);
       alert('Registration failed, try again!' + error.message);
     }
