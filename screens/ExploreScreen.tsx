@@ -1,5 +1,5 @@
 import { SafeAreaView, Text, View } from 'react-native';
-import RecipeComponent from '../components/recipeComponent';
+import RecipeComponent from '../components/RecipeComponent';
 
 function ExploreScreen() {
   return (

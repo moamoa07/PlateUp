@@ -1,5 +1,5 @@
 import { SafeAreaView, View } from 'react-native';
-import AddRecipeForm from '../components/addRecipeForm';
+import AddRecipeForm from '../components/AddRecipeForm';
 
 function AddRecipeScreen() {
   return (
