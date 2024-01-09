@@ -1,29 +1,19 @@
 import { Link } from '@react-navigation/native';
-import { User, onAuthStateChanged } from 'firebase/auth';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Avatar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FIREBASE_AUTH } from '../FirebaseConfig';
 import ImageGrid from '../components/ImageGrid';
 import BookmarkIcon from '../components/icons/BookmarkIcon';
 import LikeIcon from '../components/icons/LikeIcon';
 import SettingsIcon from '../components/icons/SettingsIcon';
+import { useAppSelector } from '../hooks/reduxHooks';
 
 function ProfileScreen() {
   const theme = useTheme();
-  const auth = FIREBASE_AUTH;
-  const [user, setUser] = React.useState<User | null>(null);
+  const user = useAppSelector((state) => state.user.user);
 
-  React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
-      setUser(authUser);
-    });
-
-    // Cleanup function to unsubscribe when the component unmounts
-    return () => unsubscribe();
-  }, [auth]);
-
+  console.log(user);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,15 +37,15 @@ function ProfileScreen() {
       </View>
       <View style={styles.profileInfo}>
         <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>28</Text>
+          <Text style={styles.textBold}>{user?.recipeCount}</Text>
           <Text style={styles.text}>Recipes</Text>
         </View>
         <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>38K</Text>
+          <Text style={styles.textBold}>{user?.likeCount}</Text>
           <Text style={styles.text}>Likes</Text>
         </View>
         <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>12K</Text>
+          <Text style={styles.textBold}>{user?.followerCount}</Text>
           <Text style={styles.text}>Followers</Text>
         </View>
       </View>
