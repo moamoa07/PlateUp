@@ -1,3 +1,5 @@
+import { getAuth } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -8,9 +10,14 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Avatar } from 'react-native-paper';
+import { Avatar, Button } from 'react-native-paper';
+import { FIREBASE_DB } from '../FirebaseConfig';
 import { Recipe } from '../api/model/recipeModel';
-import { getRecipeById } from '../api/service/recipeService';
+import {
+  addBookmarkedRecipe,
+  getBookmarkedRecipes,
+  getRecipeById,
+} from '../api/service/recipeService';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
@@ -24,10 +31,12 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [showIngredients, setShowIngredients] = useState(true);
+  const [isBookmarked, setBookmarked] = useState(false);
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      const recipeData = await getRecipeById('YHDXJmf2vSlMPwQiTiQm');
+      const recipeData = await getRecipeById(recipeId);
+
       setRecipe(recipeData as Recipe);
       setLoading(false);
     };
@@ -37,6 +46,34 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
+  };
+
+  const handleBookmark = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      console.error('No authenticated user found');
+      throw new Error('Unauthorized access');
+    }
+
+    try {
+      setBookmarked(!isBookmarked);
+      const bookmarkedRecipes = await getBookmarkedRecipes(user.uid);
+
+      if (isBookmarked) {
+        const updatedBookmarks = bookmarkedRecipes.filter(
+          (id: string) => id !== recipeId
+        );
+        await setDoc(doc(FIREBASE_DB, 'bookmarks', user.uid), {
+          bookmarkedRecipeIds: updatedBookmarks,
+        });
+      } else {
+        await addBookmarkedRecipe(user.uid, recipeId);
+      }
+    } catch (error) {
+      console.error('Error handling bookmark:', error);
+    }
   };
 
   if (isLoading) {
@@ -65,7 +102,22 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
         )}
         <View style={styles.actions}>
           <LikeIcon size={32} fill={'#232323'} />
-          <BookmarkIcon size={32} fill={'#232323'} />
+          {/* <BookmarkIcon
+            size={32}
+            fill={isBookmarked ? '#ff6347' : '#232323'}
+            onPress={handleBookmark}
+          /> */}
+          <Button
+            onPress={handleBookmark}
+            icon={() => (
+              <BookmarkIcon
+                size={32}
+                fill={isBookmarked ? '#ff6347' : '#232323'}
+              />
+            )}
+          >
+            {' '}
+          </Button>
         </View>
         <View style={styles.recipeInfo}>
           <Text style={styles.textMedium}>801 Likes</Text>
