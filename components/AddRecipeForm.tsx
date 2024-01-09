@@ -201,7 +201,11 @@ const AddRecipeForm = () => {
       >
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.h3}>Add new recipe</Text>
+
+          {/* ImageUrl */}
           <PickImage onChange={setImageUrl} resetTrigger={formSubmitted} />
+
+          {/* Title */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Title *</Text>
             <TextInput
@@ -215,6 +219,8 @@ const AddRecipeForm = () => {
               <Text style={styles.errorMessage}>{formErrors.title}</Text>
             )}
           </View>
+
+          {/* Description */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Description *</Text>
             <TextInput
@@ -229,6 +235,8 @@ const AddRecipeForm = () => {
               <Text style={styles.errorMessage}>{formErrors.description}</Text>
             )}
           </View>
+
+          {/* Serving details */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>How much will the recipe make? *</Text>
             <TextInput
@@ -244,6 +252,8 @@ const AddRecipeForm = () => {
               </Text>
             )}
           </View>
+
+          {/* Time - prep time and cook time */}
           <View style={styles.inputGroup}>
             <View style={styles.timeLabelContainer}>
               <Text style={styles.label}>Time</Text>
@@ -278,6 +288,8 @@ const AddRecipeForm = () => {
               </View>
             </View>
           </View>
+
+          {/* Quantity and ingredients */}
           <View style={styles.ingredientsContainer}>
             <Text style={styles.label}>Ingredients</Text>
             {ingredientGroups.map((group, groupIndex) => (
@@ -286,6 +298,7 @@ const AddRecipeForm = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Add a subtitle"
+                  placeholderTextColor="#888"
                   value={group.ingredientSubtitle}
                   onChangeText={(text) =>
                     handleIngredientSubtitleChange(groupIndex, text)
@@ -307,6 +320,7 @@ const AddRecipeForm = () => {
                     <TextInput
                       style={[styles.input, styles.quantityInput]}
                       placeholder="Quantity"
+                      placeholderTextColor="#888"
                       value={item.quantity}
                       onChangeText={(text) =>
                         handleIngredientChange(
@@ -328,9 +342,11 @@ const AddRecipeForm = () => {
                         }
                       </Text>
                     )}
+
                     <TextInput
                       style={[styles.input, styles.ingredientsInput]}
                       placeholder="Ingredient"
+                      placeholderTextColor="#888"
                       value={item.name}
                       onChangeText={(text) =>
                         handleIngredientChange(
@@ -391,6 +407,7 @@ const AddRecipeForm = () => {
             </TouchableOpacity>
           </View>
 
+          {/* Step and instructions */}
           <View style={styles.instructionsContainer}>
             <Text style={styles.label}>Instructions</Text>
             {instructionGroups.map((group, groupIndex) => (
@@ -399,46 +416,50 @@ const AddRecipeForm = () => {
                 <TextInput
                   style={styles.input}
                   placeholder="Add a subtitle"
+                  placeholderTextColor="#888"
                   value={group.instructionSubtitle}
                   onChangeText={(text) =>
                     handleInstructionSubtitleChange(groupIndex, text)
                   }
                 />
-                <View style={styles.subLabelStepsAndInstructionRow}>
-                  <Text style={[styles.subLabel, styles.stepLabel]}>Step</Text>
-                  <Text style={[styles.subLabel, styles.instructionLabel]}>
-                    Instruction *
-                  </Text>
-                </View>
+                <Text style={[styles.subLabel, styles.instructionLabel]}>
+                  Instruction *
+                </Text>
                 {group.steps.map((step, stepIndex) => (
                   <View key={stepIndex} style={styles.stepAndinstructionGroup}>
                     <Text style={styles.stepNumber}>{stepIndex + 1}.</Text>
-                    <TextInput
-                      style={[styles.input, styles.instructionInput]}
-                      placeholder="Instruction"
-                      value={step.instruction}
-                      onChangeText={(text) =>
-                        handleInstructionChange(groupIndex, stepIndex, text)
-                      }
-                    />
-                    {formErrors[
-                      `instructions[${groupIndex}].steps[${stepIndex}].instruction`
-                    ] && (
-                      <Text style={styles.errorMessage}>
-                        {
-                          formErrors[
-                            `instructions[${groupIndex}].steps[${stepIndex}].instruction`
-                          ]
+                    <View style={styles.instructionInputContainer}>
+                      <View style={styles.instructionInputGroup}>
+                        <TextInput
+                          style={[styles.input, styles.instructionInput]}
+                          placeholder="Add an instruction"
+                          placeholderTextColor="#888"
+                          value={step.instruction}
+                          multiline
+                          onChangeText={(text) =>
+                            handleInstructionChange(groupIndex, stepIndex, text)
+                          }
+                        />
+                        {formErrors[
+                          `instructions[${groupIndex}].steps[${stepIndex}].instruction`
+                        ] && (
+                          <Text style={styles.errorMessage}>
+                            {
+                              formErrors[
+                                `instructions[${groupIndex}].steps[${stepIndex}].instruction`
+                              ]
+                            }
+                          </Text>
+                        )}
+                      </View>
+                      <TouchableOpacity
+                        onPress={() =>
+                          removeInstructionStep(groupIndex, stepIndex)
                         }
-                      </Text>
-                    )}
-                    <TouchableOpacity
-                      onPress={() =>
-                        removeInstructionStep(groupIndex, stepIndex)
-                      }
-                    >
-                      <RemoveIcon size={28} fill={'#232323'} />
-                    </TouchableOpacity>
+                      >
+                        <RemoveIcon size={28} fill={'#232323'} />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 ))}
                 <TouchableOpacity
@@ -447,7 +468,7 @@ const AddRecipeForm = () => {
                 >
                   <Button
                     mode="outlined"
-                    style={styles.addStepButton}
+                    style={styles.addInstructionButton}
                     labelStyle={styles.buttonLabel}
                   >
                     Add Instruction
@@ -469,6 +490,7 @@ const AddRecipeForm = () => {
             </TouchableOpacity>
           </View>
 
+          {/* Additional notes */}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Additional notes</Text>
             <TextInput
@@ -480,10 +502,14 @@ const AddRecipeForm = () => {
               multiline
             />
           </View>
+
+          {/* Info to user about obligatory input fields */}
           <Text style={styles.message}>
             Please note: Fields marked with an asterisk (*) must be filled in to
             complete the submission.
           </Text>
+
+          {/* Submit button */}
           <TouchableOpacity
             onPress={handleSubmit}
             style={styles.buttonTouchable}
@@ -578,13 +604,12 @@ const styles = StyleSheet.create({
   subLabelQuantityAndIngredientRow: {
     marginTop: 16,
     flexDirection: 'row',
-    gap: 16,
+    gap: 18,
   },
   quantityAndIngredientsInputGroup: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
-    gap: 16,
   },
   quantityLabel: {
     flex: 2,
@@ -594,9 +619,11 @@ const styles = StyleSheet.create({
   },
   quantityInput: {
     flex: 2,
+    marginRight: 16,
   },
   ingredientsInput: {
     flex: 6,
+    marginRight: 6,
   },
   addIngredientButton: {
     fontFamily: 'Jost-Regular',
@@ -623,34 +650,35 @@ const styles = StyleSheet.create({
   instructionGroup: {
     // gap: 8,
   },
-  subLabelStepsAndInstructionRow: {
-    marginTop: 16,
-    flexDirection: 'row',
-    gap: 8,
-  },
   stepAndinstructionGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
     marginBottom: 12,
-  },
-  stepLabel: {
     flex: 1,
+    justifyContent: 'flex-start',
   },
   instructionLabel: {
-    flex: 9,
+    marginTop: 16,
   },
   stepNumber: {
     fontFamily: 'Jost-Regular',
-    textAlign: 'center',
     fontSize: 16,
     color: theme.colors.primary,
-    flex: 1,
+    marginBottom: 5,
+  },
+  instructionInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  instructionInputGroup: {
+    flex: 9,
+    justifyContent: 'center',
   },
   instructionInput: {
-    flex: 9,
+    height: 100, // Larger height for multi-line input
+    textAlignVertical: 'top', // Aligns text to the top for multiline
+    paddingTop: 8,
   },
-  addStepButton: {
+  addInstructionButton: {
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
     marginTop: 10,
@@ -683,6 +711,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     color: 'red',
     fontSize: 16,
+    marginTop: 5,
   },
   message: {
     fontFamily: 'Jost-Regular',
