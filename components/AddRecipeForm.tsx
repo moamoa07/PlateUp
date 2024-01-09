@@ -13,12 +13,23 @@ import {
   View,
 } from 'react-native';
 import { Button } from 'react-native-paper';
+import * as Yup from 'yup';
 import theme from '../Theme';
-import { Recipe } from '../api/model/recipeModel';
+import { recipeSchema } from '../api/schema/recipeSchema';
 import { addRecipe } from '../api/service/recipeService';
 import PickImage from './PickImage';
 import RemoveIcon from './icons/RemoveIcon';
 import TimerIcon from './icons/TimerIcon';
+
+interface FormErrors {
+  title?: string;
+  description?: string;
+  servingDetails?: string;
+  prepTime?: string;
+  cookTime?: string;
+  // Define types for dynamic fields (ingredients and instructions)
+  [key: string]: string | undefined;
+}
 
 const AddRecipeForm = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -35,6 +46,7 @@ const AddRecipeForm = () => {
   ]);
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
 
   // Function to add ingredient group
   const addIngredientGroup = () => {
@@ -118,24 +130,14 @@ const AddRecipeForm = () => {
     setInstructionGroups(newGroups);
   };
 
+  // Handle submit function
   const handleSubmit = async () => {
     Keyboard.dismiss();
-    const isIngredientGroupsValid = ingredientGroups.every((group) =>
-      group.items.some((item) => item.quantity || item.name)
-    );
-    const isInstructionGroupsValid = instructionGroups.every((group) =>
-      group.steps.some((step) => step.instruction.trim() !== '')
-    );
-    if (
-      title &&
-      description &&
-      servingDetails &&
-      prepTime &&
-      isIngredientGroupsValid &&
-      isInstructionGroupsValid
-    ) {
-      try {
-        const newRecipe: Recipe = {
+
+    try {
+      // Validate form data using Yup
+      await recipeSchema.validate(
+        {
           imageUrl,
           title,
           description,
@@ -145,34 +147,58 @@ const AddRecipeForm = () => {
           ingredients: ingredientGroups,
           instructions: instructionGroups,
           additionalNotes,
-        };
-        await addRecipe(newRecipe);
-        console.log('Recipe added successfully');
-        // Reset form here
-        setImageUrl(null); // Reset imageUrl
-        setTitle('');
-        setDescription('');
-        setServingDetails('');
-        setPrepTime('');
-        setCookTime('');
-        setIngredientGroups([
-          { ingredientSubtitle: '', items: [{ quantity: '', name: '' }] },
-        ]);
-        setInstructionGroups([
-          { instructionSubtitle: '', steps: [{ instruction: '' }] },
-        ]);
-        setAdditionalNotes('');
+        },
+        { abortEarly: false }
+      );
 
-        // Reset the form submission trigger
-        setFormSubmitted((prev) => !prev);
-        Alert.alert('Success', 'Your recipe has been shared!', [
-          { text: 'OK' },
-        ]);
-      } catch (error) {
-        console.error('Failed to add recipe:', error);
+      const newRecipe = {
+        imageUrl,
+        title,
+        description,
+        servingDetails,
+        prepTime,
+        cookTime,
+        ingredients: ingredientGroups,
+        instructions: instructionGroups,
+        additionalNotes,
+      };
+
+      await addRecipe(newRecipe);
+      console.log('Recipe added successfully');
+
+      // Reset form fields after successful submission
+      setImageUrl(null);
+      setTitle('');
+      setDescription('');
+      setServingDetails('');
+      setPrepTime('');
+      setCookTime('');
+      setIngredientGroups([
+        { ingredientSubtitle: '', items: [{ quantity: '', name: '' }] },
+      ]);
+      setInstructionGroups([
+        { instructionSubtitle: '', steps: [{ instruction: '' }] },
+      ]);
+      setAdditionalNotes('');
+      setFormSubmitted((prev) => !prev);
+
+      // Alert user of success
+      Alert.alert('Success', 'Your recipe has been shared!', [{ text: 'OK' }]);
+    } catch (error) {
+      console.error('Failed to add recipe:', error);
+
+      if (error instanceof Yup.ValidationError) {
+        // Reduce Yup errors into a single object
+        const newErrors = error.inner.reduce((acc, err) => {
+          // Assert that err.path is a string
+          const path = err.path || '';
+          return { ...acc, [path]: err.message };
+        }, {});
+        setFormErrors(newErrors);
+      } else {
+        // Handle other types of errors (like network errors)
+        Alert.alert('Error', 'Failed to add recipe. Please check your input.');
       }
-    } else {
-      console.log('Please fill in all fields');
     }
   };
 
@@ -194,6 +220,9 @@ const AddRecipeForm = () => {
               value={title}
               onChangeText={setTitle}
             />
+            {formErrors.title && (
+              <Text style={styles.errorMessage}>{formErrors.title}</Text>
+            )}
           </View>
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Description *</Text>
@@ -286,6 +315,17 @@ const AddRecipeForm = () => {
                         )
                       }
                     />
+                    {formErrors[
+                      `ingredients[${groupIndex}].items[${itemIndex}].quantity`
+                    ] && (
+                      <Text style={styles.errorMessage}>
+                        {
+                          formErrors[
+                            `ingredients[${groupIndex}].items[${itemIndex}].quantity`
+                          ]
+                        }
+                      </Text>
+                    )}
                     <TextInput
                       style={[styles.input, styles.ingredientsInput]}
                       placeholder="Ingredient"
@@ -613,6 +653,11 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     fontFamily: 'Jost-Regular',
+    fontSize: 16,
+  },
+  errorMessage: {
+    fontFamily: 'Jost-Regular',
+    color: 'red',
     fontSize: 16,
   },
   message: {
