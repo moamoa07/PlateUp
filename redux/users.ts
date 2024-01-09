@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { User } from 'firebase/auth';
-
-import type { RootState } from './store';
 import { CustomUser } from '../api/model/userModel';
+import type { RootState } from './store';
 
 // Define a type for the slice state
 export interface UserState {
@@ -11,7 +9,15 @@ export interface UserState {
 
 // Define the initial state using that type
 const initialState: UserState = {
-  user: null,
+  user: {
+    id: '',
+    email: '',
+    displayName: '',
+    photoURL: null,
+    recipeCount: 0,
+    likeCount: 0,
+    followerCount: 0,
+  },
 };
 
 export const userSlice = createSlice({
@@ -22,7 +28,6 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<CustomUser | null>) => {
       state.user = action.payload;
     },
-     // Add other user-related actions as needed
   },
 });
 
