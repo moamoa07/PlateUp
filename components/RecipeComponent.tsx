@@ -127,6 +127,7 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
                 {group.items?.map((ingredient, i) => (
                   <Text
                     key={i}
+                    style={styles.list}
                   >{`${ingredient.quantity} ${ingredient.name}`}</Text>
                 ))}
               </View>
@@ -176,8 +177,8 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   subtitle: {
-    fontWeight: '700',
     fontFamily: 'Jost-Medium',
+    fontSize: 16,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -213,6 +214,7 @@ const styles = StyleSheet.create({
   },
   list: {
     fontFamily: 'Jost-Regular',
+    fontSize: 16,
   },
   text: {
     fontFamily: 'Jost-Regular',
