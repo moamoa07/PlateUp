@@ -80,7 +80,11 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
         <View style={styles.details}>
           <TimerIcon size={24} fill={'#232323'} />
           <Text style={styles.text}>Preptime: {recipe.prepTime}</Text>
-          <Text style={styles.text}>Cooktime: {recipe.cookTime}</Text>
+          {recipe.cookTime && (
+            <View>
+              <Text style={styles.text}>Cooktime: {recipe.cookTime}</Text>
+            </View>
+          )}
         </View>
         <Text style={styles.text}>{recipe.description}</Text>
 
