@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Avatar } from 'react-native-paper';
 import { Recipe } from '../api/model/recipeModel';
 import { getRecipeById } from '../api/service/recipeService';
 import BookmarkIcon from './icons/BookmarkIcon';
@@ -49,6 +50,13 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View>
+        <View style={styles.user}>
+          <Avatar.Image
+            size={50}
+            source={require('../assets/cupcakeprofile.png')}
+          />
+          <Text style={styles.username}>MoaHedendahl</Text>
+        </View>
         {recipe.imageUrl && (
           <Image
             source={{ uri: recipe.imageUrl }}
@@ -58,6 +66,9 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
         <View style={styles.actions}>
           <LikeIcon size={32} fill={'#232323'} />
           <BookmarkIcon size={32} fill={'#232323'} />
+        </View>
+        <View style={styles.recipeInfo}>
+          <Text style={styles.textMedium}>801 Likes</Text>
         </View>
       </View>
       <View style={styles.information}>
@@ -205,6 +216,26 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'Jost-Regular',
+    fontSize: 16,
+  },
+  textMedium: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 16,
+  },
+  recipeInfo: {
+    marginHorizontal: 10,
+  },
+  user: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  username: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 20,
   },
 });
 
