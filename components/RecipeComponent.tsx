@@ -79,10 +79,15 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
         </View>
         <View style={styles.details}>
           <TimerIcon size={24} fill={'#232323'} />
-          <Text style={styles.text}>Preptime: {recipe.prepTime}</Text>
+          <Text style={styles.text}>
+            <Text style={styles.textMedium}>Preptime:</Text> {recipe.prepTime}
+          </Text>
           {recipe.cookTime && (
             <View>
-              <Text style={styles.text}>Cooktime: {recipe.cookTime}</Text>
+              <Text style={styles.text}>
+                <Text style={styles.textMedium}>Cooktime:</Text>{' '}
+                {recipe.cookTime}
+              </Text>
             </View>
           )}
         </View>
@@ -122,7 +127,7 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
         {/* Display Ingredients or Instructions based on the selected section */}
         {showIngredients
           ? recipe.ingredients?.map((group, index) => (
-              <View key={index}>
+              <View key={index} style={styles.group}>
                 {group.ingredientSubtitle && (
                   <Text style={styles.subtitle}>
                     {group.ingredientSubtitle}
@@ -131,20 +136,20 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
                 {group.items?.map((ingredient, i) => (
                   <Text
                     key={i}
-                    style={styles.list}
+                    style={styles.listIngredients}
                   >{`${ingredient.quantity} ${ingredient.name}`}</Text>
                 ))}
               </View>
             ))
           : recipe.instructions?.map((group, index) => (
-              <View key={index}>
+              <View key={index} style={styles.group}>
                 {group.instructionSubtitle && (
                   <Text style={styles.subtitle}>
                     {group.instructionSubtitle}
                   </Text>
                 )}
                 {group.steps?.map((step, i) => (
-                  <Text key={i} style={styles.list}>{`${i + 1}. ${
+                  <Text key={i} style={styles.listInstructions}>{`${i + 1}. ${
                     step.instruction
                   }`}</Text>
                 ))}
@@ -171,8 +176,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   title: {
-    fontFamily: 'Jost-Regular',
-    fontWeight: 'bold',
+    fontFamily: 'Jost-Medium',
     fontSize: 20,
     marginTop: 10,
   },
@@ -183,6 +187,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: 'Jost-Medium',
     fontSize: 16,
+    marginBottom: 2,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -216,7 +221,12 @@ const styles = StyleSheet.create({
   divider: {
     marginHorizontal: 10,
   },
-  list: {
+  listInstructions: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+    marginVertical: 3,
+  },
+  listIngredients: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
   },
@@ -243,6 +253,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Medium',
     fontSize: 20,
   },
+  group: { marginVertical: 5 },
 });
 
 export default RecipeComponent;
