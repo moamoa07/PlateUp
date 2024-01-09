@@ -138,10 +138,9 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    padding: 16,
+    // padding: 16,
     // marginTop: 48,
-    gap: 24,
-    marginBottom: 300,
+    // gap: 24,
   },
   actions: {
     display: 'flex',
@@ -152,9 +151,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontWeight: 'bold',
     fontSize: 20,
+    marginTop: 10,
   },
   information: {
-    margin: 10,
+    marginHorizontal: 10,
     gap: 6,
   },
   subtitle: {
