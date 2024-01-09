@@ -47,7 +47,7 @@ function CreateProfileScreen() {
         displayName: username,
         email: email,
         photoURL: defaultProfileImageUrl,
-        postCount: 0,
+        recipeCount: 0,
         likeCount: 0,
         followerCount: 0,
       };
