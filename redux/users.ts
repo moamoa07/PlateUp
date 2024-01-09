@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from 'firebase/auth';
+// import { User } from 'firebase/auth';
+
 import type { RootState } from './store';
+import { CustomUser } from '../api/model/userModel';
 
 // Define a type for the slice state
 export interface UserState {
-  user: User | null;
+  user: CustomUser | null;
 }
 
 // Define the initial state using that type
@@ -17,7 +19,7 @@ export const userSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User | null>) => {
+    setUser: (state, action: PayloadAction<CustomUser | null>) => {
       state.user = action.payload;
     },
      // Add other user-related actions as needed
