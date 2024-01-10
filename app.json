@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "examensarbete",
-    "slug": "examensarbete",
+    "slug": "plateup",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,17 +15,30 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.moamoa07.plateup"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.moamoa07.plateup"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "427346e6-48f1-444c-879b-b2ed938d7776"
+      }
+    },
+    "owner": "moamoa07",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/427346e6-48f1-444c-879b-b2ed938d7776"
     }
-    
   }
 }
