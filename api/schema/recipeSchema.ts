@@ -13,8 +13,10 @@ export const recipeSchema = Yup.object().shape({
     .max(30, 'Serving details cannot be more than 30 characters'),
   prepTime: Yup.string()
     .required('Please add prep time')
-    .max(20, 'Prep time description is too long'),
-  cookTime: Yup.string().nullable(),
+    .max(20, 'Prep time cannot be more than 20 characters'),
+  cookTime: Yup.string()
+    .nullable()
+    .max(20, 'Cook time cannot be more than 20 characters'),
   ingredients: Yup.array().of(
     Yup.object().shape({
       ingredientSubtitle: Yup.string()
