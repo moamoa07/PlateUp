@@ -184,7 +184,7 @@ const AddRecipeForm = () => {
       ]);
       setAdditionalNotes('');
       setFormSubmitted((prev) => !prev);
-      setFormErrors({}); // La till denna sist
+      setFormErrors({}); 
 
       // Alert user of success
       Alert.alert('Success', 'Your recipe has been shared!', [{ text: 'OK' }]);
@@ -199,6 +199,9 @@ const AddRecipeForm = () => {
           return { ...acc, [path]: err.message };
         }, {});
         setFormErrors(newErrors);
+        
+        // Alert user of validation errors
+        Alert.alert('Form Error', 'Please check your input for errors.');
       } else {
         // Handle other types of errors (like network errors)
         Alert.alert('Error', 'Failed to add recipe. Please check your input.');
