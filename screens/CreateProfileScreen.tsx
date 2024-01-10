@@ -1,11 +1,12 @@
 import { Link } from '@react-navigation/native';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
 import { CustomUser } from '../api/model/userModel';
+import { CreateProfileSchema } from '../api/schema/createProfileSchema';
 import { useAppDispatch } from '../hooks/reduxHooks';
 import { setUser } from '../redux/users';
 
@@ -20,6 +21,12 @@ function CreateProfileScreen() {
 
   const createProfile = async () => {
     try {
+
+      await CreateProfileSchema.validate(
+        { email, password, username },
+        { abortEarly: false }
+      );
+
       console.log('Before creating user');
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -54,10 +61,15 @@ function CreateProfileScreen() {
 
       dispatch(setUser(newUser));
 
-      alert('Profile created successfully. Check your email!');
+      Alert.alert('Profile created successfully!');
     } catch (error: any) {
-      console.log('Error creating user profile:', error.message);
-      alert('Registration failed, try again!' + error.message);
+      if (error.name === 'ValidationError') {
+        const errorMessage = error.errors.join('\n');
+        Alert.alert('Validation failed', errorMessage);
+      } else {
+        console.log('Error creating user profile:', error.message);
+        Alert.alert('Registration failed', `Error: ${error.message}`);
+      }
     }
   };
 
