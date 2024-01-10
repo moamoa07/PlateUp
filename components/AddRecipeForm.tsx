@@ -15,7 +15,9 @@ import { Button } from 'react-native-paper';
 import * as Yup from 'yup';
 import theme from '../Theme';
 import { recipeSchema } from '../api/schema/recipeSchema';
-import { addRecipe } from '../api/service/recipeService';
+import uploadImageToFirestore, {
+  addRecipe,
+} from '../api/service/recipeService';
 import { FormErrors } from '../types/FormErrors';
 import PickImage from './PickImage';
 import RemoveIcon from './icons/RemoveIcon';
@@ -166,8 +168,14 @@ const AddRecipeForm = () => {
         additionalNotes,
       };
 
-      await addRecipe(newRecipe);
-      console.log('Recipe added successfully');
+      // Add the recipe and get the recipeId
+      const recipeId = await addRecipe(newRecipe);
+      console.log('Recipe added successfully, ID:', recipeId);
+
+      // Now we'll use the recipeId for further operations, such as uploading an image
+      if (imageUrl) {
+        await uploadImageToFirestore(imageUrl, recipeId);
+      }
 
       // Reset form fields after successful submission
       setImageUrl(null);
@@ -184,7 +192,7 @@ const AddRecipeForm = () => {
       ]);
       setAdditionalNotes('');
       setFormSubmitted((prev) => !prev);
-      setFormErrors({}); 
+      setFormErrors({});
 
       // Alert user of success
       Alert.alert('Success', 'Your recipe has been shared!', [{ text: 'OK' }]);
@@ -199,7 +207,7 @@ const AddRecipeForm = () => {
           return { ...acc, [path]: err.message };
         }, {});
         setFormErrors(newErrors);
-        
+
         // Alert user of validation errors
         Alert.alert('Form Error', 'Please check your input for errors.');
       } else {
