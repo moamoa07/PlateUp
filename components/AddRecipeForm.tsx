@@ -317,64 +317,70 @@ const AddRecipeForm = () => {
                     key={itemIndex}
                     style={styles.quantityAndIngredientsInputGroup}
                   >
-                    <TextInput
-                      style={[styles.input, styles.quantityInput]}
-                      placeholder="Quantity"
-                      placeholderTextColor="#888"
-                      value={item.quantity}
-                      onChangeText={(text) =>
-                        handleIngredientChange(
-                          groupIndex,
-                          itemIndex,
-                          'quantity',
-                          text
-                        )
-                      }
-                    />
-                    {formErrors[
-                      `ingredients[${groupIndex}].items[${itemIndex}].quantity`
-                    ] && (
-                      <Text style={styles.errorMessage}>
-                        {
-                          formErrors[
-                            `ingredients[${groupIndex}].items[${itemIndex}].quantity`
-                          ]
+                    <View style={styles.quantityInputContainer}>
+                      <TextInput
+                        style={[styles.input, styles.quantityInput]}
+                        placeholder="Quantity"
+                        placeholderTextColor="#888"
+                        value={item.quantity}
+                        onChangeText={(text) =>
+                          handleIngredientChange(
+                            groupIndex,
+                            itemIndex,
+                            'quantity',
+                            text
+                          )
                         }
-                      </Text>
-                    )}
+                      />
+                      {formErrors[
+                        `ingredients[${groupIndex}].items[${itemIndex}].quantity`
+                      ] && (
+                        <Text style={styles.errorMessage}>
+                          {
+                            formErrors[
+                              `ingredients[${groupIndex}].items[${itemIndex}].quantity`
+                            ]
+                          }
+                        </Text>
+                      )}
+                    </View>
 
-                    <TextInput
-                      style={[styles.input, styles.ingredientsInput]}
-                      placeholder="Ingredient"
-                      placeholderTextColor="#888"
-                      value={item.name}
-                      onChangeText={(text) =>
-                        handleIngredientChange(
-                          groupIndex,
-                          itemIndex,
-                          'name',
-                          text
-                        )
-                      }
-                    />
-                    {formErrors[
-                      `ingredients[${groupIndex}].items[${itemIndex}].name`
-                    ] && (
-                      <Text style={styles.errorMessage}>
-                        {
-                          formErrors[
-                            `ingredients[${groupIndex}].items[${itemIndex}].name`
-                          ]
+                    <View style={styles.ingredientInputContainer}>
+                      <TextInput
+                        style={[styles.input, styles.ingredientsInput]}
+                        placeholder="Ingredient"
+                        placeholderTextColor="#888"
+                        value={item.name}
+                        onChangeText={(text) =>
+                          handleIngredientChange(
+                            groupIndex,
+                            itemIndex,
+                            'name',
+                            text
+                          )
                         }
-                      </Text>
-                    )}
-                    <TouchableOpacity
-                      onPress={() =>
-                        removeIngredientItem(groupIndex, itemIndex)
-                      }
-                    >
-                      <RemoveIcon size={28} fill={'#232323'} />
-                    </TouchableOpacity>
+                      />
+                      {formErrors[
+                        `ingredients[${groupIndex}].items[${itemIndex}].name`
+                      ] && (
+                        <Text style={styles.errorMessage}>
+                          {
+                            formErrors[
+                              `ingredients[${groupIndex}].items[${itemIndex}].name`
+                            ]
+                          }
+                        </Text>
+                      )}
+                    </View>
+                    <View style={styles.removeIngredientIconWrapper}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          removeIngredientItem(groupIndex, itemIndex)
+                        }
+                      >
+                        <RemoveIcon size={28} fill={'#232323'} />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 ))}
                 <TouchableOpacity
@@ -452,13 +458,15 @@ const AddRecipeForm = () => {
                           </Text>
                         )}
                       </View>
-                      <TouchableOpacity
-                        onPress={() =>
-                          removeInstructionStep(groupIndex, stepIndex)
-                        }
-                      >
-                        <RemoveIcon size={28} fill={'#232323'} />
-                      </TouchableOpacity>
+                      <View style={styles.removeInstructionIconWrapper}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            removeInstructionStep(groupIndex, stepIndex)
+                          }
+                        >
+                          <RemoveIcon size={28} fill={'#232323'} />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
                 ))}
@@ -593,7 +601,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   timeInput: {
-    // You may adjust styles for time-specific inputs here
+    // Adjust styles for time-specific inputs here
   },
   ingredientsContainer: {
     gap: 8,
@@ -608,7 +616,7 @@ const styles = StyleSheet.create({
   },
   quantityAndIngredientsInputGroup: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     marginBottom: 12,
   },
   quantityLabel: {
@@ -617,13 +625,18 @@ const styles = StyleSheet.create({
   ingredientLabel: {
     flex: 6,
   },
-  quantityInput: {
+  quantityInputContainer: {
     flex: 2,
     marginRight: 16,
   },
-  ingredientsInput: {
-    flex: 6,
+  quantityInput: {},
+  ingredientInputContainer: {
+    flex: 5,
     marginRight: 6,
+  },
+  ingredientsInput: {},
+  removeIngredientIconWrapper: {
+    marginTop: 8,
   },
   addIngredientButton: {
     fontFamily: 'Jost-Regular',
@@ -666,7 +679,7 @@ const styles = StyleSheet.create({
   },
   instructionInputContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     gap: 8,
   },
   instructionInputGroup: {
@@ -677,6 +690,9 @@ const styles = StyleSheet.create({
     height: 100, // Larger height for multi-line input
     textAlignVertical: 'top', // Aligns text to the top for multiline
     paddingTop: 8,
+  },
+  removeInstructionIconWrapper: {
+    marginTop: 35,
   },
   addInstructionButton: {
     fontFamily: 'Jost-Regular',
