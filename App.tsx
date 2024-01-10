@@ -4,14 +4,17 @@ import { User, onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import { initApp } from './Init';
 import theme from './Theme';
 import RootNavigator from './navigators/RootNavigator';
 import BookmarkScreen from './screens/BookmarkScreen';
+import CreateProfileScreen from './screens/CreateProfileScreen';
 import SettingScreen from './screens/SettingScreen';
 import SignInScreen from './screens/SignInScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
+import { store } from './redux/store'
 
 const Stack = createNativeStackNavigator();
 const StartStack = createNativeStackNavigator();
@@ -28,6 +31,11 @@ function StartLayout() {
       <Stack.Screen
         name="SignInScreen"
         component={SignInScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CreateProfileScreen"
+        component={CreateProfileScreen}
         options={{ headerShown: false }}
       />
     </StartStack.Navigator>
@@ -83,25 +91,27 @@ function App() {
 
   return (
     <SafeAreaProvider>
-      <PaperProvider theme={theme}>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="StartLayout">
-            {user ? (
-              <Stack.Screen
-                name="InsideLayout"
-                component={InsideLayout}
-                options={{ headerShown: false }}
-              />
-            ) : (
-              <Stack.Screen
-                name="StartLayout"
-                component={StartLayout}
-                options={{ headerShown: false }}
-              />
-            )}
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
+      <Provider store={store}>
+        <PaperProvider theme={theme}>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="StartLayout">
+              {user ? (
+                <Stack.Screen
+                  name="InsideLayout"
+                  component={InsideLayout}
+                  options={{ headerShown: false }}
+                />
+              ) : (
+                <Stack.Screen
+                  name="StartLayout"
+                  component={StartLayout}
+                  options={{ headerShown: false }}
+                />
+              )}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PaperProvider>
+      </Provider>
     </SafeAreaProvider>
   );
 }
