@@ -62,6 +62,9 @@ const AddRecipeForm = () => {
     const newGroups = [...ingredientGroups];
     newGroups[groupIndex].items[itemIndex][field] = value;
     setIngredientGroups(newGroups);
+
+    const errorKey = `ingredients[${groupIndex}].items[${itemIndex}].${field}`;
+    setFormErrors({ ...formErrors, [errorKey]: undefined });
   };
 
   // For ingredient subtitle changes
@@ -72,6 +75,9 @@ const AddRecipeForm = () => {
     const newGroups = [...ingredientGroups];
     newGroups[groupIndex].ingredientSubtitle = value;
     setIngredientGroups(newGroups);
+
+    const errorKey = `ingredients[${groupIndex}].ingredientSubtitle`;
+    setFormErrors({ ...formErrors, [errorKey]: undefined });
   };
 
   // Function to handle removal of an ingredient item
@@ -102,6 +108,10 @@ const AddRecipeForm = () => {
     const newGroups = [...instructionGroups];
     newGroups[groupIndex].steps[stepIndex].instruction = value;
     setInstructionGroups(newGroups);
+
+    // Clear the respective error
+    const errorKey = `instructions[${groupIndex}].steps[${stepIndex}].instruction`;
+    setFormErrors({ ...formErrors, [errorKey]: undefined });
   };
 
   const removeInstructionStep = (groupIndex: number, stepIndex: number) => {
@@ -118,6 +128,9 @@ const AddRecipeForm = () => {
     const newGroups = [...instructionGroups];
     newGroups[groupIndex].instructionSubtitle = value;
     setInstructionGroups(newGroups);
+
+    const errorKey = `instructions[${groupIndex}].instructionSubtitle`;
+    setFormErrors({ ...formErrors, [errorKey]: undefined });
   };
 
   // Handle submit function
@@ -171,6 +184,7 @@ const AddRecipeForm = () => {
       ]);
       setAdditionalNotes('');
       setFormSubmitted((prev) => !prev);
+      setFormErrors({}); // La till denna sist
 
       // Alert user of success
       Alert.alert('Success', 'Your recipe has been shared!', [{ text: 'OK' }]);
@@ -211,7 +225,10 @@ const AddRecipeForm = () => {
             placeholder="Enter the title of your recipe"
             placeholderTextColor="#888"
             value={title}
-            onChangeText={setTitle}
+            onChangeText={(text) => {
+              setTitle(text);
+              setFormErrors({ ...formErrors, title: undefined }); // Clear the title error
+            }}
           />
           {formErrors.title && (
             <Text style={styles.errorMessage}>{formErrors.title}</Text>
@@ -226,7 +243,10 @@ const AddRecipeForm = () => {
             placeholder="Describe your recipe"
             placeholderTextColor="#888"
             value={description}
-            onChangeText={setDescription}
+            onChangeText={(text) => {
+              setDescription(text);
+              setFormErrors({ ...formErrors, description: undefined }); // Clear the description error
+            }}
             multiline
           />
           {formErrors.description && (
@@ -242,7 +262,10 @@ const AddRecipeForm = () => {
             placeholder="e.g., 4 servings, 12 cookies"
             placeholderTextColor="#888"
             value={servingDetails}
-            onChangeText={setServingDetails}
+            onChangeText={(text) => {
+              setServingDetails(text);
+              setFormErrors({ ...formErrors, servingDetails: undefined }); // Clear the servingDetails error
+            }}
           />
           {formErrors.servingDetails && (
             <Text style={styles.errorMessage}>{formErrors.servingDetails}</Text>
@@ -266,7 +289,10 @@ const AddRecipeForm = () => {
                 placeholder="e.g., 20 min"
                 placeholderTextColor="#888"
                 value={prepTime}
-                onChangeText={setPrepTime}
+                onChangeText={(text) => {
+                  setPrepTime(text);
+                  setFormErrors({ ...formErrors, prepTime: undefined }); // Clear the prepTime error
+                }}
               />
               {formErrors.prepTime && (
                 <Text style={styles.errorMessage}>{formErrors.prepTime}</Text>
@@ -279,8 +305,14 @@ const AddRecipeForm = () => {
                 placeholder="e.g., 1 h"
                 placeholderTextColor="#888"
                 value={cookTime}
-                onChangeText={setCookTime}
+                onChangeText={(text) => {
+                  setCookTime(text);
+                  setFormErrors({ ...formErrors, cookTime: undefined }); // Clear the cookTime error
+                }}
               />
+              {formErrors.cookTime && (
+                <Text style={styles.errorMessage}>{formErrors.cookTime}</Text>
+              )}
             </View>
           </View>
         </View>
@@ -291,15 +323,28 @@ const AddRecipeForm = () => {
           {ingredientGroups.map((group, groupIndex) => (
             <View key={groupIndex} style={styles.ingredientsGroup}>
               <Text style={styles.subLabel}>Subtitle</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Add a subtitle"
-                placeholderTextColor="#888"
-                value={group.ingredientSubtitle}
-                onChangeText={(text) =>
-                  handleIngredientSubtitleChange(groupIndex, text)
-                }
-              />
+              <View style={styles.ingredientSubtitleContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Add a subtitle"
+                  placeholderTextColor="#888"
+                  value={ingredientGroups[groupIndex].ingredientSubtitle}
+                  onChangeText={(text) =>
+                    handleIngredientSubtitleChange(groupIndex, text)
+                  }
+                />
+                {formErrors[
+                  `ingredients[${groupIndex}].ingredientSubtitle`
+                ] && (
+                  <Text style={styles.errorMessage}>
+                    {
+                      formErrors[
+                        `ingredients[${groupIndex}].ingredientSubtitle`
+                      ]
+                    }
+                  </Text>
+                )}
+              </View>
               <View style={styles.subLabelQuantityAndIngredientRow}>
                 <Text style={[styles.subLabel, styles.quantityLabel]}>
                   Quantity *
@@ -318,7 +363,10 @@ const AddRecipeForm = () => {
                       style={[styles.input, styles.quantityInput]}
                       placeholder="Quantity"
                       placeholderTextColor="#888"
-                      value={item.quantity}
+                      value={
+                        ingredientGroups[groupIndex].items[itemIndex].quantity
+                      }
+                      // value={item.quantity}
                       onChangeText={(text) =>
                         handleIngredientChange(
                           groupIndex,
@@ -346,7 +394,8 @@ const AddRecipeForm = () => {
                       style={[styles.input, styles.ingredientsInput]}
                       placeholder="Ingredient"
                       placeholderTextColor="#888"
-                      value={item.name}
+                      // value={item.name}
+                      value={ingredientGroups[groupIndex].items[itemIndex].name}
                       onChangeText={(text) =>
                         handleIngredientChange(
                           groupIndex,
@@ -419,11 +468,22 @@ const AddRecipeForm = () => {
                 style={styles.input}
                 placeholder="Add a subtitle"
                 placeholderTextColor="#888"
-                value={group.instructionSubtitle}
+                value={instructionGroups[groupIndex].instructionSubtitle}
                 onChangeText={(text) =>
                   handleInstructionSubtitleChange(groupIndex, text)
                 }
               />
+              {formErrors[
+                `instructions[${groupIndex}].instructionSubtitle`
+              ] && (
+                <Text style={styles.errorMessage}>
+                  {
+                    formErrors[
+                      `instructions[${groupIndex}].instructionSubtitle`
+                    ]
+                  }
+                </Text>
+              )}
               <Text style={[styles.subLabel, styles.instructionLabel]}>
                 Instruction *
               </Text>
@@ -436,7 +496,11 @@ const AddRecipeForm = () => {
                         style={[styles.input, styles.instructionInput]}
                         placeholder="Add an instruction"
                         placeholderTextColor="#888"
-                        value={step.instruction}
+                        // value={step.instruction}
+                        value={
+                          instructionGroups[groupIndex].steps[stepIndex]
+                            .instruction
+                        }
                         multiline
                         onChangeText={(text) =>
                           handleInstructionChange(groupIndex, stepIndex, text)
@@ -502,9 +566,17 @@ const AddRecipeForm = () => {
             placeholder="Add extra details to your recipe"
             placeholderTextColor="#888"
             value={additionalNotes}
-            onChangeText={setAdditionalNotes}
+            onChangeText={(text) => {
+              setAdditionalNotes(text);
+              setFormErrors({ ...formErrors, additionalNotes: undefined }); // Clear the additional notes error
+            }}
             multiline
           />
+          {formErrors.additionalNotes && (
+            <Text style={styles.errorMessage}>
+              {formErrors.additionalNotes}
+            </Text>
+          )}
         </View>
 
         {/* Info to user about obligatory input fields */}
@@ -595,6 +667,7 @@ const styles = StyleSheet.create({
   timeInput: {
     // Adjust styles for time-specific inputs here
   },
+  ingredientSubtitleContainer: {},
   ingredientsContainer: {
     gap: 8,
   },
