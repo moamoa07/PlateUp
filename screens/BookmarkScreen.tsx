@@ -20,11 +20,11 @@ function BookmarkScreen() {
 
       if (user) {
         try {
-          let recipeIds = await getBookmarkedRecipes(user.uid);
+          // Specify the type of recipeIds as string[]
+          let recipeIds: string[] = await getBookmarkedRecipes(user.uid);
 
-          // recipeIds = recipeIds.map((id: string) =>
-          //   id ? id.replace(/"/g, '') : ''
-          // );
+          // Filter out potential null or undefined values
+          recipeIds = recipeIds.filter((id) => !!id);
 
           console.log('recipeIds', recipeIds);
 
@@ -46,7 +46,11 @@ function BookmarkScreen() {
           console.log('recipes', recipes);
 
           // Filter out null recipes before setting the state
-          setBookmarkedRecipes(recipes.filter((recipe) => recipe !== null));
+          setBookmarkedRecipes(
+            recipes.filter((recipe) => recipe !== null) as Recipe[]
+          );
+          console.log('recipes bookmarked', bookmarkedRecipes);
+          console.log('recipes test', recipes);
         } catch (error) {
           console.error('Error fetching bookmarked recipes:', error);
         } finally {
@@ -57,6 +61,10 @@ function BookmarkScreen() {
 
     fetchBookmarkedRecipes();
   }, []);
+
+  useEffect(() => {
+    console.log('Updated bookmarkedRecipes:', bookmarkedRecipes);
+  }, [bookmarkedRecipes]);
 
   if (isLoading) {
     return (
@@ -73,7 +81,7 @@ function BookmarkScreen() {
       <FlatList
         data={bookmarkedRecipes}
         keyExtractor={(item, index) =>
-          item.id ? item.id.toString() : index.toString()
+          item && item.timestamp ? item.timestamp.toString() : index.toString()
         }
         renderItem={({ item }) => <RecipeComponent recipeId={item.id} />}
       />
@@ -81,4 +89,20 @@ function BookmarkScreen() {
   );
 }
 
+{
+  /* <SafeAreaView>
+<FlatList
+  data={bookmarkedRecipes}
+  keyExtractor={(item, index) =>
+    item && item.id ? item.id.toString() : index.toString()
+  }
+  renderItem={({ item }) => (
+    <View>
+      <Text>Title: {item.title}</Text>
+      <Text>Timestamp: {item.timestamp.toString()}</Text>
+    </View>
+  )}
+/>
+</SafeAreaView> */
+}
 export default BookmarkScreen;
