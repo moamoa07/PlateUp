@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
     // padding: 16,
     // marginTop: 48,
     // gap: 24,
+    margin: 10,
   },
   actions: {
     display: 'flex',

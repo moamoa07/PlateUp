@@ -8,6 +8,8 @@ function ExploreScreen() {
         <View>
           <RecipeComponent recipeId="YHDXJmf2vSlMPwQiTiQm" />
           <RecipeComponent recipeId="YsEeThwnjcQLgrvcfV8C" />
+          <RecipeComponent recipeId="hUQJOb6u5anmmwJSYTUf" />
+          <RecipeComponent recipeId="B3yWoTcfXgR7WqzFKDBG" />
         </View>
       </ScrollView>
     </SafeAreaView>
