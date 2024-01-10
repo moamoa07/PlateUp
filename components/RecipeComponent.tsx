@@ -27,13 +27,14 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
 
   useEffect(() => {
     const fetchRecipe = async () => {
-      const recipeData = await getRecipeById('YHDXJmf2vSlMPwQiTiQm');
+      setLoading(true);
+      const recipeData = await getRecipeById(recipeId); // Using the recipeId prop
       setRecipe(recipeData as Recipe);
       setLoading(false);
     };
 
     fetchRecipe();
-  }, []);
+  }, [recipeId]);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
