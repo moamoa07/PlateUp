@@ -7,9 +7,13 @@ import ImageGrid from '../components/ImageGrid';
 import BookmarkIcon from '../components/icons/BookmarkIcon';
 import LikeIcon from '../components/icons/LikeIcon';
 import SettingsIcon from '../components/icons/SettingsIcon';
+import { useAppSelector } from '../hooks/reduxHooks';
 
 function ProfileScreen() {
   const theme = useTheme();
+  const user = useAppSelector((state) => state.user.user);
+
+  console.log(user);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,11 +33,11 @@ function ProfileScreen() {
           size={140}
           source={require('../assets/cupcakeprofile.png')}
         />
-        <Text style={styles.textUsername}>MoaHedendahl</Text>
+        <Text style={styles.textUsername}>{user?.displayName}</Text>
       </View>
       <View style={styles.profileInfo}>
         <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>28</Text>
+          <Text style={styles.textBold}>10</Text>
           <Text style={styles.text}>Recipes</Text>
         </View>
         <View style={styles.profileInfoGroup}>
@@ -41,7 +45,7 @@ function ProfileScreen() {
           <Text style={styles.text}>Likes</Text>
         </View>
         <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>12K</Text>
+          <Text style={styles.textBold}>500K</Text>
           <Text style={styles.text}>Followers</Text>
         </View>
       </View>

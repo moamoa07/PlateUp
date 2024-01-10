@@ -1,25 +1,63 @@
 import { Link } from '@react-navigation/native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useState } from 'react';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { addDoc, collection } from 'firebase/firestore';
+import React, { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
-import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
+import { CustomUser } from '../api/model/userModel';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { setUser } from '../redux/users';
 
-function SignInScreen() {
+function CreateProfileScreen() {
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const auth = FIREBASE_AUTH;
+  const [username, setUsername] = useState('');
   const [isFocused, setFocused] = useState(false);
+  const dispatch = useAppDispatch();
 
-  const signIn = async () => {
+  const createProfile = async () => {
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
-      alert('You signed in!');
-    } catch (error) {
-      console.log(error);
-      alert('Sign in failed, try again!');
+      console.log('Before creating user');
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      // Check if authentication was successful
+      const user = userCredential.user;
+
+      if (!user) {
+        console.error('Authentication failed');
+        throw new Error('Authentication failed'); // Handle this case appropriately
+      }
+
+      const defaultProfileImageUrl = '../assets/img/chokladkaka.jpeg';
+
+      await updateProfile(user, {
+        displayName: username,
+        photoURL: defaultProfileImageUrl,
+      });
+
+      const newUser: CustomUser = {
+        id: user.uid,
+        displayName: username,
+        email: email,
+        photoURL: defaultProfileImageUrl,
+      };
+
+      // Write user data to Firestore
+      await addDoc(collection(FIREBASE_DB, 'users'), newUser);
+
+      dispatch(setUser(newUser));
+
+      alert('Profile created successfully. Check your email!');
+    } catch (error: any) {
+      console.log('Error creating user profile:', error.message);
+      alert('Registration failed, try again!' + error.message);
     }
   };
 
@@ -28,7 +66,24 @@ function SignInScreen() {
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <KeyboardAvoidingView behavior="padding">
-        <Text style={[styles.title]}>Sign In</Text>
+        <Text style={[styles.title]}>Create a profile</Text>
+        <TextInput
+          value={username}
+          label={<Text style={{ fontFamily: 'Jost-Regular' }}>Username</Text>}
+          mode="outlined"
+          autoCapitalize="none"
+          contentStyle={{ fontFamily: 'Jost-Regular' }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          outlineStyle={{
+            borderRadius: 10,
+            borderColor: isFocused
+              ? theme.colors.primary
+              : theme.colors.secondary,
+          }}
+          style={[styles.textInput, { marginBottom: 10 }]}
+          onChangeText={(text) => setUsername(text)}
+        />
         <TextInput
           value={email}
           label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
@@ -64,24 +119,27 @@ function SignInScreen() {
           secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
         />
-        <Text style={[styles.passwordText, { color: theme.colors.primary }]}>
-          Forgot password?
-        </Text>
         <View style={[styles.buttonContainer]}>
           <Button
             mode="contained"
             buttonColor={theme.colors.primary}
             labelStyle={{ marginHorizontal: 0 }}
             style={[styles.button]}
-            onPress={signIn}
+            onPress={createProfile}
           >
-            <Text style={[styles.textWhite]}>Sign in</Text>
+            <Text style={styles.textWhite}>Sign up</Text>
           </Button>
         </View>
+        <View style={[styles.termsTextContainer]}>
+          <Text style={[styles.termsText]}>
+            By signing up, you agree to PlateUp's
+          </Text>
+          <Text>Terms of Use & Privacy Policy</Text>
+        </View>
         <View style={[styles.linkContainer]}>
-          <Text style={[styles.linkText1]}>New to PlateUp?</Text>
-          <Link to={{ screen: 'CreateProfileScreen' }}>
-            <Text style={[styles.linkText2]}>Create a profile</Text>
+          <Text style={[styles.linkText1]}>Already have a profile?</Text>
+          <Link to={{ screen: 'SignInScreen' }}>
+            <Text style={[styles.linkText2]}>Sign in</Text>
           </Link>
         </View>
       </KeyboardAvoidingView>
@@ -109,16 +167,11 @@ const styles = StyleSheet.create({
     width: 260,
     borderRadius: 25,
   },
-  passwordText: {
-    fontFamily: 'Jost-Regular',
-    marginLeft: 5,
-    marginTop: 4,
-    marginBottom: 30,
-  },
   buttonContainer: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: 50,
+    marginTop: 30,
   },
   button: {
     borderRadius: 10,
@@ -127,6 +180,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontSize: 15,
     color: '#fff',
+  },
+  termsTextContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: 60,
   },
   termsText: {
     color: '#696969',
@@ -150,4 +208,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInScreen;
+export default CreateProfileScreen;
