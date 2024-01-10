@@ -1,11 +1,11 @@
 import { SafeAreaView, View } from 'react-native';
-import RecipeComponent from '../components/RecipeComponent';
+import RecipesList from '../components/RecipeList';
 
 function ExploreScreen() {
   return (
     <SafeAreaView>
       <View>
-        <RecipeComponent recipeId="tKWpZramrLoHOQBHAHF5" />
+        <RecipesList />
       </View>
     </SafeAreaView>
   );
