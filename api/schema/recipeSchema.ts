@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 
 export const recipeSchema = Yup.object().shape({
-  imageUrl: Yup.string().nullable(),
+  imageUrl: Yup.string().required('An image is required'),
   title: Yup.string()
     .required('Please add a title')
     .max(100, 'Title cannot be more than 100 characters'),
