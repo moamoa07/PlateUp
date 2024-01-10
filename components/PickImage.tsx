@@ -3,15 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
+import { PickImageProps } from '../types/PickImageProps';
 import ImageViewer from './ImageViewer';
 
-function PickImage({
-  onChange,
-  resetTrigger, // new prop to listen for a reset signal
-}: {
-  onChange: (imageUrl: string | null) => void;
-  resetTrigger: boolean; // this could be a number that increments to indicate a reset
-}) {
+function PickImage({ onChange, resetTrigger }: PickImageProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const pickImageAsync = async () => {
@@ -22,21 +17,16 @@ function PickImage({
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
-      onChange(result.assets[0].uri);
-
-      // await addImage({
-      //   imageUrl: result.assets[0].uri,
-      // });
+      onChange(result.assets[0].uri); // Pass the local image URI back to the parent component
     } else {
       alert('You did not select any image.');
     }
   };
 
-  // Effect to reset the image when the form is submitted
   useEffect(() => {
     if (resetTrigger) {
-      setSelectedImage(null); // this clears the local state for the image
-      onChange(null); // this tells the parent component to clear its image state as well
+      setSelectedImage(null);
+      onChange(null);
     }
   }, [resetTrigger, onChange]);
 
@@ -59,6 +49,7 @@ function PickImage({
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     // margin: 10,
