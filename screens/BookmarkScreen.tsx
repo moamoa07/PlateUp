@@ -72,7 +72,9 @@ function BookmarkScreen() {
     <SafeAreaView>
       <FlatList
         data={bookmarkedRecipes}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) =>
+          item.id ? item.id.toString() : index.toString()
+        }
         renderItem={({ item }) => <RecipeComponent recipeId={item.id} />}
       />
     </SafeAreaView>
