@@ -1,11 +1,10 @@
-import { SafeAreaView, Text, View } from 'react-native';
-import AddRecipeForm from '../components/addRecipeForm';
+import { SafeAreaView, View } from 'react-native';
+import AddRecipeForm from '../components/AddRecipeForm';
 
 function AddRecipeScreen() {
   return (
     <SafeAreaView>
       <View>
-        <Text>Recipe Screen</Text>
         <AddRecipeForm />
       </View>
     </SafeAreaView>

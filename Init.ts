@@ -6,6 +6,7 @@ export const initApp = async () => {
     'Crake-Regular': require('./assets/fonts/craketest-regular.otf'),
     'Crake-Bold': require('./assets/fonts/craketest-bold.otf'),
     'Jost-Regular': require('./assets/fonts/Jost-VariableFont_wght.ttf'),
+    'Jost-Medium': require('./assets/fonts/Jost-Medium.ttf'),
   });
   await SplashScreen.hideAsync();
 };
