@@ -616,7 +616,6 @@ const styles = StyleSheet.create({
   },
   quantityAndIngredientsInputGroup: {
     flexDirection: 'row',
-    // alignItems: 'center',
     marginBottom: 12,
   },
   quantityLabel: {
@@ -679,7 +678,6 @@ const styles = StyleSheet.create({
   },
   instructionInputContainer: {
     flexDirection: 'row',
-    // alignItems: 'center',
     gap: 8,
   },
   instructionInputGroup: {
