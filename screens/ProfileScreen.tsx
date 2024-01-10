@@ -37,15 +37,15 @@ function ProfileScreen() {
       </View>
       <View style={styles.profileInfo}>
         <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>{user?.recipeCount}</Text>
+          <Text style={styles.textBold}>10</Text>
           <Text style={styles.text}>Recipes</Text>
         </View>
         <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>{user?.likeCount}</Text>
+          <Text style={styles.textBold}>38K</Text>
           <Text style={styles.text}>Likes</Text>
         </View>
         <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>{user?.followerCount}</Text>
+          <Text style={styles.textBold}>500K</Text>
           <Text style={styles.text}>Followers</Text>
         </View>
       </View>
