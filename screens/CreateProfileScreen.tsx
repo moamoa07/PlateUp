@@ -47,9 +47,6 @@ function CreateProfileScreen() {
         displayName: username,
         email: email,
         photoURL: defaultProfileImageUrl,
-        recipeCount: 0,
-        likeCount: 0,
-        followerCount: 0,
       };
 
       // Write user data to Firestore
