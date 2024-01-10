@@ -11,9 +11,6 @@ export interface Recipe {
   additionalNotes?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  id: string;
-  userId: string;
-  timestamp: Date;
 }
 
 export interface IngredientGroup {
