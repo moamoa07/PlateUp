@@ -4,6 +4,7 @@ export interface FormErrors {
   servingDetails?: string;
   prepTime?: string;
   cookTime?: string;
+  additionalNotes?: string;
   // Define types for dynamic fields (ingredients and instructions)
   [key: string]: string | undefined;
 }
