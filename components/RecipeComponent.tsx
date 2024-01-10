@@ -61,10 +61,15 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
       setBookmarked(!isBookmarked);
       const bookmarkedRecipes = await getBookmarkedRecipes(user.uid);
 
+      console.log('bookmarkedRecipes:', bookmarkedRecipes);
+
       if (isBookmarked) {
         const updatedBookmarks = bookmarkedRecipes.filter(
           (id: string) => id !== recipeId
         );
+
+        console.log('updatedBookmarks:', updatedBookmarks);
+
         await setDoc(doc(FIREBASE_DB, 'bookmarks', user.uid), {
           bookmarkedRecipeIds: updatedBookmarks,
         });
