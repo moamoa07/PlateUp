@@ -135,9 +135,37 @@ const AddRecipeForm = () => {
     setFormErrors({ ...formErrors, [errorKey]: undefined });
   };
 
+  // Function to handle image upload errors
+  const handleImageUploadError = (error: string) => {
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      imageUrl: error,
+    }));
+  };
+
+  // Reset submitted form
+  const resetFormSubmitted = () => setFormSubmitted(false);
+
   // Handle submit function
   const handleSubmit = async () => {
     Keyboard.dismiss();
+
+    if (!imageUrl) {
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        imageUrl: 'An image is required',
+      }));
+      return;
+    }
+
+    // Check for image upload error before proceeding
+    if (formErrors.imageUrl) {
+      Alert.alert(
+        'Error',
+        'Please resolve the image upload error before submitting.'
+      );
+      return;
+    }
 
     try {
       // Validate form data using Yup
@@ -226,7 +254,14 @@ const AddRecipeForm = () => {
         <Text style={styles.h3}>Add new recipe</Text>
 
         {/* ImageUrl */}
-        <PickImage onChange={setImageUrl} resetTrigger={formSubmitted} />
+        <PickImage
+          onChange={setImageUrl}
+          resetTrigger={formSubmitted}
+          onResetComplete={resetFormSubmitted}
+          errorMessage={formErrors.imageUrl}
+          maxSizeInMB={5}
+          onImageUploadError={handleImageUploadError}
+        />
 
         {/* Title */}
         <View style={styles.inputGroup}>
@@ -600,7 +635,7 @@ const AddRecipeForm = () => {
         <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
           <Button
             mode="contained"
-            style={styles.button}
+            style={styles.submitButton}
             labelStyle={styles.buttonLabel}
           >
             Share Recipe
@@ -785,7 +820,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 2,
   },
-  button: {
+  submitButton: {
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
     backgroundColor: theme.colors.primary,
@@ -793,6 +828,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 2,
+    marginBottom: 20,
   },
   buttonLabel: {
     fontFamily: 'Jost-Regular',
