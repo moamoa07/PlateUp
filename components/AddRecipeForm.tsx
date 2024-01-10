@@ -370,7 +370,6 @@ const AddRecipeForm = () => {
                   </View>
                   <View style={styles.removeIngredientIconWrapper}>
                     <TouchableOpacity
-                      activeOpacity={1}
                       onPress={() =>
                         removeIngredientItem(groupIndex, itemIndex)
                       }
@@ -381,7 +380,6 @@ const AddRecipeForm = () => {
                 </View>
               ))}
               <TouchableOpacity
-                activeOpacity={1}
                 onPress={() => addIngredientItem(groupIndex)}
                 style={styles.buttonTouchable}
               >
@@ -397,7 +395,6 @@ const AddRecipeForm = () => {
           ))}
 
           <TouchableOpacity
-            activeOpacity={1}
             onPress={addIngredientGroup}
             style={styles.buttonTouchable}
           >
@@ -459,7 +456,6 @@ const AddRecipeForm = () => {
                     </View>
                     <View style={styles.removeInstructionIconWrapper}>
                       <TouchableOpacity
-                        activeOpacity={1}
                         onPress={() =>
                           removeInstructionStep(groupIndex, stepIndex)
                         }
@@ -471,7 +467,6 @@ const AddRecipeForm = () => {
                 </View>
               ))}
               <TouchableOpacity
-                activeOpacity={1}
                 onPress={() => addInstructionStep(groupIndex)}
                 style={styles.buttonTouchable}
               >
@@ -486,7 +481,6 @@ const AddRecipeForm = () => {
             </View>
           ))}
           <TouchableOpacity
-            activeOpacity={1}
             onPress={addInstructionGroup}
             style={styles.buttonTouchable}
           >
@@ -520,11 +514,7 @@ const AddRecipeForm = () => {
         </Text>
 
         {/* Submit button */}
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={handleSubmit}
-          style={styles.buttonTouchable}
-        >
+        <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
           <Button
             mode="contained"
             style={styles.button}
