@@ -18,7 +18,7 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
     // Include the additional fields in the recipe data
     const docRef = await addDoc(collection(FIREBASE_DB, 'recipes'), {
       ...recipeData,
-      userId: user.uid, // Optionally store the user ID with the recipe
+      userId: user.uid, // Store the user ID with the recipe
       createdAt: new Date(), // Set the current date as the creation date
       updatedAt: new Date(), // Set the current date as the updated date
     });
