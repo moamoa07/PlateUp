@@ -3,7 +3,4 @@ export interface CustomUser {
   email: string;
   displayName: string;
   photoURL: string | null;
-  recipeCount: number;
-  likeCount: number;
-  followerCount: number;
 }

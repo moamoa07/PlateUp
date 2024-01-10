@@ -14,9 +14,6 @@ const initialState: UserState = {
     email: '',
     displayName: '',
     photoURL: null,
-    recipeCount: 0,
-    likeCount: 0,
-    followerCount: 0,
   },
 };
 
