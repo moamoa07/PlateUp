@@ -1,5 +1,12 @@
 import { getAuth } from 'firebase/auth';
-import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { FIREBASE_DB, FIREBASE_STORAGE } from '../../FirebaseConfig';
 import { Recipe } from '../model/recipeModel';
@@ -28,6 +35,18 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
     console.error('Error adding recipe to Firestore:', error);
     throw error;
   }
+}
+
+// Fetch all recipes from Firestore
+export async function getAllRecipes() {
+  const recipes: Array<Recipe & { id: string }> = []; // Define the type of array with an additional 'id' property
+  const querySnapshot = await getDocs(collection(FIREBASE_DB, 'recipes'));
+  querySnapshot.forEach((doc) => {
+    // Combine the document data with the document ID
+    const recipeData = doc.data() as Recipe; // Cast the document data to the Recipe type
+    recipes.push({ ...recipeData, id: doc.id }); // Add the id property
+  });
+  return recipes;
 }
 
 // Get recipe by id from Firestore database
