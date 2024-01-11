@@ -1,3 +1,4 @@
+import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -11,7 +12,6 @@ function PickImage({
   resetTrigger,
   onResetComplete,
   errorMessage,
-  maxSizeInMB,
   onImageUploadError,
 }: PickImageProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -22,26 +22,24 @@ function PickImage({
       quality: 1,
     });
 
-    if (!result.canceled) {
-      const imageSizeInMB = result.assets[0]?.fileSize
-        ? result.assets[0].fileSize / 1024 / 1024
-        : 0; // Convert bytes to MB
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const selectedAsset = result.assets[0];
 
-      // Check if the image exceeds the maximum size limit
-      if (maxSizeInMB && imageSizeInMB > maxSizeInMB) {
-        onImageUploadError?.(
-          `Image size should be less than ${maxSizeInMB} MB`
+      try {
+        const compressedImage = await ImageManipulator.manipulateAsync(
+          selectedAsset.uri,
+          [{ resize: { width: 1080 } }], // Might have to adjust this after testing
+          { compress: 0.7 } // Compression 70% - might have to adjust this after testing
         );
-      } else {
-        // Clear any previous error message
-        onImageUploadError?.('');
 
-        // Set the new image
-        setSelectedImage(result.assets[0].uri);
-        onChange(result.assets[0].uri); // Pass the local image URI back to the parent component
+        setSelectedImage(compressedImage.uri);
+        onChange(compressedImage.uri);
+        onImageUploadError?.('');
+      } catch (error) {
+        console.error('Error during image manipulation:', error);
+        onImageUploadError?.('Error compressing the image');
       }
     } else {
-      // Clear any previous error message when no image is selected
       onImageUploadError?.('');
       alert('You did not select any image.');
     }
