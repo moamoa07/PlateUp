@@ -251,8 +251,6 @@ const AddRecipeForm = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.h3}>Add new recipe</Text>
-
         {/* ImageUrl */}
         <PickImage
           onChange={setImageUrl}
@@ -439,7 +437,6 @@ const AddRecipeForm = () => {
                       style={[styles.input, styles.ingredientsInput]}
                       placeholder="Ingredient"
                       placeholderTextColor="#888"
-                      // value={item.name}
                       value={ingredientGroups[groupIndex].items[itemIndex].name}
                       onChangeText={(text) =>
                         handleIngredientChange(
@@ -651,12 +648,6 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 16,
     gap: 24,
-  },
-  h3: {
-    fontSize: 28,
-    fontFamily: 'Crake-Regular',
-    textAlign: 'center',
-    color: theme.colors.primary,
   },
   inputGroup: {
     display: 'flex',
