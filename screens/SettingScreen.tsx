@@ -1,7 +1,5 @@
 import { Link } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, Modal, Portal, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,37 +7,32 @@ import { FIREBASE_AUTH } from '../FirebaseConfig';
 import AccountIcon from '../components/icons/AccountIcon';
 import HelpIcon from '../components/icons/HelpIcon';
 import SignOutIcon from '../components/icons/SignOutIcon';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { setSignOutState } from '../redux/users';
 
 function SettingScreen() {
   const theme = useTheme();
-  const [isLoaded] = useFonts({
-    CrakeRegular: require('../assets/fonts/craketest-regular.otf'),
-    CrakeBold: require('../assets/fonts/craketest-bold.otf'),
-    Jost: require('../assets/fonts/Jost-VariableFont_wght.ttf'),
-  });
-
+  const dispatch = useAppDispatch();
   const [isModalVisible, setModalVisible] = useState(false);
-
-  const handleOnLayout = useCallback(async () => {
-    if (isLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [isLoaded]);
-
-  if (!isLoaded) {
-    return null;
-  }
-
   const showModal = () => setModalVisible(true);
   const hideModal = () => setModalVisible(false);
 
   const onSignOut = async () => {
-    hideModal(); // Close the modal before signing out
-    await FIREBASE_AUTH.signOut();
+    try {
+      hideModal(); // Close the modal before signing out
+      await FIREBASE_AUTH.signOut();
+
+      // Dispatch the signOut action to update the Redux store
+      dispatch(setSignOutState());
+
+      console.log('User signed out successfully');
+    } catch (error: any) {
+      console.error('Error signing out:', error.message);
+    }
   };
 
   return (
-    <SafeAreaView onLayout={handleOnLayout}>
+    <SafeAreaView>
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Settings</Text>
@@ -103,7 +96,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   title: {
-    fontFamily: 'CrakeBold',
+    fontFamily: 'Crake-Bold',
     fontSize: 24,
   },
   titleContainer: {
@@ -112,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   text: {
-    fontFamily: 'Jost',
+    fontFamily: 'Jost-Regular',
     marginLeft: 10,
   },
   link: {
@@ -141,7 +134,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   modalText: {
-    fontFamily: 'Jost',
+    fontFamily: 'Jost-Regular',
     marginBottom: 20,
   },
   modalButton: {
