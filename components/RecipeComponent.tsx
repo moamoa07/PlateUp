@@ -18,6 +18,7 @@ import {
   getBookmarkedRecipes,
   getRecipeById,
 } from '../api/service/recipeService';
+import { useAppSelector } from '../hooks/reduxHooks';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
 import FillBookmarkIcon from './icons/FillBookmarkIcon';
@@ -33,6 +34,7 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
   const [isLoading, setLoading] = useState(true);
   const [showIngredients, setShowIngredients] = useState(true);
   const [isBookmarked, setBookmarked] = useState(false);
+  const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -98,7 +100,7 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
             size={50}
             source={require('../assets/cupcakeprofile.png')}
           />
-          <Text style={styles.username}>MoaHedendahl</Text>
+          <Text style={styles.username}>{user?.displayName}</Text>
         </View>
         {recipe.imageUrl && (
           <Image
