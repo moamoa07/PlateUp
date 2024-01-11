@@ -1,6 +1,6 @@
 import { Link } from '@react-navigation/native';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { Alert, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
@@ -19,10 +19,9 @@ function CreateProfileScreen() {
   const [isFocused, setFocused] = useState(false);
   const dispatch = useAppDispatch();
 
-
   // This code works, but is blocked by the rules on db, will keep this if we have time to
   // do it in another way but still keep this code here :)
-  
+
   // const checkUsernameAvailability = async (username: string) => {
   //   const usersCollection = collection(FIREBASE_DB, 'users');
   //   const usernameQuery = query(
@@ -65,7 +64,8 @@ function CreateProfileScreen() {
         throw new Error('Authentication failed'); // Handle this case appropriately
       }
 
-      const defaultProfileImageUrl = '../assets/img/chokladkaka.jpeg';
+      const defaultProfileImageUrl =
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7';
 
       await updateProfile(user, {
         displayName: username,
