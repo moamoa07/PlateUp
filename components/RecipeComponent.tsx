@@ -297,7 +297,6 @@ const styles = StyleSheet.create({
   stepNumber: {
     width: 22, // Fixed width for the step numbers
     marginRight: 6, // Space between number and instruction
-    textAlign: 'center',
     fontFamily: 'Jost-Regular',
     fontSize: 16,
   },
