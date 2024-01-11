@@ -6,10 +6,8 @@ function ExploreScreen() {
     <SafeAreaView>
       <ScrollView contentContainerStyle={styles.container}>
         <View>
-          <RecipeComponent recipeId="YHDXJmf2vSlMPwQiTiQm" />
-          <RecipeComponent recipeId="YsEeThwnjcQLgrvcfV8C" />
-          <RecipeComponent recipeId="hUQJOb6u5anmmwJSYTUf" />
-          <RecipeComponent recipeId="B3yWoTcfXgR7WqzFKDBG" />
+          <RecipeComponent recipeId="MF6gUpKXslP7auPYphPm" />
+          <RecipeComponent recipeId="TOGlPQ4OOIJPjhPxouEg" />
         </View>
       </ScrollView>
     </SafeAreaView>
