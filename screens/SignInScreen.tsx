@@ -1,9 +1,11 @@
 import { Link } from '@react-navigation/native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { User, UserCredential, signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { setUser } from '../redux/users';
 
 function SignInScreen() {
   const theme = useTheme();
@@ -11,12 +13,27 @@ function SignInScreen() {
   const [password, setPassword] = useState('');
   const auth = FIREBASE_AUTH;
   const [isFocused, setFocused] = useState(false);
-
+  const dispatch = useAppDispatch();
+  
   const signIn = async () => {
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
-      alert('You signed in!');
+      const response: UserCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user: User | null = response.user;
+
+      if (user) {
+        // If you want to store the user's information in your Redux store
+        dispatch(setUser({
+          id: user.uid,
+          displayName: user.displayName || '',
+          email: user.email || '',
+          photoURL: user.photoURL || null,
+        }));
+
+        alert('You signed in!');
+      } else {
+        console.error('No user information available after sign-in.');
+        // Handle this case appropriately
+      }
     } catch (error) {
       console.log(error);
       alert('Sign in failed, try again!');
