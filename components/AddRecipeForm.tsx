@@ -259,7 +259,6 @@ const AddRecipeForm = () => {
           resetTrigger={formSubmitted}
           onResetComplete={resetFormSubmitted}
           errorMessage={formErrors.imageUrl}
-          maxSizeInMB={5}
           onImageUploadError={handleImageUploadError}
         />
 
