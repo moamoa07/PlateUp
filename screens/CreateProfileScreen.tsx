@@ -19,8 +19,31 @@ function CreateProfileScreen() {
   const [isFocused, setFocused] = useState(false);
   const dispatch = useAppDispatch();
 
+
+  // This code works, but is blocked by the rules on db, will keep this if we have time to
+  // do it in another way but still keep this code here :)
+  
+  // const checkUsernameAvailability = async (username: string) => {
+  //   const usersCollection = collection(FIREBASE_DB, 'users');
+  //   const usernameQuery = query(
+  //     usersCollection,
+  //     where('displayName', '==', username)
+  //   );
+  //   const querySnapshot = await getDocs(usernameQuery);
+
+  //   return querySnapshot.size > 0; // If size > 0, username is taken; otherwise, it's available.
+  // };
+
   const createProfile = async () => {
     try {
+      // const usernameExists = await checkUsernameAvailability(username);
+
+      // if (usernameExists) {
+      //   Alert.alert(
+      //     'Username is already taken. Please choose a different one.'
+      //   );
+      //   return;
+      // }
 
       await CreateProfileSchema.validate(
         { email, password, username },
