@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   ingredientQuantity: {
-    width: 50,
+    width: 60,
     marginRight: 8,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
@@ -289,19 +289,17 @@ const styles = StyleSheet.create({
     // fontFamily: 'Jost-Regular',
     // fontSize: 16,
   },
-  listInstructions: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
-    paddingBottom: 8,
-  },
   instructionItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: 10, // Space between instructions
   },
   stepNumber: {
-    width: 22, // Set a fixed width for the step numbers
+    width: 22, // Fixed width for the step numbers
     marginRight: 6, // Space between number and instruction
+    textAlign: 'center',
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
   },
   instructionText: {
     flex: 1, // Take up the rest of the space in the row
