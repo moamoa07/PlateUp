@@ -14,6 +14,7 @@ function CreateProfileScreen() {
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const auth = FIREBASE_AUTH;
   const [username, setUsername] = useState('');
   const [isFocused, setFocused] = useState(false);
@@ -48,6 +49,11 @@ function CreateProfileScreen() {
         { email, password, username },
         { abortEarly: false }
       );
+
+      if (password !== confirmPassword) {
+        Alert.alert('Password does not match');
+        return;
+      }
 
       console.log('Before creating user');
       const userCredential = await createUserWithEmailAndPassword(
@@ -150,9 +156,29 @@ function CreateProfileScreen() {
               ? theme.colors.primary
               : theme.colors.secondary,
           }}
-          style={[styles.textInput]}
+          style={[styles.textInput, { marginBottom: 10 }]}
           secureTextEntry={true}
           onChangeText={(text) => setPassword(text)}
+        />
+        <TextInput
+          value={confirmPassword}
+          label={
+            <Text style={{ fontFamily: 'Jost-Regular' }}>Confirm password</Text>
+          }
+          mode="outlined"
+          autoCapitalize="none"
+          contentStyle={{ fontFamily: 'Jost-Regular' }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          outlineStyle={{
+            borderRadius: 10,
+            borderColor: isFocused
+              ? theme.colors.primary
+              : theme.colors.secondary,
+          }}
+          style={[styles.textInput]}
+          secureTextEntry={true}
+          onChangeText={(text) => setConfirmPassword(text)}
         />
         <View style={[styles.buttonContainer]}>
           <Button
