@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Avatar, Button } from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import { FIREBASE_DB } from '../FirebaseConfig';
 import { Recipe } from '../api/model/recipeModel';
 import {
@@ -20,6 +20,7 @@ import {
 } from '../api/service/recipeService';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
+import FillBookmarkIcon from './icons/FillBookmarkIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
 
@@ -107,22 +108,14 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
         )}
         <View style={styles.actions}>
           <LikeIcon size={32} fill={'#232323'} />
-          {/* <BookmarkIcon
-            size={32}
-            fill={isBookmarked ? '#ff6347' : '#232323'}
-            onPress={handleBookmark}
-          /> */}
-          <Button
-            onPress={handleBookmark}
-            icon={() => (
-              <BookmarkIcon
-                size={32}
-                fill={isBookmarked ? '#ff6347' : '#232323'}
-              />
+
+          <TouchableOpacity onPress={handleBookmark}>
+            {isBookmarked ? (
+              <FillBookmarkIcon size={32} fill={'#232323'} />
+            ) : (
+              <BookmarkIcon size={32} fill={'#232323'} />
             )}
-          >
-            {' '}
-          </Button>
+          </TouchableOpacity>
         </View>
         <View style={styles.recipeInfo}>
           <Text style={styles.textMedium}>801 Likes</Text>
@@ -225,7 +218,7 @@ const styles = StyleSheet.create({
     // padding: 16,
     // marginTop: 48,
     // gap: 24,
-    margin: 10,
+    marginVertical: 10,
   },
   actions: {
     display: 'flex',
