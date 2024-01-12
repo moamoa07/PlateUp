@@ -34,7 +34,7 @@ const RecipesList = () => {
     lastRecipe: QueryDocumentSnapshot<DocumentData> | null = null
   ) => {
     if (isFetchingMore) {
-      return; // Avoid fetching more if a request is already in progress
+      return; // Prevent multiple fetches at the same time
     }
 
     setIsFetchingMore(true);
@@ -58,7 +58,7 @@ const RecipesList = () => {
         <Text style={styles.h3}>Explore Recipes</Text>
       </View>
       {isLoading ? (
-        <ActivityIndicator />
+        <ActivityIndicator size={'large'} />
       ) : (
         <>
           {recipes.map((recipe) => (
@@ -66,7 +66,7 @@ const RecipesList = () => {
           ))}
         </>
       )}
-      {hasMoreRecipes && !isLoading && (
+      {hasMoreRecipes && (
         <TouchableOpacity
           onPress={() => fetchRecipes(lastFetchedRecipe)}
           disabled={isFetchingMore}
@@ -82,7 +82,7 @@ const RecipesList = () => {
         </TouchableOpacity>
       )}
 
-      {!hasMoreRecipes && (
+      {!hasMoreRecipes && !isLoading && (
         <Text style={styles.endOfListMessage}>You've reached the end.</Text>
       )}
     </ScrollView>
