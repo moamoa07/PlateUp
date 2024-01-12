@@ -66,12 +66,12 @@ const RecipesList = () => {
           ))}
         </>
       )}
-      <TouchableOpacity
-        onPress={() => fetchRecipes(lastFetchedRecipe)}
-        disabled={isFetchingMore}
-        style={styles.buttonTouchable}
-      >
-        {hasMoreRecipes && !isLoading && (
+      {hasMoreRecipes && !isLoading && (
+        <TouchableOpacity
+          onPress={() => fetchRecipes(lastFetchedRecipe)}
+          disabled={isFetchingMore}
+          style={styles.buttonTouchable}
+        >
           <Button
             mode="contained"
             style={styles.loadMoreButton}
@@ -79,8 +79,8 @@ const RecipesList = () => {
           >
             Load More Recipes
           </Button>
-        )}
-      </TouchableOpacity>
+        </TouchableOpacity>
+      )}
 
       {!hasMoreRecipes && (
         <Text style={styles.endOfListMessage}>You've reached the end.</Text>
