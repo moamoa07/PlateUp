@@ -189,7 +189,7 @@ function CreateProfileScreen() {
           <Button
             mode="contained"
             buttonColor={theme.colors.primary}
-            labelStyle={{ marginHorizontal: 0 }}
+            labelStyle={{ marginVertical: 10 }}
             style={[styles.button]}
             onPress={createProfile}
           >
@@ -221,17 +221,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    paddingHorizontal: 10,
-    paddingTop: 70,
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center'
   },
   title: {
     fontFamily: 'Crake-Regular',
     textAlign: 'center',
     fontSize: 24,
     height: 30,
-    marginBottom: 15,
+    marginBottom: 20,
   },
   textInput: {
     width: 260,
@@ -248,7 +247,7 @@ const styles = StyleSheet.create({
   },
   textWhite: {
     fontFamily: 'Jost-Regular',
-    fontSize: 15,
+    fontSize: 16,
     color: '#fff',
   },
   termsTextContainer: {
