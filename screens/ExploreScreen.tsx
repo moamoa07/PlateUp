@@ -1,6 +1,5 @@
 import { PixelRatio, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import theme from '../Theme';
-import RecipesList from '../components/RecipeList';
 
 const thinBorder = 1 / PixelRatio.get();
 
@@ -11,7 +10,7 @@ function ExploreScreen() {
         <View style={styles.screenHeader}>
           <Text style={styles.h3}>Explore Recipes</Text>
         </View>
-        <RecipesList />
+        {/* <RecipesList /> */}
       </View>
     </SafeAreaView>
   );
