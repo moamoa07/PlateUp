@@ -83,7 +83,7 @@ const RecipesList = () => {
       )}
 
       {!hasMoreRecipes && !isLoading && (
-        <Text style={styles.endOfListMessage}>You've reached the end.</Text>
+        <Text style={styles.endOfListMessage}>You've reached the last recipe.</Text>
       )}
     </ScrollView>
   );
