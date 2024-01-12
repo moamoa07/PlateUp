@@ -57,7 +57,7 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
 
 export async function getAllRecipes(
   lastFetchedRecipe: QueryDocumentSnapshot<DocumentData> | null = null,
-  limitNumber = 4
+  limitNumber = 2
 ) {
   const recipes: Array<Recipe & { id: string }> = [];
 
