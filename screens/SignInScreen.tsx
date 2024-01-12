@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Crake-Regular',
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 28,
     height: 30,
     marginBottom: 20,
   },
