@@ -15,7 +15,9 @@ import { Button } from 'react-native-paper';
 import * as Yup from 'yup';
 import theme from '../Theme';
 import { recipeSchema } from '../api/schema/recipeSchema';
-import { addRecipe } from '../api/service/recipeService';
+import uploadImageToFirestore, {
+  addRecipe,
+} from '../api/service/recipeService';
 import { FormErrors } from '../types/FormErrors';
 import PickImage from './PickImage';
 import RemoveIcon from './icons/RemoveIcon';
@@ -133,9 +135,37 @@ const AddRecipeForm = () => {
     setFormErrors({ ...formErrors, [errorKey]: undefined });
   };
 
+  // Function to handle image upload errors
+  const handleImageUploadError = (error: string) => {
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      imageUrl: error,
+    }));
+  };
+
+  // Reset submitted form
+  const resetFormSubmitted = () => setFormSubmitted(false);
+
   // Handle submit function
   const handleSubmit = async () => {
     Keyboard.dismiss();
+
+    if (!imageUrl) {
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        imageUrl: 'An image is required',
+      }));
+      return;
+    }
+
+    // Check for image upload error before proceeding
+    if (formErrors.imageUrl) {
+      Alert.alert(
+        'Error',
+        'Please resolve the image upload error before submitting.'
+      );
+      return;
+    }
 
     try {
       // Validate form data using Yup
@@ -166,8 +196,14 @@ const AddRecipeForm = () => {
         additionalNotes,
       };
 
-      await addRecipe(newRecipe);
-      console.log('Recipe added successfully');
+      // Add the recipe and get the recipeId
+      const recipeId = await addRecipe(newRecipe);
+      console.log('Recipe added successfully, ID:', recipeId);
+
+      // Now we'll use the recipeId for further operations, such as uploading an image
+      if (imageUrl) {
+        await uploadImageToFirestore(imageUrl, recipeId);
+      }
 
       // Reset form fields after successful submission
       setImageUrl(null);
@@ -184,7 +220,7 @@ const AddRecipeForm = () => {
       ]);
       setAdditionalNotes('');
       setFormSubmitted((prev) => !prev);
-      setFormErrors({}); 
+      setFormErrors({});
 
       // Alert user of success
       Alert.alert('Success', 'Your recipe has been shared!', [{ text: 'OK' }]);
@@ -199,7 +235,7 @@ const AddRecipeForm = () => {
           return { ...acc, [path]: err.message };
         }, {});
         setFormErrors(newErrors);
-        
+
         // Alert user of validation errors
         Alert.alert('Form Error', 'Please check your input for errors.');
       } else {
@@ -215,10 +251,14 @@ const AddRecipeForm = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.h3}>Add new recipe</Text>
-
         {/* ImageUrl */}
-        <PickImage onChange={setImageUrl} resetTrigger={formSubmitted} />
+        <PickImage
+          onChange={setImageUrl}
+          resetTrigger={formSubmitted}
+          onResetComplete={resetFormSubmitted}
+          errorMessage={formErrors.imageUrl}
+          onImageUploadError={handleImageUploadError}
+        />
 
         {/* Title */}
         <View style={styles.inputGroup}>
@@ -397,7 +437,6 @@ const AddRecipeForm = () => {
                       style={[styles.input, styles.ingredientsInput]}
                       placeholder="Ingredient"
                       placeholderTextColor="#888"
-                      // value={item.name}
                       value={ingredientGroups[groupIndex].items[itemIndex].name}
                       onChangeText={(text) =>
                         handleIngredientChange(
@@ -592,7 +631,7 @@ const AddRecipeForm = () => {
         <TouchableOpacity onPress={handleSubmit} style={styles.buttonTouchable}>
           <Button
             mode="contained"
-            style={styles.button}
+            style={styles.submitButton}
             labelStyle={styles.buttonLabel}
           >
             Share Recipe
@@ -609,12 +648,6 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 16,
     gap: 24,
-  },
-  h3: {
-    fontSize: 28,
-    fontFamily: 'Crake-Regular',
-    textAlign: 'center',
-    color: theme.colors.primary,
   },
   inputGroup: {
     display: 'flex',
@@ -777,7 +810,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 2,
   },
-  button: {
+  submitButton: {
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
     backgroundColor: theme.colors.primary,
@@ -785,6 +818,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 2,
+    marginBottom: 20,
   },
   buttonLabel: {
     fontFamily: 'Jost-Regular',
