@@ -22,58 +22,64 @@ interface RecipeWithId extends Recipe {
 const thinBorder = 1 / PixelRatio.get();
 
 const RecipesList = () => {
-  // Specify the type of the recipes state
   const [recipes, setRecipes] = useState<RecipeWithId[]>([]);
   const [lastFetchedRecipe, setLastFetchedRecipe] =
     useState<QueryDocumentSnapshot<DocumentData> | null>(null);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [hasMoreRecipes, setHasMoreRecipes] = useState(true);
 
-  const fetchRecipes = async () => {
-    setLoading(true);
-    const { recipes, lastFetchedRecipe } = await getAllRecipes();
-    setRecipes(recipes);
-    setLastFetchedRecipe(lastFetchedRecipe);
-    setLoading(false);
-  };
-
-  const loadMoreRecipes = async () => {
-    if (lastFetchedRecipe) {
-      const { recipes: newRecipes, lastFetchedRecipe: newLastFetchedRecipe } =
-        await getAllRecipes(lastFetchedRecipe);
-      setRecipes((prevRecipes) => [...prevRecipes, ...newRecipes]);
-      setLastFetchedRecipe(newLastFetchedRecipe);
+  const fetchRecipes = async (
+    lastRecipe: QueryDocumentSnapshot<DocumentData> | null = null
+  ) => {
+    if (isFetchingMore) {
+      return; // Avoid fetching more if a request is already in progress
     }
+
+    setIsFetchingMore(true);
+    const fetchedData = await getAllRecipes(lastRecipe);
+    setRecipes((prev) =>
+      lastRecipe ? [...prev, ...fetchedData.recipes] : fetchedData.recipes
+    );
+    setLastFetchedRecipe(fetchedData.lastFetchedRecipe);
+    setHasMoreRecipes(!!fetchedData.lastFetchedRecipe);
+    setLoading(false);
+    setIsFetchingMore(false);
   };
 
   useEffect(() => {
     fetchRecipes();
   }, []);
 
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-
   return (
     <ScrollView>
       <View style={styles.screenHeader}>
         <Text style={styles.h3}>Explore Recipes</Text>
       </View>
-      {recipes.length > 0 ? (
-        recipes.map((recipe) => (
-          <RecipeComponent key={recipe.id} recipeId={recipe.id} />
-        ))
+      {isLoading ? (
+        <ActivityIndicator />
       ) : (
-        <Text>No recipes found</Text>
+        <>
+          {recipes.map((recipe) => (
+            <RecipeComponent key={recipe.id} recipeId={recipe.id} />
+          ))}
+          {!hasMoreRecipes && (
+            <Text style={styles.endOfListMessage}>You've reached the end.</Text>
+          )}
+        </>
       )}
-      <Button
-        mode="contained"
-        style={styles.loadMoreRecipesButton}
-        labelStyle={styles.buttonLabel}
-        onPress={loadMoreRecipes}
-        disabled={!lastFetchedRecipe}
-      >
-        Load more recipes
-      </Button>
+
+      {hasMoreRecipes && !isLoading && (
+        <Button
+          mode="contained"
+          style={styles.loadMoreButton}
+          onPress={() => fetchRecipes(lastFetchedRecipe)}
+          disabled={isFetchingMore}
+          labelStyle={styles.buttonLabel}
+        >
+          Load More Recipes
+        </Button>
+      )}
     </ScrollView>
   );
 };
@@ -91,7 +97,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.colors.primary,
   },
-  loadMoreRecipesButton: {
+  loadMoreButton: {
     fontFamily: 'Jost-Regular',
     borderRadius: 10,
     backgroundColor: theme.colors.primary,
@@ -105,6 +111,13 @@ const styles = StyleSheet.create({
   buttonLabel: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
+  },
+  endOfListMessage: {
+    fontFamily: 'Jost-Regular',
+    textAlign: 'center',
+    fontSize: 16,
+    marginVertical: 20,
+    color: '#888',
   },
 });
 
