@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { Button } from 'react-native-paper';
@@ -63,22 +64,26 @@ const RecipesList = () => {
           {recipes.map((recipe) => (
             <RecipeComponent key={recipe.id} recipeId={recipe.id} />
           ))}
-          {!hasMoreRecipes && (
-            <Text style={styles.endOfListMessage}>You've reached the end.</Text>
-          )}
         </>
       )}
+      <TouchableOpacity
+        onPress={() => fetchRecipes(lastFetchedRecipe)}
+        disabled={isFetchingMore}
+        style={styles.buttonTouchable}
+      >
+        {hasMoreRecipes && !isLoading && (
+          <Button
+            mode="contained"
+            style={styles.loadMoreButton}
+            labelStyle={styles.buttonLabel}
+          >
+            Load More Recipes
+          </Button>
+        )}
+      </TouchableOpacity>
 
-      {hasMoreRecipes && !isLoading && (
-        <Button
-          mode="contained"
-          style={styles.loadMoreButton}
-          onPress={() => fetchRecipes(lastFetchedRecipe)}
-          disabled={isFetchingMore}
-          labelStyle={styles.buttonLabel}
-        >
-          Load More Recipes
-        </Button>
+      {!hasMoreRecipes && (
+        <Text style={styles.endOfListMessage}>You've reached the end.</Text>
       )}
     </ScrollView>
   );
@@ -96,6 +101,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Crake-Regular',
     textAlign: 'center',
     color: theme.colors.primary,
+  },
+  buttonTouchable: {
+    borderRadius: 10,
+    flex: 1,
   },
   loadMoreButton: {
     fontFamily: 'Jost-Regular',
