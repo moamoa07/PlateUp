@@ -6,6 +6,7 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
@@ -115,118 +116,132 @@ function CreateProfileScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: theme.colors.background }}
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Text style={[styles.title]}>Create a profile</Text>
-          <TextInput
-            value={username}
-            label={<Text style={{ fontFamily: 'Jost-Regular' }}>Username</Text>}
-            mode="outlined"
-            autoCapitalize="none"
-            contentStyle={{ fontFamily: 'Jost-Regular' }}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            outlineStyle={{
-              borderRadius: 10,
-              borderColor: isFocused
-                ? theme.colors.primary
-                : theme.colors.secondary,
-            }}
-            style={[styles.textInput, { marginBottom: 10 }]}
-            onChangeText={(text) => setUsername(text)}
-          />
-          <TextInput
-            value={email}
-            label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
-            mode="outlined"
-            autoCapitalize="none"
-            contentStyle={{ fontFamily: 'Jost-Regular' }}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            outlineStyle={{
-              borderRadius: 10,
-              borderColor: isFocused
-                ? theme.colors.primary
-                : theme.colors.secondary,
-            }}
-            style={[styles.textInput, { marginBottom: 10 }]}
-            onChangeText={(text) => setEmail(text)}
-          />
-          <TextInput
-            value={password}
-            label={<Text style={{ fontFamily: 'Jost-Regular' }}>Password</Text>}
-            mode="outlined"
-            autoCapitalize="none"
-            contentStyle={{ fontFamily: 'Jost-Regular' }}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            outlineStyle={{
-              borderRadius: 10,
-              borderColor: isFocused
-                ? theme.colors.primary
-                : theme.colors.secondary,
-            }}
-            style={[styles.textInput, { marginBottom: 10 }]}
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-          />
-          <TextInput
-            value={confirmPassword}
-            label={
-              <Text style={{ fontFamily: 'Jost-Regular' }}>
-                Confirm password
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={{
+          flex: 1,
+          backgroundColor: theme.colors.background,
+          paddingTop: 130,
+        }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <Text style={[styles.title]}>Create a profile</Text>
+            <TextInput
+              value={username}
+              label={
+                <Text style={{ fontFamily: 'Jost-Regular' }}>Username</Text>
+              }
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput, { marginBottom: 10 }]}
+              onChangeText={(text) => setUsername(text)}
+            />
+            <TextInput
+              value={email}
+              label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput, { marginBottom: 10 }]}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              value={password}
+              label={
+                <Text style={{ fontFamily: 'Jost-Regular' }}>Password</Text>
+              }
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput, { marginBottom: 10 }]}
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <TextInput
+              value={confirmPassword}
+              label={
+                <Text style={{ fontFamily: 'Jost-Regular' }}>
+                  Confirm password
+                </Text>
+              }
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput]}
+              secureTextEntry={true}
+              onChangeText={(text) => setConfirmPassword(text)}
+            />
+            <View style={[styles.buttonContainer]}>
+              <Button
+                mode="contained"
+                buttonColor={theme.colors.primary}
+                labelStyle={{ marginVertical: 10 }}
+                style={[styles.button]}
+                onPress={createProfile}
+              >
+                <Text style={styles.textWhite}>Sign up</Text>
+              </Button>
+            </View>
+            <TermsAndPrivacyModal
+              isVisible={isModalVisible}
+              hideModal={hideModal}
+            />
+            <View style={[styles.termsTextContainer]}>
+              <Text style={[styles.termsText]}>
+                By signing up, you agree to PlateUp's
               </Text>
-            }
-            mode="outlined"
-            autoCapitalize="none"
-            contentStyle={{ fontFamily: 'Jost-Regular' }}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            outlineStyle={{
-              borderRadius: 10,
-              borderColor: isFocused
-                ? theme.colors.primary
-                : theme.colors.secondary,
-            }}
-            style={[styles.textInput]}
-            secureTextEntry={true}
-            onChangeText={(text) => setConfirmPassword(text)}
-          />
-          <View style={[styles.buttonContainer]}>
-            <Button
-              mode="contained"
-              buttonColor={theme.colors.primary}
-              labelStyle={{ marginVertical: 10 }}
-              style={[styles.button]}
-              onPress={createProfile}
-            >
-              <Text style={styles.textWhite}>Sign up</Text>
-            </Button>
+              <Text onPress={showModal}>Terms of Use & Privacy Policy</Text>
+            </View>
+            <View style={[styles.linkContainer]}>
+              <Text style={[styles.linkText1]}>Already have a profile?</Text>
+              <Link to={{ screen: 'SignInScreen' }}>
+                <Text style={[styles.linkText2]}>Sign in</Text>
+              </Link>
+            </View>
           </View>
-          <TermsAndPrivacyModal
-            isVisible={isModalVisible}
-            hideModal={hideModal}
-          />
-          <View style={[styles.termsTextContainer]}>
-            <Text style={[styles.termsText]}>
-              By signing up, you agree to PlateUp's
-            </Text>
-            <Text onPress={showModal}>Terms of Use & Privacy Policy</Text>
-          </View>
-          <View style={[styles.linkContainer]}>
-            <Text style={[styles.linkText1]}>Already have a profile?</Text>
-            <Link to={{ screen: 'SignInScreen' }}>
-              <Text style={[styles.linkText2]}>Sign in</Text>
-            </Link>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
