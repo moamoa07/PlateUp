@@ -73,44 +73,50 @@ function SignInScreen() {
           ]}
         >
           <Text style={[styles.title]}>Sign In</Text>
-          <TextInput
-            value={email}
-            label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
-            mode="outlined"
-            autoCapitalize="none"
-            contentStyle={{ fontFamily: 'Jost-Regular' }}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            outlineStyle={{
-              borderRadius: 10,
-              borderColor: isFocused
-                ? theme.colors.primary
-                : theme.colors.secondary,
-            }}
-            style={[styles.textInput, { marginBottom: 10 }]}
-            onChangeText={(text) => setEmail(text)}
-          />
-          <TextInput
-            value={password}
-            label={<Text style={{ fontFamily: 'Jost-Regular' }}>Password</Text>}
-            mode="outlined"
-            autoCapitalize="none"
-            contentStyle={{ fontFamily: 'Jost-Regular' }}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            outlineStyle={{
-              borderRadius: 10,
-              borderColor: isFocused
-                ? theme.colors.primary
-                : theme.colors.secondary,
-            }}
-            style={[styles.textInput]}
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-          />
-          <Text style={[styles.passwordText, { color: theme.colors.primary }]}>
-            Forgot password?
-          </Text>
+          <View>
+            <TextInput
+              value={email}
+              label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput, { marginBottom: 10 }]}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              value={password}
+              label={
+                <Text style={{ fontFamily: 'Jost-Regular' }}>Password</Text>
+              }
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput]}
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <Text
+              style={[styles.passwordText, { color: theme.colors.primary }]}
+            >
+              Forgot password?
+            </Text>
+          </View>
           <View style={[styles.buttonContainer]}>
             <Button
               mode="contained"
