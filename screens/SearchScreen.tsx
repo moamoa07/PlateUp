@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Searchbar, Text } from 'react-native-paper';
 
 type User = {
@@ -40,6 +40,41 @@ function SearchScreen() {
           style={[styles.searchbar]}
         />
 
+        {/* Buttons to toggle between Ingredients and Instructions */}
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            style={[styles.button]}
+            // style={[styles.button, showIngredients && styles.activeButton]}
+            // onPress={() => toggleSection('ingredients')}
+          >
+            <Text
+              style={[styles.buttonText]}
+              // style={[
+              //   styles.buttonText,
+              //   showIngredients && styles.activeButtonText,
+              // ]}
+            >
+              Users
+            </Text>
+          </TouchableOpacity>
+          <Text style={[styles.divider]}>|</Text>
+          <TouchableOpacity
+            style={[styles.button]}
+            // style={[styles.button, !showIngredients && styles.activeButton]}
+            // onPress={() => toggleSection('instructions')}
+          >
+            <Text
+              style={[styles.buttonText]}
+              // style={[
+              //   styles.buttonText,
+              //   !showIngredients && styles.activeButtonText,
+              // ]}
+            >
+              Recipes
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {searchQuery.length > 0 && filteredUsers.length > 0 ? (
           <View>
             {filteredUsers.map((user) => (
@@ -57,41 +92,6 @@ function SearchScreen() {
             </Text>
           </View>
         )}
-
-        {/* Buttons to toggle between Ingredients and Instructions
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={[styles.button]}
-            // style={[styles.button, showIngredients && styles.activeButton]}
-            // onPress={() => toggleSection('ingredients')}
-          >
-            <Text
-              style={[styles.buttonText]}
-              // style={[
-              //   styles.buttonText,
-              //   showIngredients && styles.activeButtonText,
-              // ]}
-            >
-              Ingredients
-            </Text>
-          </TouchableOpacity>
-          <Text style={[styles.divider]}>|</Text>
-          <TouchableOpacity
-            style={[styles.button]}
-            // style={[styles.button, !showIngredients && styles.activeButton]}
-            // onPress={() => toggleSection('instructions')}
-          >
-            <Text
-              style={[styles.buttonText]}
-              // style={[
-              //   styles.buttonText,
-              //   !showIngredients && styles.activeButtonText,
-              // ]}
-            >
-              Instructions
-            </Text>
-          </TouchableOpacity>
-        </View> */}
 
         {/* Users or Recipes /*}
         {showIngredients ? (
