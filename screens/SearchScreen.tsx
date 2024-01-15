@@ -14,6 +14,7 @@ function SearchScreen() {
           value={searchQuery}
           style={[styles.searchbar]}
         />
+
         {/* Buttons to toggle between Ingredients and Instructions */}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
@@ -44,6 +45,52 @@ function SearchScreen() {
             </Text>
           </TouchableOpacity>
         </View>
+        {/* Ingredients or Instructions
+        {showIngredients ? (
+              // Ingredients list
+              <View style={styles.ingredientsList}>
+                {recipe.ingredients?.map((group, index) => (
+                  <View key={index} style={styles.group}>
+                    {group.ingredientSubtitle && (
+                      <Text style={styles.subtitle}>
+                        {group.ingredientSubtitle}
+                      </Text>
+                    )}
+                    {group.items?.map((ingredient, i) => (
+                      <View key={i} style={styles.ingredientItem}>
+                        <Text
+                          style={styles.ingredientQuantity}
+                        >{`${ingredient.quantity}`}</Text>
+                        <Text style={styles.ingredientName}>
+                          {ingredient.name}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            ) : (
+              // Instructions list
+              <View style={styles.instructionsList}>
+                {recipe.instructions?.map((group, index) => (
+                  <View key={index} style={styles.group}>
+                    {group.instructionSubtitle && (
+                      <Text style={styles.subtitle}>
+                        {group.instructionSubtitle}
+                      </Text>
+                    )}
+                    {group.steps?.map((step, i) => (
+                      <View key={i} style={styles.instructionItem}>
+                        <Text style={styles.stepNumber}>{`${i + 1}.`}</Text>
+                        <Text style={styles.instructionText}>
+                          {step.instruction}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            )} */}
         <View style={[styles.emptySearchTextContainer]}>
           <Text style={[styles.emptySearchText]}>
             Discover recipes and connect with others!
@@ -80,6 +127,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
+    marginTop: 25,
   },
 });
 
