@@ -251,6 +251,9 @@ const AddRecipeForm = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <ScrollView contentContainerStyle={styles.container}>
+        {/* Add Recipe Headline */}
+        <Text style={styles.h3}>Add New Recipe</Text>
+
         {/* ImageUrl */}
         <PickImage
           onChange={setImageUrl}
@@ -648,6 +651,12 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 16,
     gap: 24,
+  },
+  h3: {
+    fontSize: 28,
+    fontFamily: 'Crake-Regular',
+    textAlign: 'center',
+    color: theme.colors.primary,
   },
   inputGroup: {
     display: 'flex',
