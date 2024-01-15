@@ -1,4 +1,5 @@
 export interface Recipe {
+  id?: string;
   imageUrl: string | null;
   // imageUrls: string[]; Om vi ska spara flera bilder längre fram
   title: string;
