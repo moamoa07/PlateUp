@@ -197,16 +197,14 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   textContainer: {
-    marginLeft: 8,
-    marginRight: 8,
+    marginHorizontal: 8,
     paddingTop: 8,
   },
   actions: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginLeft: 4,
-    marginRight: 4,
+    marginHorizontal: 4,
   },
   title: {
     fontFamily: 'Jost-Medium',
@@ -335,11 +333,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 10,
-    marginLeft: 16,
-    marginRight: 16,
+    marginHorizontal: 16,
   },
   username: {
     fontFamily: 'Jost-Medium',

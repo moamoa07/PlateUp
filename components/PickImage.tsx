@@ -59,7 +59,7 @@ function PickImage({
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageViewer
-          placeholderImageSource={require('../assets/waffle.jpg')}
+          placeholderImageSource={require('../assets/img/add-new-recipe-placeholder.png')}
           selectedImage={selectedImage}
         />
       </View>

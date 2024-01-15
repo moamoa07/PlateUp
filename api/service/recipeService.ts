@@ -1,11 +1,17 @@
 import { getAuth } from 'firebase/auth';
 import {
+  DocumentData,
+  QueryDocumentSnapshot,
   addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
+  query,
   setDoc,
+  startAfter,
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { FIREBASE_DB, FIREBASE_STORAGE } from '../../FirebaseConfig';
@@ -38,15 +44,50 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
 }
 
 // Fetch all recipes from Firestore
-export async function getAllRecipes() {
-  const recipes: Array<Recipe & { id: string }> = []; // Define the type of array with an additional 'id' property
-  const querySnapshot = await getDocs(collection(FIREBASE_DB, 'recipes'));
-  querySnapshot.forEach((doc) => {
-    // Combine the document data with the document ID
-    const recipeData = doc.data() as Recipe; // Cast the document data to the Recipe type
-    recipes.push({ ...recipeData, id: doc.id }); // Add the id property
-  });
-  return recipes;
+// export async function getAllRecipes() {
+//   const recipes: Array<Recipe & { id: string }> = []; // Define the type of array with an additional 'id' property
+//   const querySnapshot = await getDocs(collection(FIREBASE_DB, 'recipes'));
+//   querySnapshot.forEach((doc) => {
+//     // Combine the document data with the document ID
+//     const recipeData = doc.data() as Recipe; // Cast the document data to the Recipe type
+//     recipes.push({ ...recipeData, id: doc.id }); // Add the id property
+//   });
+//   return recipes;
+// }
+
+export async function getAllRecipes(
+  lastFetchedRecipe: QueryDocumentSnapshot<DocumentData> | null = null,
+  limitNumber: number = 2
+) {
+  // Base query with ordering and limiting
+  let baseQuery = query(
+    collection(FIREBASE_DB, 'recipes'),
+    orderBy('updatedAt', 'desc'),
+    limit(limitNumber)
+  );
+
+  // Modify query if lastFetchedRecipe exists
+  let finalQuery = lastFetchedRecipe
+    ? query(baseQuery, startAfter(lastFetchedRecipe))
+    : baseQuery;
+
+  const querySnapshot = await getDocs(finalQuery);
+
+  const fetchedRecipes = querySnapshot.docs.map((doc) => ({
+    ...(doc.data() as Recipe),
+    id: doc.id,
+  }));
+
+  // Determine the new 'lastFetchedRecipe' for pagination
+  const newLastFetchedRecipe =
+    querySnapshot.docs.length === limitNumber
+      ? querySnapshot.docs[querySnapshot.docs.length - 1]
+      : null;
+
+  return {
+    recipes: fetchedRecipes,
+    lastFetchedRecipe: newLastFetchedRecipe,
+  };
 }
 
 // Get recipe by id from Firestore database

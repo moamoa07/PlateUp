@@ -22,6 +22,16 @@ const firebaseConfig = {
   appId: '1:725439259612:web:58f9c9d7a291909fed2519',
 };
 
+// Backup database
+// const firebaseConfig = {
+//   apiKey: 'AIzaSyBkRty0aVrJFkursrSbfmbWtbGBok09rqE',
+//   authDomain: 'plateup2.firebaseapp.com',
+//   projectId: 'plateup2',
+//   storageBucket: 'plateup2.appspot.com',
+//   messagingSenderId: '52300252680',
+//   appId: '1:52300252680:web:8e6964e9cb01374812b3bd',
+// };
+
 // Initialize Firebase
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 initializeAuth(FIREBASE_APP, {
