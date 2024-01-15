@@ -1,10 +1,18 @@
-import { SafeAreaView, Text, View } from 'react-native';
+import React from 'react';
+import { SafeAreaView, View } from 'react-native';
+import { Searchbar } from 'react-native-paper';
 
 function SearchScreen() {
+  const [searchQuery, setSearchQuery] = React.useState('');
+  
   return (
     <SafeAreaView>
       <View>
-        <Text>Search Screen</Text>
+        <Searchbar
+          placeholder="Search"
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+        />
       </View>
     </SafeAreaView>
   );
