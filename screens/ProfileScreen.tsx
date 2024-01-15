@@ -31,7 +31,11 @@ function ProfileScreen() {
       <View style={styles.avatar}>
         <Avatar.Image
           size={140}
-          source={require('../assets/cupcakeprofile.png')}
+          source={
+            user?.photoURL
+              ? { uri: user.photoURL }
+              : require('../assets/img/chokladkaka.jpeg')
+          }
         />
         <Text style={styles.textUsername}>{user?.displayName}</Text>
       </View>

@@ -25,12 +25,15 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<CustomUser | null>) => {
       state.user = action.payload;
     },
+    setSignOutState: (state) => {
+      state.user = null;
+    }
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, setSignOutState } = userSlice.actions;
 
 // Selector to get the user from the state
-export const select = (state: RootState) => (state.user as UserState).user;
+export const currentUser = (state: RootState) => state.user.user;
 
 export default userSlice.reducer;
