@@ -1,51 +1,99 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Searchbar, Text } from 'react-native-paper';
 
+type User = {
+  id: string;
+  name: string;
+  // ... other properties
+};
+
 function SearchScreen() {
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+
+  // Mocked list of users (replace with your actual list of users)
+  const allUsers: User[] = [
+    { id: '1', name: 'Nathalie' },
+    { id: '2', name: 'Moa' },
+    { id: '3', name: 'Lisa-Marie' },
+    // ... other users
+  ];
+
+  const handleSearch = (query: string) => {
+    const filtered = allUsers.filter((user) =>
+      user.name.toLocaleLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredUsers(filtered);
+  };
 
   return (
     <SafeAreaView>
       <View style={[styles.container]}>
         <Searchbar
           placeholder="Search"
-          onChangeText={setSearchQuery}
+          onChangeText={(query) => {
+            setSearchQuery(query);
+            handleSearch(query);
+          }}
           value={searchQuery}
           style={[styles.searchbar]}
         />
 
-        {/* Buttons to toggle between Ingredients and Instructions */}
+        {searchQuery.length > 0 && filteredUsers.length > 0 ? (
+          <View>
+            {filteredUsers.map((user) => (
+              <View key={user.id}>
+                <Text>{user.name}</Text>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <View style={[styles.emptySearchTextContainer]}>
+            <Text style={[styles.emptySearchText]}>
+              {searchQuery.length > 0
+                ? 'No matching users found'
+                : 'Discover recipes and connect with others!'}
+            </Text>
+          </View>
+        )}
+
+        {/* Buttons to toggle between Ingredients and Instructions
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
-          // style={[styles.button, showIngredients && styles.activeButton]}
-          // onPress={() => toggleSection('ingredients')}
+            style={[styles.button]}
+            // style={[styles.button, showIngredients && styles.activeButton]}
+            // onPress={() => toggleSection('ingredients')}
           >
             <Text
-            // style={[
-            //   styles.buttonText,
-            //   showIngredients && styles.activeButtonText,
-            // ]}
+              style={[styles.buttonText]}
+              // style={[
+              //   styles.buttonText,
+              //   showIngredients && styles.activeButtonText,
+              // ]}
             >
               Ingredients
             </Text>
           </TouchableOpacity>
-          <Text>|</Text>
+          <Text style={[styles.divider]}>|</Text>
           <TouchableOpacity
-          // style={[styles.button, !showIngredients && styles.activeButton]}
-          // onPress={() => toggleSection('instructions')}
+            style={[styles.button]}
+            // style={[styles.button, !showIngredients && styles.activeButton]}
+            // onPress={() => toggleSection('instructions')}
           >
             <Text
-            // style={[
-            //   styles.buttonText,
-            //   !showIngredients && styles.activeButtonText,
-            // ]}
+              style={[styles.buttonText]}
+              // style={[
+              //   styles.buttonText,
+              //   !showIngredients && styles.activeButtonText,
+              // ]}
             >
               Instructions
             </Text>
           </TouchableOpacity>
-        </View>
-        {/* Ingredients or Instructions
+        </View> */}
+
+        {/* Users or Recipes /*}
         {showIngredients ? (
               // Ingredients list
               <View style={styles.ingredientsList}>
@@ -91,11 +139,6 @@ function SearchScreen() {
                 ))}
               </View>
             )} */}
-        <View style={[styles.emptySearchTextContainer]}>
-          <Text style={[styles.emptySearchText]}>
-            Discover recipes and connect with others!
-          </Text>
-        </View>
       </View>
     </SafeAreaView>
   );
@@ -128,6 +171,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
     marginTop: 25,
+  },
+  button: {
+    // paddingHorizontal: 10,
+    paddingVertical: 5,
+    // marginHorizontal: 5,
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+  },
+  divider: {
+    marginHorizontal: 10,
   },
 });
 
