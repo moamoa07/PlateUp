@@ -10,12 +10,6 @@ const initialState: RecipeState = {
   isLoading: false,
 };
 
-// RecipeState = {
-//   recipes: [],
-//   lastFetchedRecipe: null,
-//   isLoading: false,
-// };
-
 export const recipesSlice = createSlice({
   name: 'recipes',
   initialState,
