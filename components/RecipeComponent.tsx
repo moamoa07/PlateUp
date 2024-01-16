@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -9,43 +8,33 @@ import {
   View,
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
-import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { fetchRecipeById } from '../redux/actions/recipeActions';
+import { RecipeWithId } from '../api/model/recipeModel';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
 
 interface RecipeComponentProps {
-  recipeId: string;
+  recipe: RecipeWithId; // Assuming RecipeWithId includes all Recipe fields + id
 }
 
-function RecipeComponent({ recipeId }: RecipeComponentProps) {
-  const dispatch = useAppDispatch();
-  const recipe = useAppSelector((state) => state.recipes.currentRecipe);
-  const isLoading = useAppSelector((state) => state.recipes.isLoading);
-  const error = useAppSelector((state) => state.recipes.error);
+function RecipeComponent({ recipe }: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
   };
 
-  useEffect(() => {
-    dispatch(fetchRecipeById(recipeId));
-    console.log('Recipe ID:', recipeId);
-  }, [dispatch, recipeId]);
+  // if (isLoading) {
+  //   return <ActivityIndicator />;
+  // }
 
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
+  // if (error) {
+  //   return <Text>Error: {error}</Text>;
+  // }
 
   if (!recipe) {
-    return <Text>No recipe found</Text>;
+    return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
 
   return (
@@ -193,6 +182,11 @@ function RecipeComponent({ recipeId }: RecipeComponentProps) {
 }
 
 const styles = StyleSheet.create({
+  noRecipeFoundMessage: {
+    fontFamily: 'Crake-Regular',
+    fontSize: 28,
+    textAlign: 'center',
+  },
   container: {
     paddingBottom: 16,
   },
