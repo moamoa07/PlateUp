@@ -5,6 +5,7 @@ import { Searchbar, Text } from 'react-native-paper';
 type User = {
   id: string;
   name: string;
+  image: string;
   // ... other properties
 };
 
@@ -21,9 +22,24 @@ function SearchScreen() {
 
   // Mocked list of users (replace with your actual list of users)
   const allUsers: User[] = [
-    { id: '1', name: 'Nathalie' },
-    { id: '2', name: 'Moa' },
-    { id: '3', name: 'Lisa-Marie' },
+    {
+      id: '1',
+      name: 'Nathalie',
+      image:
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+    },
+    {
+      id: '2',
+      name: 'Moa',
+      image:
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+    },
+    {
+      id: '3',
+      name: 'Lisa-Marie',
+      image:
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+    },
     // ... other users
   ];
 
