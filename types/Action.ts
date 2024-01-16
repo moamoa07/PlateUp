@@ -1,4 +1,3 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { Recipe, RecipeWithId } from '../api/model/recipeModel';
 
 export const FETCH_RECIPES = 'FETCH_RECIPES';
@@ -10,17 +9,18 @@ export const FETCH_RECIPE_ERROR = 'FETCH_RECIPE_ERROR';
 // Define your RecipeState type
 export interface RecipeState {
   recipes: (Recipe | RecipeWithId)[];
-  lastFetchedRecipe: QueryDocumentSnapshot<DocumentData> | null;
+  lastFetchedRecipeId: string | null; // Update here
   isLoading: boolean;
-  currentRecipe: Recipe | RecipeWithId | null; // Updated to include Recipe or RecipeWithId
+  currentRecipe: Recipe | RecipeWithId | null;
   error: string | null;
+  hasMoreRecipes: boolean;
 }
 
 export interface FetchRecipesAction {
   type: typeof FETCH_RECIPES;
   payload: {
-    recipes: Recipe[];
-    lastFetchedRecipe: QueryDocumentSnapshot | null;
+    recipes: (Recipe | RecipeWithId)[];
+    lastFetchedRecipeId: string | null; // Updated from lastFetchedRecipe
   };
 }
 
