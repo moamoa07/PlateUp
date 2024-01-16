@@ -3,6 +3,7 @@ import {
   Image,
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -47,6 +48,36 @@ function SearchScreen() {
       image:
         'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
     },
+    {
+      id: '4',
+      name: 'Nathalie',
+      image:
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+    },
+    {
+      id: '5',
+      name: 'Moa',
+      image:
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+    },
+    {
+      id: '6',
+      name: 'Lisa-Marie',
+      image:
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+    },
+    {
+      id: '7',
+      name: 'Moa',
+      image:
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+    },
+    {
+      id: '8',
+      name: 'Lisa-Marie',
+      image:
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+    },
     // ... other users
   ];
 
@@ -75,6 +106,18 @@ function SearchScreen() {
       title: 'Chokladkaka',
       image:
         'https://cdn-rdb.arla.com/Files/arla-se/3181484453/def2d890-b9c5-4f30-b60b-626fb40e74dc.jpg?crop=(0,0,0,-148)&w=1269&h=715&mode=crop&ak=f525e733&hm=bd2594bd',
+    },
+    {
+      id: '222',
+      title: 'Marängbakelser med färska hallon och röda vinbär',
+      image:
+        'https://img.koket.se/standard-mega/mjuk-citronkaka-med-syrlig-glasyr-dansukker.png.webp',
+    },
+    {
+      id: '333',
+      title: 'Macarons',
+      image:
+        'https://cdn-rdb.arla.com/Files/arla-se/3269212119/01bd1421-10fa-497e-8a5b-ee2c5101e31d.jpg?w=1269&h=715&mode=crop&ak=f525e733&hm=b762ca1a',
     },
     // ... other recipes
   ];
@@ -166,63 +209,67 @@ function SearchScreen() {
 
         {/* Display Users or Recipes based on the active section */}
         {searchQuery.length > 0 && filteredResults.length > 0 ? (
-          <View
-            style={{
-              width: '100%',
-              paddingHorizontal: 10,
-            }}
-          >
+          <ScrollView style={{ width: '100%', paddingHorizontal: 10 }}>
             <View
               style={{
-                flexDirection: 'column',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                gap: 10,
+                width: '100%',
+                paddingHorizontal: 10,
+                height: '100%',
+                paddingBottom: 300,
               }}
             >
-              {filteredUsers.map((result) => (
-                <View key={result.id} style={{ marginBottom: 10 }}>
-                  <View style={[styles.userLayout]}>
-                    <View style={[styles.userBox]}>
-                      <Avatar.Image
-                        size={50}
-                        source={{ uri: (result as User).image }}
+              <View
+                style={{
+                  flexDirection: 'column',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  gap: 10,
+                }}
+              >
+                {filteredUsers.map((result) => (
+                  <View key={result.id} style={{ marginBottom: 10 }}>
+                    <View style={[styles.userLayout]}>
+                      <View style={[styles.userBox]}>
+                        <Avatar.Image
+                          size={50}
+                          source={{ uri: (result as User).image }}
+                        />
+                        <Text style={[styles.userName]}>
+                          {(result as User).name}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                ))}
+              </View>
+              {/* // Render filtered results for recipes */}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  gap: 10,
+                }}
+              >
+                {filteredRecipes.map((result) => (
+                  <View
+                    key={result.id}
+                    style={{ width: '48.5%', marginBottom: 10 }}
+                  >
+                    <View style={[styles.recipeBox]}>
+                      <Image
+                        style={[styles.recipeImage]}
+                        source={{ uri: (result as Recipe).image }}
                       />
-                      <Text style={[styles.userName]}>
-                        {(result as User).name}
+                      <Text style={[styles.recipeText]}>
+                        {(result as Recipe).title}
                       </Text>
                     </View>
                   </View>
-                </View>
-              ))}
+                ))}
+              </View>
             </View>
-            {/* // Render filtered results for recipes */}
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                gap: 10,
-              }}
-            >
-              {filteredRecipes.map((result) => (
-                <View
-                  key={result.id}
-                  style={{ width: '48.5%', marginBottom: 10 }}
-                >
-                  <View style={[styles.recipeBox]}>
-                    <Image
-                      style={[styles.recipeImage]}
-                      source={{ uri: (result as Recipe).image }}
-                    />
-                    <Text style={[styles.recipeText]}>
-                      {(result as Recipe).title}
-                    </Text>
-                  </View>
-                </View>
-              ))}
-            </View>
-          </View>
+          </ScrollView>
         ) : (
           <View style={[styles.emptySearchTextContainer]}>
             <Text style={[styles.emptySearchText]}>
