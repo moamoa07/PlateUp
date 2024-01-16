@@ -1,12 +1,12 @@
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import { Recipe } from '../api/model/recipeModel';
+import { Recipe, RecipeWithId } from '../api/model/recipeModel';
 
 export const FETCH_RECIPES = 'FETCH_RECIPES';
 export const SET_LOADING = 'SET_LOADING';
 
 // Define your RecipeState type
 export interface RecipeState {
-  recipes: Recipe[];
+  recipes: (Recipe | RecipeWithId)[];
   lastFetchedRecipe: QueryDocumentSnapshot<DocumentData> | null;
   isLoading: boolean;
 }
