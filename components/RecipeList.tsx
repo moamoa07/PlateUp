@@ -31,7 +31,9 @@ const RecipeList = () => {
   const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
 
   useEffect(() => {
-    dispatch(fetchRecipes(null, 2)); // Fetch initial 2 recipes
+    if (!recipes.length) {
+      dispatch(fetchRecipes(null, 2));
+    }
   }, [dispatch]);
 
   useEffect(() => {
