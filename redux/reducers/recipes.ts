@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Recipe, RecipeWithId } from '../../api/model/recipeModel';
-import { RecipeState } from '../../types/Action';
+import { LIMIT_NUMBER, RecipeState } from '../../types/Action';
 import { RootState } from '../store';
 
 const initialState: RecipeState = {
@@ -35,8 +35,7 @@ export const recipesSlice = createSlice({
       state,
       action: PayloadAction<{
         recipes: RecipeWithId[];
-        lastFetchedRecipeId: string | null;
-        limitNumber: number; // Add this line
+        lastFetchedRecipeId: string | null; // Corrected property name
       }>
     ) => {
       const newRecipes = action.payload.recipes.filter(
@@ -48,9 +47,11 @@ export const recipesSlice = createSlice({
       state.recipes = [...state.recipes, ...newRecipes];
       state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
       state.isLoading = false;
-      state.hasMoreRecipes = newRecipes.length === 2; // Assuming 2 is the limit per fetch
+      state.hasMoreRecipes = newRecipes.length === LIMIT_NUMBER; //  2 is the limit per fetch
     },
-
+    setHasMoreRecipes: (state, action: PayloadAction<boolean>) => {
+      state.hasMoreRecipes = action.payload;
+    },
     fetchRecipeError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
@@ -62,6 +63,7 @@ export const {
   updateRecipesState,
   setLoading,
   fetchRecipesSuccess,
+  setHasMoreRecipes,
   fetchRecipeError,
 } = recipesSlice.actions;
 
