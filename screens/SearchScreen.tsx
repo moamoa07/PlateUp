@@ -27,6 +27,29 @@ function SearchScreen() {
     // ... other users
   ];
 
+  // Mocked list of recipes (replace with your actual list of users)
+  const allRecipes: Recipe[] = [
+    {
+      id: '11',
+      title: 'Chokladkaka',
+      image:
+        'https://cdn-rdb.arla.com/Files/arla-se/3181484453/def2d890-b9c5-4f30-b60b-626fb40e74dc.jpg?crop=(0,0,0,-148)&w=1269&h=715&mode=crop&ak=f525e733&hm=bd2594bd',
+    },
+    {
+      id: '22',
+      title: 'Citronkaka',
+      image:
+        'https://img.koket.se/standard-mega/mjuk-citronkaka-med-syrlig-glasyr-dansukker.png.webp',
+    },
+    {
+      id: '33',
+      title: 'Macarons',
+      image:
+        'https://cdn-rdb.arla.com/Files/arla-se/3269212119/01bd1421-10fa-497e-8a5b-ee2c5101e31d.jpg?w=1269&h=715&mode=crop&ak=f525e733&hm=b762ca1a',
+    },
+    // ... other recipes
+  ];
+
   const handleSearch = (query: string) => {
     const filtered = allUsers.filter((user) =>
       user.name.toLocaleLowerCase().includes(query.toLowerCase())
