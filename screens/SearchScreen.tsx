@@ -80,16 +80,27 @@ function SearchScreen() {
   ];
 
   const handleSearch = (query: string) => {
-    const filtered =
-      searchType === 'users'
-        ? allUsers.filter((user) =>
-            user.name.toLowerCase().includes(query.toLowerCase())
-          )
-        : allRecipes.filter((recipe) =>
-            recipe.title.toLowerCase().includes(query.toLowerCase())
-          );
+    // Separate filtering for users and recipes
+    const filteredUsers = allUsers.filter((user) =>
+      user.name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    const filteredRecipes = allRecipes.filter((recipe) =>
+      recipe.title.toLowerCase().includes(query.toLowerCase())
+    );
+
+    // Combine the results based on the active search type
+    const filtered = searchType === 'users' ? filteredUsers : filteredRecipes;
+
     setFilteredResults(filtered);
   };
+
+  const filteredUsers = filteredResults.filter(
+    (result) => searchType === 'users'
+  );
+  const filteredRecipes = filteredResults.filter(
+    (result) => searchType === 'recipes'
+  );
 
   return (
     <SafeAreaView>
@@ -142,7 +153,12 @@ function SearchScreen() {
               setSearchQuery(''); // Clear the search query
             }}
           >
-            <Text style={[styles.buttonText && styles.activeButtonText]}>
+            <Text
+              style={[
+                styles.buttonText,
+                searchType === 'users' && styles.activeButtonText,
+              ]}
+            >
               Users
             </Text>
           </TouchableOpacity>
@@ -158,40 +174,51 @@ function SearchScreen() {
           >
             <View
               style={{
+                flexDirection: 'column',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                gap: 10,
+              }}
+            >
+              {filteredUsers.map((result) => (
+                <View key={result.id} style={{ marginBottom: 10 }}>
+                  <View style={[styles.userLayout]}>
+                    <View style={[styles.userBox]}>
+                      <Avatar.Image
+                        size={50}
+                        source={{ uri: (result as User).image }}
+                      />
+                      <Text style={[styles.userName]}>
+                        {(result as User).name}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              ))}
+            </View>
+            {/* // Render filtered results for recipes */}
+            <View
+              style={{
                 flexDirection: 'row',
                 flexWrap: 'wrap',
                 justifyContent: 'space-between',
                 gap: 10,
               }}
             >
-              {filteredResults.map((result) => (
+              {filteredRecipes.map((result) => (
                 <View
                   key={result.id}
                   style={{ width: '48.5%', marginBottom: 10 }}
                 >
-                  {searchType === 'users' ? (
-                    <View style={[styles.userLayout]}>
-                      <View style={[styles.userBox]}>
-                        <Avatar.Image
-                          size={50}
-                          source={{ uri: (result as User).image }}
-                        />
-                        <Text style={[styles.userName]}>
-                          {(result as User).name}
-                        </Text>
-                      </View>
-                    </View>
-                  ) : (
-                    <View style={[styles.recipeBox]}>
-                      <Image
-                        style={[styles.recipeImage]}
-                        source={{ uri: (result as Recipe).image }}
-                      />
-                      <Text style={[styles.recipeText]}>
-                        {(result as Recipe).title}
-                      </Text>
-                    </View>
-                  )}
+                  <View style={[styles.recipeBox]}>
+                    <Image
+                      style={[styles.recipeImage]}
+                      source={{ uri: (result as Recipe).image }}
+                    />
+                    <Text style={[styles.recipeText]}>
+                      {(result as Recipe).title}
+                    </Text>
+                  </View>
                 </View>
               ))}
             </View>
@@ -246,7 +273,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontFamily: 'Jost-Regular',
-    fontSize: 16,
+    fontSize: 17,
   },
   divider: {
     marginHorizontal: 10,
@@ -269,6 +296,7 @@ const styles = StyleSheet.create({
   activeButtonText: {
     fontWeight: 'bold',
     fontFamily: 'Jost-Medium',
+    fontSize: 18,
   },
   activeButton: {
     // backgroundColor: '#ccc',
