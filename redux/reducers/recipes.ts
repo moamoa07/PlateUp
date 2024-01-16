@@ -8,6 +8,8 @@ const initialState: RecipeState = {
   recipes: [],
   lastFetchedRecipe: null,
   isLoading: false,
+  currentRecipe: null,
+  error: null,
 };
 
 export const recipesSlice = createSlice({
@@ -28,6 +30,13 @@ export const recipesSlice = createSlice({
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
+    },
+    fetchRecipeSuccess: (state, action: PayloadAction<Recipe>) => {
+      state.currentRecipe = action.payload;
+      state.error = null;
+    },
+    fetchRecipeError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
     },
     // Add other reducers like updateRecipe, deleteRecipe, etc. as needed
   },
