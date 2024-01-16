@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Avatar, Searchbar, Text } from 'react-native-paper';
 
 type User = {
@@ -75,7 +81,13 @@ function SearchScreen() {
 
   return (
     <SafeAreaView>
-      <View style={[styles.container]}>
+      <View
+        style={[
+          styles.container,
+          Platform.OS === 'android' && { marginTop: 50 },
+          Platform.OS === 'ios' && { marginTop: 20 },
+        ]}
+      >
         <Searchbar
           placeholder="Search"
           onChangeText={(query) => {
@@ -204,7 +216,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '80%',
+    height: '70%',
     paddingHorizontal: 10,
   },
   emptySearchText: {
@@ -236,11 +248,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   userName: {
     fontFamily: 'Jost-Regular',
-    fontSize: 20
+    fontSize: 20,
   },
 });
 
