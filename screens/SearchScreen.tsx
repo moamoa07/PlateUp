@@ -145,12 +145,12 @@ function SearchScreen() {
             {filteredResults.map((result) => (
               <View key={result.id}>
                 {searchType === 'users' ? (
-                  <View>
+                  <View style={[styles.userLayout]}>
                     <Avatar.Image
-                      size={140}
+                      size={50}
                       source={{ uri: (result as User).image }}
                     />
-                    <Text>{(result as User).name}</Text>
+                    <Text style={[styles.userName]}>{(result as User).name}</Text>
                   </View>
                 ) : (
                   <View>
