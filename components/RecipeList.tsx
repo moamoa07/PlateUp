@@ -1,5 +1,4 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   ActivityIndicator,
   PixelRatio,
@@ -11,46 +10,36 @@ import {
 } from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
-import { Recipe } from '../api/model/recipeModel';
-import { getAllRecipes } from '../api/service/recipeService';
+import { RecipeWithId } from '../api/model/recipeModel';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchRecipes } from '../redux/actions/recipeActions';
 import RecipeComponent from './RecipeComponent';
-
-// Define a new type that includes the 'id' property
-interface RecipeWithId extends Recipe {
-  id: string;
-}
 
 const thinBorder = 1 / PixelRatio.get();
 
-const RecipesList = () => {
-  const [recipes, setRecipes] = useState<RecipeWithId[]>([]);
-  const [lastFetchedRecipe, setLastFetchedRecipe] =
-    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
-  const [isLoading, setLoading] = useState(true);
-  const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const [hasMoreRecipes, setHasMoreRecipes] = useState(true);
-
-  const fetchRecipes = async (
-    lastRecipe: QueryDocumentSnapshot<DocumentData> | null = null
-  ) => {
-    if (isFetchingMore) {
-      return; // Prevent multiple fetches at the same time
-    }
-
-    setIsFetchingMore(true);
-    const fetchedData = await getAllRecipes(lastRecipe);
-    setRecipes((prev) =>
-      lastRecipe ? [...prev, ...fetchedData.recipes] : fetchedData.recipes
-    );
-    setLastFetchedRecipe(fetchedData.lastFetchedRecipe);
-    setHasMoreRecipes(!!fetchedData.lastFetchedRecipe);
-    setLoading(false);
-    setIsFetchingMore(false);
-  };
+const RecipeList = () => {
+  const dispatch = useAppDispatch();
+  const recipes = useAppSelector((state) => state.recipes.recipes);
+  console.log('Recipes in component:', recipes);
+  const lastFetchedRecipe = useAppSelector(
+    (state) => state.recipes.lastFetchedRecipeId
+  );
+  const isLoading = useAppSelector((state) => state.recipes.isLoading);
+  const hasMoreRecipes = useAppSelector(
+    (state) => state.recipes.hasMoreRecipes
+  );
 
   useEffect(() => {
-    fetchRecipes();
-  }, []);
+    dispatch(fetchRecipes(null, 2)); // Fetch initial 2 recipes
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log('Component updated with new recipes:', recipes);
+  }, [recipes]);
+
+  const handleLoadMore = () => {
+    dispatch(fetchRecipes(lastFetchedRecipe, 2)); // Fetch next 2 recipes
+  };
 
   return (
     <ScrollView>
@@ -61,15 +50,16 @@ const RecipesList = () => {
         <ActivityIndicator size={'large'} />
       ) : (
         <>
-          {recipes.map((recipe) => (
-            <RecipeComponent key={recipe.id} recipeId={recipe.id} />
-          ))}
+          {recipes
+            .filter((recipe): recipe is RecipeWithId => !!recipe.id)
+            .map((recipe) => (
+              <RecipeComponent key={recipe.id} recipe={recipe} />
+            ))}
         </>
       )}
-      {hasMoreRecipes && (
+      {!isLoading && hasMoreRecipes && (
         <TouchableOpacity
-          onPress={() => fetchRecipes(lastFetchedRecipe)}
-          disabled={isFetchingMore}
+          onPress={handleLoadMore}
           style={styles.buttonTouchable}
         >
           <Button
@@ -82,8 +72,10 @@ const RecipesList = () => {
         </TouchableOpacity>
       )}
 
-      {!hasMoreRecipes && !isLoading && (
-        <Text style={styles.endOfListMessage}>You've reached the last recipe.</Text>
+      {!isLoading && !hasMoreRecipes && (
+        <Text style={styles.endOfListMessage}>
+          You've reached the last recipe.
+        </Text>
       )}
     </ScrollView>
   );
@@ -130,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipesList;
+export default RecipeList;
