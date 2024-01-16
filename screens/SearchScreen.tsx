@@ -114,7 +114,6 @@ function SearchScreen() {
               setSearchType('users');
               setSearchQuery(''); // Clear the search query
             }}
-            
           >
             <Text style={[styles.buttonText && styles.activeButtonText]}>
               Users
@@ -153,7 +152,9 @@ function SearchScreen() {
                       size={50}
                       source={{ uri: (result as User).image }}
                     />
-                    <Text style={[styles.userName]}>{(result as User).name}</Text>
+                    <Text style={[styles.userName]}>
+                      {(result as User).name}
+                    </Text>
                   </View>
                 ) : (
                   <View>
@@ -174,7 +175,9 @@ function SearchScreen() {
                 ? searchType === 'users'
                   ? 'No matching users found'
                   : 'No matching recipes found'
-                : 'Discover recipes and connect with others!'}
+                : searchType === 'users'
+                ? 'Discover amazing users and connect with them!'
+                : 'Explore delicious recipes and get inspired!'}
             </Text>
           </View>
         )}
