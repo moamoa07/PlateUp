@@ -12,8 +12,14 @@ const theme = {
   fonts: {
     ...MD3LightTheme.fonts,
     regular: {
-      fontFamily: 'Jost',
+      fontFamily: 'Jost-Regular',
       fontWeight: 'normal',
+    },
+    labelMedium: {
+      fontFamily: 'Jost-Regular',
+    },
+    labelLarge: {
+      fontFamily: 'Jost-Regular',
     },
   },
 };
