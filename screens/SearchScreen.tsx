@@ -23,8 +23,8 @@ type Recipe = {
 
 function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [showUsers, setShowUsers] = useState(true); // true for users, false for recipes
+  const [filteredResults, setFilteredResults] = useState<(User | Recipe)[]>([]);
+  const [searchType, setSearchType] = useState<'users' | 'recipes'>('users');
 
   // Mocked list of users (replace with your actual list of users)
   const allUsers: User[] = [
@@ -73,15 +73,20 @@ function SearchScreen() {
   ];
 
   const handleSearch = (query: string) => {
-    const filtered = allUsers.filter((user) =>
-      user.name.toLocaleLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredUsers(filtered);
+    const filtered =
+      searchType === 'users'
+        ? allUsers.filter((user) =>
+            user.name.toLowerCase().includes(query.toLowerCase())
+          )
+        : allRecipes.filter((recipe) =>
+            recipe.title.toLowerCase().includes(query.toLowerCase())
+          );
+    setFilteredResults(filtered);
   };
 
-  const toggleSection = () => {
-    setShowUsers((prevShowUsers) => !prevShowUsers);
-  };
+  // const toggleSection = () => {
+  //   setShowUsers((prevShowUsers) => !prevShowUsers);
+  // };
 
   return (
     <SafeAreaView>
@@ -105,22 +110,29 @@ function SearchScreen() {
         {/* Buttons to toggle between Users and Recipes */}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
-            style={[styles.button, showUsers && styles.activeButton]}
-            onPress={toggleSection}
+            style={[
+              styles.button,
+              searchType === 'users' && styles.activeButton,
+            ]}
+            onPress={() => setSearchType('users')}
           >
-            <Text
-              style={[styles.buttonText, showUsers && styles.activeButtonText]}
-            >
+            <Text style={[styles.buttonText && styles.activeButtonText]}>
               Users
             </Text>
           </TouchableOpacity>
           <Text style={[styles.divider]}>|</Text>
           <TouchableOpacity
-            style={[styles.button, !showUsers && styles.activeButton]}
-            onPress={toggleSection}
+            style={[
+              styles.button,
+              searchType === 'recipes' && styles.activeButton,
+            ]}
+            onPress={() => setSearchType('recipes')}
           >
             <Text
-              style={[styles.buttonText, !showUsers && styles.activeButtonText]}
+              style={[
+                styles.buttonText,
+                searchType === 'recipes' && styles.activeButtonText,
+              ]}
             >
               Recipes
             </Text>
@@ -128,80 +140,41 @@ function SearchScreen() {
         </View>
 
         {/* Display Users or Recipes based on the active section */}
-        {searchQuery.length > 0 && filteredUsers.length > 0 ? (
+        {searchQuery.length > 0 && filteredResults.length > 0 ? (
           <View>
-            {showUsers ? (
-              // Users list
-              filteredUsers.map((user) => (
-                <View key={user.id} style={[styles.userLayout]}>
-                  <Avatar.Image size={50} source={{ uri: user.image }} />
-                  <Text style={[styles.userName]}>{user.name}</Text>
-                </View>
-              ))
-            ) : (
-              // Recipes list (replace with your actual recipe rendering logic)
-              <View>
-                {/* Render your recipe content here */}
-                {/* Example: <Text>{recipe.name}</Text> */}
+            {filteredResults.map((result) => (
+              <View key={result.id}>
+                {searchType === 'users' ? (
+                  <View>
+                    <Avatar.Image
+                      size={140}
+                      source={{ uri: (result as User).image }}
+                    />
+                    <Text>{(result as User).name}</Text>
+                  </View>
+                ) : (
+                  <View>
+                    <Text>{(result as Recipe).title}</Text>
+                    <Avatar.Image
+                      size={140}
+                      source={{ uri: (result as Recipe).image }}
+                    />
+                  </View>
+                )}
               </View>
-            )}
+            ))}
           </View>
         ) : (
-          <View style={styles.emptySearchTextContainer}>
-            <Text style={styles.emptySearchText}>
+          <View style={[styles.emptySearchTextContainer]}>
+            <Text style={[styles.emptySearchText]}>
               {searchQuery.length > 0
-                ? `No matching ${showUsers ? 'users' : 'recipes'} found`
+                ? searchType === 'users'
+                  ? 'No matching users found'
+                  : 'No matching recipes found'
                 : 'Discover recipes and connect with others!'}
             </Text>
           </View>
         )}
-
-        {/* Users or Recipes /*}
-        {showIngredients ? (
-              // Ingredients list
-              <View style={styles.ingredientsList}>
-                {recipe.ingredients?.map((group, index) => (
-                  <View key={index} style={styles.group}>
-                    {group.ingredientSubtitle && (
-                      <Text style={styles.subtitle}>
-                        {group.ingredientSubtitle}
-                      </Text>
-                    )}
-                    {group.items?.map((ingredient, i) => (
-                      <View key={i} style={styles.ingredientItem}>
-                        <Text
-                          style={styles.ingredientQuantity}
-                        >{`${ingredient.quantity}`}</Text>
-                        <Text style={styles.ingredientName}>
-                          {ingredient.name}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </View>
-            ) : (
-              // Instructions list
-              <View style={styles.instructionsList}>
-                {recipe.instructions?.map((group, index) => (
-                  <View key={index} style={styles.group}>
-                    {group.instructionSubtitle && (
-                      <Text style={styles.subtitle}>
-                        {group.instructionSubtitle}
-                      </Text>
-                    )}
-                    {group.steps?.map((step, i) => (
-                      <View key={i} style={styles.instructionItem}>
-                        <Text style={styles.stepNumber}>{`${i + 1}.`}</Text>
-                        <Text style={styles.instructionText}>
-                          {step.instruction}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </View>
-            )} */}
       </View>
     </SafeAreaView>
   );
