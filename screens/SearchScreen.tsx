@@ -84,10 +84,6 @@ function SearchScreen() {
     setFilteredResults(filtered);
   };
 
-  // const toggleSection = () => {
-  //   setShowUsers((prevShowUsers) => !prevShowUsers);
-  // };
-
   return (
     <SafeAreaView>
       <View
@@ -114,7 +110,11 @@ function SearchScreen() {
               styles.button,
               searchType === 'users' && styles.activeButton,
             ]}
-            onPress={() => setSearchType('users')}
+            onPress={() => {
+              setSearchType('users');
+              setSearchQuery(''); // Clear the search query
+            }}
+            
           >
             <Text style={[styles.buttonText && styles.activeButtonText]}>
               Users
@@ -126,7 +126,10 @@ function SearchScreen() {
               styles.button,
               searchType === 'recipes' && styles.activeButton,
             ]}
-            onPress={() => setSearchType('recipes')}
+            onPress={() => {
+              setSearchType('recipes');
+              setSearchQuery(''); // Clear the search query
+            }}
           >
             <Text
               style={[
