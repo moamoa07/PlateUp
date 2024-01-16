@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Image,
   Platform,
   SafeAreaView,
   StyleSheet,
@@ -108,21 +109,6 @@ function SearchScreen() {
           <TouchableOpacity
             style={[
               styles.button,
-              searchType === 'users' && styles.activeButton,
-            ]}
-            onPress={() => {
-              setSearchType('users');
-              setSearchQuery(''); // Clear the search query
-            }}
-          >
-            <Text style={[styles.buttonText && styles.activeButtonText]}>
-              Users
-            </Text>
-          </TouchableOpacity>
-          <Text style={[styles.divider]}>|</Text>
-          <TouchableOpacity
-            style={[
-              styles.button,
               searchType === 'recipes' && styles.activeButton,
             ]}
             onPress={() => {
@@ -137,6 +123,21 @@ function SearchScreen() {
               ]}
             >
               Recipes
+            </Text>
+          </TouchableOpacity>
+          <Text style={[styles.divider]}>|</Text>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              searchType === 'users' && styles.activeButton,
+            ]}
+            onPress={() => {
+              setSearchType('users');
+              setSearchQuery(''); // Clear the search query
+            }}
+          >
+            <Text style={[styles.buttonText && styles.activeButtonText]}>
+              Users
             </Text>
           </TouchableOpacity>
         </View>
@@ -159,10 +160,7 @@ function SearchScreen() {
                 ) : (
                   <View>
                     <Text>{(result as Recipe).title}</Text>
-                    <Avatar.Image
-                      size={140}
-                      source={{ uri: (result as Recipe).image }}
-                    />
+                    <Image source={{ uri: (result as Recipe).image }} />
                   </View>
                 )}
               </View>
