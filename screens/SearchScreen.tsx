@@ -8,9 +8,16 @@ type User = {
   // ... other properties
 };
 
+type Recipe = {
+  id: string;
+  title: string;
+  image: string;
+};
+
 function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [showUsers, setShowUsers] = useState(true); // true for users, false for recipes
 
   // Mocked list of users (replace with your actual list of users)
   const allUsers: User[] = [
