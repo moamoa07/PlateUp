@@ -25,7 +25,7 @@ type Recipe = {
 function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState<(User | Recipe)[]>([]);
-  const [searchType, setSearchType] = useState<'users' | 'recipes'>('users');
+  const [searchType, setSearchType] = useState<'users' | 'recipes'>('recipes');
 
   // Mocked list of users (replace with your actual list of users)
   const allUsers: User[] = [
@@ -60,7 +60,7 @@ function SearchScreen() {
     },
     {
       id: '22',
-      title: 'Citronkaka',
+      title: 'Marängbakelser med färska hallon och röda vinbär',
       image:
         'https://img.koket.se/standard-mega/mjuk-citronkaka-med-syrlig-glasyr-dansukker.png.webp',
     },
@@ -69,6 +69,12 @@ function SearchScreen() {
       title: 'Macarons',
       image:
         'https://cdn-rdb.arla.com/Files/arla-se/3269212119/01bd1421-10fa-497e-8a5b-ee2c5101e31d.jpg?w=1269&h=715&mode=crop&ak=f525e733&hm=b762ca1a',
+    },
+    {
+      id: '111',
+      title: 'Chokladkaka',
+      image:
+        'https://cdn-rdb.arla.com/Files/arla-se/3181484453/def2d890-b9c5-4f30-b60b-626fb40e74dc.jpg?crop=(0,0,0,-148)&w=1269&h=715&mode=crop&ak=f525e733&hm=bd2594bd',
     },
     // ... other recipes
   ];
@@ -144,27 +150,51 @@ function SearchScreen() {
 
         {/* Display Users or Recipes based on the active section */}
         {searchQuery.length > 0 && filteredResults.length > 0 ? (
-          <View>
-            {filteredResults.map((result) => (
-              <View key={result.id}>
-                {searchType === 'users' ? (
-                  <View style={[styles.userLayout]}>
-                    <Avatar.Image
-                      size={50}
-                      source={{ uri: (result as User).image }}
-                    />
-                    <Text style={[styles.userName]}>
-                      {(result as User).name}
-                    </Text>
-                  </View>
-                ) : (
-                  <View>
-                    <Text>{(result as Recipe).title}</Text>
-                    <Image source={{ uri: (result as Recipe).image }} />
-                  </View>
-                )}
-              </View>
-            ))}
+          <View
+            style={{
+              width: '100%',
+              paddingHorizontal: 10,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                gap: 10,
+              }}
+            >
+              {filteredResults.map((result) => (
+                <View
+                  key={result.id}
+                  style={{ width: '48.5%', marginBottom: 10 }}
+                >
+                  {searchType === 'users' ? (
+                    <View style={[styles.userLayout]}>
+                      <View style={[styles.userBox]}>
+                        <Avatar.Image
+                          size={50}
+                          source={{ uri: (result as User).image }}
+                        />
+                        <Text style={[styles.userName]}>
+                          {(result as User).name}
+                        </Text>
+                      </View>
+                    </View>
+                  ) : (
+                    <View style={[styles.recipeBox]}>
+                      <Image
+                        style={[styles.recipeImage]}
+                        source={{ uri: (result as Recipe).image }}
+                      />
+                      <Text style={[styles.recipeText]}>
+                        {(result as Recipe).title}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              ))}
+            </View>
           </View>
         ) : (
           <View style={[styles.emptySearchTextContainer]}>
@@ -207,14 +237,11 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 25,
   },
   button: {
-    // paddingHorizontal: 10,
     paddingVertical: 5,
-    // marginHorizontal: 5,
     borderRadius: 5,
   },
   buttonText: {
@@ -224,12 +251,16 @@ const styles = StyleSheet.create({
   divider: {
     marginHorizontal: 10,
   },
+  searchResultLayout: {
+    width: '100%',
+  },
   userLayout: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
     marginBottom: 20,
+  },
+  userBox: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
   },
   userName: {
     fontFamily: 'Jost-Regular',
@@ -241,6 +272,18 @@ const styles = StyleSheet.create({
   },
   activeButton: {
     // backgroundColor: '#ccc',
+  },
+  recipeBox: {
+    gap: 5,
+  },
+  recipeImage: {
+    width: '100%',
+    height: 150,
+    resizeMode: 'cover',
+  },
+  recipeText: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 18,
   },
 });
 
