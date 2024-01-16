@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import { Recipe } from '../../api/model/recipeModel';
+import { Recipe, RecipeWithId } from '../../api/model/recipeModel';
 import { RecipeState } from '../../types/Action';
 import { RootState } from '../store';
 
@@ -14,10 +14,11 @@ export const recipesSlice = createSlice({
   name: 'recipes',
   initialState,
   reducers: {
-    fetchRecipes: (
+    // Updates the state based on the fetched recipes
+    updateRecipesState: (
       state,
       action: PayloadAction<{
-        recipes: Recipe[];
+        recipes: (Recipe | RecipeWithId)[];
         lastFetchedRecipe: QueryDocumentSnapshot<DocumentData> | null;
       }>
     ) => {
@@ -28,10 +29,13 @@ export const recipesSlice = createSlice({
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
+    // Add other reducers like updateRecipe, deleteRecipe, etc. as needed
   },
 });
 
-export const { fetchRecipes, setLoading } = recipesSlice.actions;
+export const { updateRecipesState, setLoading } = recipesSlice.actions;
+
+// Update your selector and other parts of the code where you use this reducer
 
 // Selector to get the recipes from the state
 export const selectRecipes = (state: RootState) => state.recipes.recipes;
