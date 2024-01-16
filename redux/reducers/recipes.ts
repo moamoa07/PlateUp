@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { Recipe, RecipeWithId } from '../../api/model/recipeModel';
 import { RecipeState } from '../../types/Action';
 import { RootState } from '../store';
 
 const initialState: RecipeState = {
   recipes: [],
-  lastFetchedRecipe: null,
+  lastFetchedRecipeId: null,
   isLoading: false,
   currentRecipe: null,
   error: null,
+  hasMoreRecipes: true,
 };
 
 export const recipesSlice = createSlice({
@@ -21,19 +21,26 @@ export const recipesSlice = createSlice({
       state,
       action: PayloadAction<{
         recipes: (Recipe | RecipeWithId)[];
-        lastFetchedRecipe: QueryDocumentSnapshot<DocumentData> | null;
+        lastFetchedRecipeId: string | null;
       }>
     ) => {
       state.recipes = [...state.recipes, ...action.payload.recipes];
-      state.lastFetchedRecipe = action.payload.lastFetchedRecipe;
+      state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
       state.isLoading = false;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    fetchRecipeSuccess: (state, action: PayloadAction<Recipe>) => {
-      state.currentRecipe = action.payload;
-      state.error = null;
+    fetchRecipesSuccess: (
+      state,
+      action: PayloadAction<{
+        recipes: Recipe[];
+        lastFetchedRecipeId: string | null;
+      }>
+    ) => {
+      state.recipes = [...state.recipes, ...action.payload.recipes];
+      state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
+      state.isLoading = false;
     },
     fetchRecipeError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
@@ -42,7 +49,12 @@ export const recipesSlice = createSlice({
   },
 });
 
-export const { updateRecipesState, setLoading } = recipesSlice.actions;
+export const {
+  updateRecipesState,
+  setLoading,
+  fetchRecipesSuccess,
+  fetchRecipeError,
+} = recipesSlice.actions;
 
 // Update your selector and other parts of the code where you use this reducer
 
