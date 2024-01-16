@@ -50,31 +50,31 @@ function SearchScreen() {
     },
     {
       id: '4',
-      name: 'Nathalie',
+      name: 'Greta',
       image:
         'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
     },
     {
       id: '5',
-      name: 'Moa',
+      name: 'Anna',
       image:
         'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
     },
     {
       id: '6',
-      name: 'Lisa-Marie',
+      name: 'Lennart',
       image:
         'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
     },
     {
       id: '7',
-      name: 'Moa',
+      name: 'Bella',
       image:
         'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
     },
     {
       id: '8',
-      name: 'Lisa-Marie',
+      name: 'Ana',
       image:
         'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
     },
