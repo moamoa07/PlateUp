@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Searchbar, Text } from 'react-native-paper';
+import { Avatar, Searchbar, Text } from 'react-native-paper';
 
 type User = {
   id: string;
@@ -124,8 +124,9 @@ function SearchScreen() {
         {searchQuery.length > 0 && filteredUsers.length > 0 ? (
           <View>
             {filteredUsers.map((user) => (
-              <View key={user.id}>
-                <Text>{user.name}</Text>
+              <View key={user.id} style={[styles.userLayout]}>
+                <Avatar.Image size={50} source={{ uri: user.image }} />
+                <Text style={[styles.userName]}>{user.name}</Text>
               </View>
             ))}
           </View>
@@ -215,8 +216,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
-    marginTop: 25,
+    marginVertical: 25,
   },
   button: {
     // paddingHorizontal: 10,
@@ -230,6 +230,17 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginHorizontal: 10,
+  },
+  userLayout: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 20
+  },
+  userName: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 20
   },
 });
 
