@@ -217,7 +217,6 @@ function SearchScreen() {
             <View
               style={{
                 width: '100%',
-                paddingHorizontal: 10,
                 height: '100%',
                 paddingBottom: 300,
               }}
@@ -228,10 +227,11 @@ function SearchScreen() {
                   flexWrap: 'wrap',
                   justifyContent: 'space-between',
                   gap: 10,
+                  paddingHorizontal: 10
                 }}
               >
                 {filteredUsers.map((result) => (
-                  <View key={result.id} style={{ marginBottom: 10 }}>
+                  <View key={result.id}>
                     <View style={[styles.userLayout]}>
                       <View style={[styles.userBox]}>
                         <Avatar.Image
@@ -258,7 +258,7 @@ function SearchScreen() {
                 {filteredRecipes.map((result) => (
                   <View
                     key={result.id}
-                    style={{ width: '48.5%', marginBottom: 10 }}
+                    style={{ width: '48%', marginBottom: 10 }}
                   >
                     <View style={[styles.recipeBox]}>
                       <Image
@@ -309,12 +309,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '70%',
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
   },
   emptySearchText: {
     fontFamily: 'Crake-Regular',
-    fontSize: 40,
+    fontSize: 35,
     textAlign: 'center',
+
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -332,6 +333,14 @@ const styles = StyleSheet.create({
   divider: {
     marginHorizontal: 10,
   },
+  activeButtonText: {
+    fontWeight: 'bold',
+    fontFamily: 'Jost-Medium',
+    fontSize: 17,
+  },
+  activeButton: {
+    // backgroundColor: '#ccc',
+  },
   searchResultLayout: {
     width: '100%',
   },
@@ -346,14 +355,6 @@ const styles = StyleSheet.create({
   userName: {
     fontFamily: 'Jost-Regular',
     fontSize: 20,
-  },
-  activeButtonText: {
-    fontWeight: 'bold',
-    fontFamily: 'Jost-Medium',
-    fontSize: 18,
-  },
-  activeButton: {
-    // backgroundColor: '#ccc',
   },
   recipeBox: {
     gap: 5,
