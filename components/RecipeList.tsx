@@ -13,21 +13,22 @@ import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchRecipes } from '../redux/actions/recipeActions';
+import {
+  selectHasMoreRecipes,
+  selectIsLoading,
+  selectLastFetchedRecipeId,
+  selectRecipes,
+} from '../redux/reducers/recipes';
 import RecipeComponent from './RecipeComponent';
 
 const thinBorder = 1 / PixelRatio.get();
 
 const RecipeList = () => {
   const dispatch = useAppDispatch();
-  const recipes = useAppSelector((state) => state.recipes.recipes);
-  console.log('Recipes in component:', recipes);
-  const lastFetchedRecipe = useAppSelector(
-    (state) => state.recipes.lastFetchedRecipeId
-  );
-  const isLoading = useAppSelector((state) => state.recipes.isLoading);
-  const hasMoreRecipes = useAppSelector(
-    (state) => state.recipes.hasMoreRecipes
-  );
+  const recipes = useAppSelector(selectRecipes);
+  const lastFetchedRecipeId = useAppSelector(selectLastFetchedRecipeId);
+  const isLoading = useAppSelector(selectIsLoading);
+  const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
 
   useEffect(() => {
     dispatch(fetchRecipes(null, 2)); // Fetch initial 2 recipes
@@ -38,7 +39,9 @@ const RecipeList = () => {
   }, [recipes]);
 
   const handleLoadMore = () => {
-    dispatch(fetchRecipes(lastFetchedRecipe, 2)); // Fetch next 2 recipes
+    if (hasMoreRecipes) {
+      dispatch(fetchRecipes(lastFetchedRecipeId, 2));
+    }
   };
 
   return (
@@ -46,17 +49,21 @@ const RecipeList = () => {
       <View style={styles.screenHeader}>
         <Text style={styles.h3}>Explore Recipes</Text>
       </View>
-      {isLoading ? (
-        <ActivityIndicator size={'large'} />
-      ) : (
-        <>
-          {recipes
-            .filter((recipe): recipe is RecipeWithId => !!recipe.id)
-            .map((recipe) => (
-              <RecipeComponent key={recipe.id} recipe={recipe} />
-            ))}
-        </>
-      )}
+
+      {/* Loader */}
+      {isLoading && <ActivityIndicator size={'large'} />}
+
+      {/* Recipes List */}
+      {!isLoading &&
+        recipes.map((recipe) => {
+          // Assert that each recipe is a RecipeWithId
+          const recipeWithId = recipe as RecipeWithId;
+          return (
+            <RecipeComponent key={recipeWithId.id} recipe={recipeWithId} />
+          );
+        })}
+
+      {/* Load More Button */}
       {!isLoading && hasMoreRecipes && (
         <TouchableOpacity
           onPress={handleLoadMore}
@@ -72,6 +79,7 @@ const RecipeList = () => {
         </TouchableOpacity>
       )}
 
+      {/* End of List Message */}
       {!isLoading && !hasMoreRecipes && (
         <Text style={styles.endOfListMessage}>
           You've reached the last recipe.
