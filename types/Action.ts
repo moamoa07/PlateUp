@@ -5,6 +5,7 @@ export const SET_LOADING = 'SET_LOADING';
 export const FETCH_RECIPE_START = 'FETCH_RECIPE_START';
 export const FETCH_RECIPE_SUCCESS = 'FETCH_RECIPE_SUCCESS';
 export const FETCH_RECIPE_ERROR = 'FETCH_RECIPE_ERROR';
+export const LIMIT_NUMBER = 2;
 
 // Define your RecipeState type
 export interface RecipeState {
