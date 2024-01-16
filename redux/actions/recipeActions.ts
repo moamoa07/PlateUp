@@ -4,28 +4,33 @@ import {
   FETCH_RECIPE_START,
   FETCH_RECIPE_SUCCESS,
 } from '../../types/Action';
-import { fetchRecipesSuccess, setLoading } from '../reducers/recipes';
+import {
+  fetchRecipesSuccess,
+  setHasMoreRecipes,
+  setLoading,
+} from '../reducers/recipes';
 import { AppDispatch } from '../store';
 
 // THUNK ACTION CREATOR
 
+// Adjust the fetchRecipes thunk action
 export const fetchRecipes =
-  (lastFetchedRecipeId: string | null, limitNumber: number = 2) =>
+  (lastFetchedRecipeId: string | null, limitNumber: number) =>
   async (dispatch: AppDispatch) => {
-    dispatch(setLoading(true));
+    dispatch(setLoading(true)); // Set loading state
     try {
       const fetchedData = await getAllRecipes(lastFetchedRecipeId, limitNumber);
       dispatch(
         fetchRecipesSuccess({
           recipes: fetchedData.recipes,
           lastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
-          limitNumber, // Add this line
         })
       );
+      dispatch(setHasMoreRecipes(fetchedData.lastFetchedRecipeId != null));
     } catch (error) {
-      // Handle the error appropriately, possibly dispatch another action
+      // Handle error
     } finally {
-      dispatch(setLoading(false));
+      dispatch(setLoading(false)); // Reset loading state
     }
   };
 
