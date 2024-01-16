@@ -4,7 +4,7 @@ import {
   FETCH_RECIPE_START,
   FETCH_RECIPE_SUCCESS,
 } from '../../types/Action';
-import { fetchRecipesSuccess } from '../reducers/recipes';
+import { fetchRecipesSuccess, setLoading } from '../reducers/recipes';
 import { AppDispatch } from '../store';
 
 // THUNK ACTION CREATOR
@@ -12,15 +12,21 @@ import { AppDispatch } from '../store';
 export const fetchRecipes =
   (lastFetchedRecipeId: string | null, limitNumber: number = 2) =>
   async (dispatch: AppDispatch) => {
-    const fetchedData = await getAllRecipes(lastFetchedRecipeId, limitNumber);
-    console.log('Fetched data:', fetchedData);
-
-    dispatch(
-      fetchRecipesSuccess({
-        recipes: fetchedData.recipes,
-        lastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
-      })
-    );
+    dispatch(setLoading(true));
+    try {
+      const fetchedData = await getAllRecipes(lastFetchedRecipeId, limitNumber);
+      dispatch(
+        fetchRecipesSuccess({
+          recipes: fetchedData.recipes,
+          lastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
+          limitNumber, // Add this line
+        })
+      );
+    } catch (error) {
+      // Handle the error appropriately, possibly dispatch another action
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
 
 export const fetchRecipeById =
