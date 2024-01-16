@@ -7,6 +7,16 @@ export const store = configureStore({
     user: userReducer,
     recipes: recipesReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          'recipes/fetchRecipesSuccess',
+          'recipes/fetchRecipeByIdSuccess',
+        ],
+        ignoredPaths: ['recipes.currentRecipe', 'recipes.recipes'],
+      },
+    }),
 });
 
 // Typescript
