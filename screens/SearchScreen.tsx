@@ -315,7 +315,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Crake-Regular',
     fontSize: 35,
     textAlign: 'center',
-
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -332,6 +331,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginHorizontal: 10,
+    fontSize: 19
   },
   activeButtonText: {
     fontWeight: 'bold',
