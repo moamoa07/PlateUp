@@ -91,7 +91,7 @@ function SearchScreen() {
     },
     {
       id: '22',
-      title: 'Marängbakelser med färska hallon och röda vinbär',
+      title: 'Citronkaka',
       image:
         'https://img.koket.se/standard-mega/mjuk-citronkaka-med-syrlig-glasyr-dansukker.png.webp',
     },
@@ -103,21 +103,21 @@ function SearchScreen() {
     },
     {
       id: '111',
-      title: 'Chokladkaka',
+      title: 'Hallontårta',
       image:
-        'https://cdn-rdb.arla.com/Files/arla-se/3181484453/def2d890-b9c5-4f30-b60b-626fb40e74dc.jpg?crop=(0,0,0,-148)&w=1269&h=715&mode=crop&ak=f525e733&hm=bd2594bd',
+        'https://assets.icanet.se/e_sharpen:80,q_auto,dpr_1.25,w_718,h_718,c_lfill/imagevaultfiles/id_240376/cf_259/hallontarta.jpg',
     },
     {
       id: '222',
-      title: 'Marängbakelser med färska hallon och röda vinbär',
+      title: 'Rosa marängbakelser med bär, mandel och grädde',
       image:
-        'https://img.koket.se/standard-mega/mjuk-citronkaka-med-syrlig-glasyr-dansukker.png.webp',
+        'https://static.cdn-expressen.se/images/35/bb/35bb78298d9b4cc884b21ea8f5affed7/16x9/1000@40.jpg',
     },
     {
       id: '333',
-      title: 'Macarons',
+      title: 'Kladdig kladdkaka',
       image:
-        'https://cdn-rdb.arla.com/Files/arla-se/3269212119/01bd1421-10fa-497e-8a5b-ee2c5101e31d.jpg?w=1269&h=715&mode=crop&ak=f525e733&hm=b762ca1a',
+        'https://assets.icanet.se/e_sharpen:80,q_auto,dpr_1.25,w_718,h_718,c_lfill/imagevaultfiles/id_221660/cf_259/kladdig_kladdkaka.jpg',
     },
     // ... other recipes
   ];
