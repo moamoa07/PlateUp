@@ -28,17 +28,13 @@ const RecipeList = () => {
 
   useEffect(() => {
     if (!recipes.length) {
-      dispatch(fetchRecipes(null, 2));
+      dispatch(fetchRecipes(null, 3));
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    console.log('Component updated with new recipes:', recipes);
-  }, [recipes]);
-
   const handleLoadMore = () => {
     if (hasMoreRecipes) {
-      dispatch(fetchRecipes(lastFetchedRecipeId, 2));
+      dispatch(fetchRecipes(lastFetchedRecipeId, 3));
     }
   };
 
