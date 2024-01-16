@@ -15,7 +15,7 @@ import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
 
 interface RecipeComponentProps {
-  recipe: RecipeWithId; // Assuming RecipeWithId includes all Recipe fields + id
+  recipe: RecipeWithId;
 }
 
 function RecipeComponent({ recipe }: RecipeComponentProps) {
@@ -24,14 +24,6 @@ function RecipeComponent({ recipe }: RecipeComponentProps) {
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
   };
-
-  // if (isLoading) {
-  //   return <ActivityIndicator />;
-  // }
-
-  // if (error) {
-  //   return <Text>Error: {error}</Text>;
-  // }
 
   if (!recipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
