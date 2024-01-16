@@ -79,6 +79,10 @@ function SearchScreen() {
     setFilteredUsers(filtered);
   };
 
+  const toggleSection = () => {
+    setShowUsers((prevShowUsers) => !prevShowUsers);
+  };
+
   return (
     <SafeAreaView>
       <View
@@ -98,55 +102,55 @@ function SearchScreen() {
           style={[styles.searchbar]}
         />
 
-        {/* Buttons to toggle between Ingredients and Instructions */}
+        {/* Buttons to toggle between Users and Recipes */}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
-            style={[styles.button]}
-            // style={[styles.button, showIngredients && styles.activeButton]}
-            // onPress={() => toggleSection('ingredients')}
+            style={[styles.button, showUsers && styles.activeButton]}
+            onPress={toggleSection}
           >
             <Text
-              style={[styles.buttonText]}
-              // style={[
-              //   styles.buttonText,
-              //   showIngredients && styles.activeButtonText,
-              // ]}
+              style={[styles.buttonText, showUsers && styles.activeButtonText]}
             >
               Users
             </Text>
           </TouchableOpacity>
           <Text style={[styles.divider]}>|</Text>
           <TouchableOpacity
-            style={[styles.button]}
-            // style={[styles.button, !showIngredients && styles.activeButton]}
-            // onPress={() => toggleSection('instructions')}
+            style={[styles.button, !showUsers && styles.activeButton]}
+            onPress={toggleSection}
           >
             <Text
-              style={[styles.buttonText]}
-              // style={[
-              //   styles.buttonText,
-              //   !showIngredients && styles.activeButtonText,
-              // ]}
+              style={[styles.buttonText, !showUsers && styles.activeButtonText]}
             >
               Recipes
             </Text>
           </TouchableOpacity>
         </View>
 
+        {/* Display Users or Recipes based on the active section */}
         {searchQuery.length > 0 && filteredUsers.length > 0 ? (
           <View>
-            {filteredUsers.map((user) => (
-              <View key={user.id} style={[styles.userLayout]}>
-                <Avatar.Image size={50} source={{ uri: user.image }} />
-                <Text style={[styles.userName]}>{user.name}</Text>
+            {showUsers ? (
+              // Users list
+              filteredUsers.map((user) => (
+                <View key={user.id} style={[styles.userLayout]}>
+                  <Avatar.Image size={50} source={{ uri: user.image }} />
+                  <Text style={[styles.userName]}>{user.name}</Text>
+                </View>
+              ))
+            ) : (
+              // Recipes list (replace with your actual recipe rendering logic)
+              <View>
+                {/* Render your recipe content here */}
+                {/* Example: <Text>{recipe.name}</Text> */}
               </View>
-            ))}
+            )}
           </View>
         ) : (
-          <View style={[styles.emptySearchTextContainer]}>
-            <Text style={[styles.emptySearchText]}>
+          <View style={styles.emptySearchTextContainer}>
+            <Text style={styles.emptySearchText}>
               {searchQuery.length > 0
-                ? 'No matching users found'
+                ? `No matching ${showUsers ? 'users' : 'recipes'} found`
                 : 'Discover recipes and connect with others!'}
             </Text>
           </View>
@@ -253,6 +257,13 @@ const styles = StyleSheet.create({
   userName: {
     fontFamily: 'Jost-Regular',
     fontSize: 20,
+  },
+  activeButtonText: {
+    fontWeight: 'bold',
+    fontFamily: 'Jost-Medium',
+  },
+  activeButton: {
+    // backgroundColor: '#ccc',
   },
 });
 
