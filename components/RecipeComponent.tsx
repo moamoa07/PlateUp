@@ -9,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
-import { Recipe } from '../api/model/recipeModel';
-import { getRecipeById } from '../api/service/recipeService';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchRecipeById } from '../redux/actions/recipeActions';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
@@ -20,28 +20,28 @@ interface RecipeComponentProps {
   recipeId: string;
 }
 
-const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [isLoading, setLoading] = useState(true);
+function RecipeComponent({ recipeId }: RecipeComponentProps) {
+  const dispatch = useAppDispatch();
+  const recipe = useAppSelector((state) => state.recipes.currentRecipe);
+  const isLoading = useAppSelector((state) => state.recipes.isLoading);
+  const error = useAppSelector((state) => state.recipes.error);
   const [showIngredients, setShowIngredients] = useState(true);
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      setLoading(true);
-      const recipeData = await getRecipeById(recipeId); // Using the recipeId prop
-      setRecipe(recipeData as Recipe);
-      setLoading(false);
-    };
-
-    fetchRecipe();
-  }, [recipeId]);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
   };
 
+  useEffect(() => {
+    dispatch(fetchRecipeById(recipeId));
+    console.log('Recipe ID:', recipeId);
+  }, [dispatch, recipeId]);
+
   if (isLoading) {
     return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Text>Error: {error}</Text>;
   }
 
   if (!recipe) {
@@ -190,7 +190,7 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
