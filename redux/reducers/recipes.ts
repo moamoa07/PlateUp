@@ -34,14 +34,23 @@ export const recipesSlice = createSlice({
     fetchRecipesSuccess: (
       state,
       action: PayloadAction<{
-        recipes: Recipe[];
+        recipes: RecipeWithId[];
         lastFetchedRecipeId: string | null;
+        limitNumber: number; // Add this line
       }>
     ) => {
-      state.recipes = [...state.recipes, ...action.payload.recipes];
+      const newRecipes = action.payload.recipes.filter(
+        (newRecipe) =>
+          !state.recipes.some(
+            (existingRecipe) => existingRecipe.id === newRecipe.id
+          )
+      );
+      state.recipes = [...state.recipes, ...newRecipes];
       state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
       state.isLoading = false;
+      state.hasMoreRecipes = newRecipes.length === 2; // Assuming 2 is the limit per fetch
     },
+
     fetchRecipeError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
@@ -59,7 +68,18 @@ export const {
 // Update your selector and other parts of the code where you use this reducer
 
 // Selector to get the recipes from the state
-export const selectRecipes = (state: RootState) => state.recipes.recipes;
+export const selectRecipes = (state: RootState) =>
+  state.recipes.recipes as (Recipe | RecipeWithId)[];
+
+// Selector to get the isLoading flag from the state
 export const selectIsLoading = (state: RootState) => state.recipes.isLoading;
+
+// Selector to get the last fetched recipe ID from the state
+export const selectLastFetchedRecipeId = (state: RootState) =>
+  state.recipes.lastFetchedRecipeId;
+
+// Selector to get the hasMoreRecipes flag from the state
+export const selectHasMoreRecipes = (state: RootState) =>
+  state.recipes.hasMoreRecipes;
 
 export default recipesSlice.reducer;
