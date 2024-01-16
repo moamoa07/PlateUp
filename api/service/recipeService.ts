@@ -55,7 +55,7 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
 
 export async function getAllRecipes(
   lastFetchedRecipeId: string | null = null,
-  limitNumber: number = 2
+  limitNumber: number = 3
 ) {
   // Base query with ordering and limiting
   let baseQuery = query(
