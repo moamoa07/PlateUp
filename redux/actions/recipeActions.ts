@@ -1,27 +1,26 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import { Dispatch } from 'react';
 import { getAllRecipes, getRecipeById } from '../../api/service/recipeService';
 import {
-  FETCH_RECIPES,
   FETCH_RECIPE_ERROR,
   FETCH_RECIPE_START,
   FETCH_RECIPE_SUCCESS,
-  RecipeActionTypes,
-  SET_LOADING,
 } from '../../types/Action';
+import { fetchRecipesSuccess } from '../reducers/recipes';
 import { AppDispatch } from '../store';
 
 // THUNK ACTION CREATOR
 
 export const fetchRecipes =
-  (lastFetchedRecipe: QueryDocumentSnapshot<DocumentData> | null) =>
-  async (dispatch: Dispatch<RecipeActionTypes>) => {
-    dispatch({ type: SET_LOADING, payload: true });
-    const fetchedData = await getAllRecipes(lastFetchedRecipe);
-    dispatch({
-      type: FETCH_RECIPES,
-      payload: fetchedData,
-    });
+  (lastFetchedRecipeId: string | null, limitNumber: number = 2) =>
+  async (dispatch: AppDispatch) => {
+    const fetchedData = await getAllRecipes(lastFetchedRecipeId, limitNumber);
+    console.log('Fetched data:', fetchedData);
+
+    dispatch(
+      fetchRecipesSuccess({
+        recipes: fetchedData.recipes,
+        lastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
+      })
+    );
   };
 
 export const fetchRecipeById =
