@@ -1,7 +1,5 @@
 import { getAuth } from 'firebase/auth';
 import {
-  DocumentData,
-  QueryDocumentSnapshot,
   addDoc,
   collection,
   doc,
@@ -56,7 +54,7 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
 // }
 
 export async function getAllRecipes(
-  lastFetchedRecipe: QueryDocumentSnapshot<DocumentData> | null = null,
+  lastFetchedRecipeId: string | null = null,
   limitNumber: number = 2
 ) {
   // Base query with ordering and limiting
@@ -66,10 +64,16 @@ export async function getAllRecipes(
     limit(limitNumber)
   );
 
-  // Modify query if lastFetchedRecipe exists
-  let finalQuery = lastFetchedRecipe
-    ? query(baseQuery, startAfter(lastFetchedRecipe))
-    : baseQuery;
+  // Modify the query if lastFetchedRecipeId exists
+  let finalQuery;
+  if (lastFetchedRecipeId) {
+    const lastSnapshot = await getDoc(
+      doc(FIREBASE_DB, 'recipes', lastFetchedRecipeId)
+    );
+    finalQuery = query(baseQuery, startAfter(lastSnapshot));
+  } else {
+    finalQuery = baseQuery;
+  }
 
   const querySnapshot = await getDocs(finalQuery);
 
@@ -78,15 +82,15 @@ export async function getAllRecipes(
     id: doc.id,
   }));
 
-  // Determine the new 'lastFetchedRecipe' for pagination
-  const newLastFetchedRecipe =
+  // Determine the new 'lastFetchedRecipeId' for pagination
+  const newLastFetchedRecipeId =
     querySnapshot.docs.length === limitNumber
-      ? querySnapshot.docs[querySnapshot.docs.length - 1]
+      ? querySnapshot.docs[querySnapshot.docs.length - 1].id
       : null;
 
   return {
     recipes: fetchedRecipes,
-    lastFetchedRecipe: newLastFetchedRecipe,
+    lastFetchedRecipeId: newLastFetchedRecipeId,
   };
 }
 
