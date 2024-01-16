@@ -1,14 +1,10 @@
 import React, { useEffect } from 'react';
 import {
   ActivityIndicator,
+  FlatList,
   PixelRatio,
-  ScrollView,
   StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
 } from 'react-native';
-import { Button } from 'react-native-paper';
 import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
@@ -47,49 +43,63 @@ const RecipeList = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.screenHeader}>
-        <Text style={styles.h3}>Explore Recipes</Text>
-      </View>
-
-      {/* Loader */}
-      {isLoading && <ActivityIndicator size={'large'} />}
-
-      {/* Recipes List */}
-      {!isLoading &&
-        recipes.map((recipe) => {
-          // Assert that each recipe is a RecipeWithId
-          const recipeWithId = recipe as RecipeWithId;
-          return (
-            <RecipeComponent key={recipeWithId.id} recipe={recipeWithId} />
-          );
-        })}
-
-      {/* Load More Button */}
-      {!isLoading && hasMoreRecipes && (
-        <TouchableOpacity
-          onPress={handleLoadMore}
-          style={styles.buttonTouchable}
-        >
-          <Button
-            mode="contained"
-            style={styles.loadMoreButton}
-            labelStyle={styles.buttonLabel}
-          >
-            Load More Recipes
-          </Button>
-        </TouchableOpacity>
-      )}
-
-      {/* End of List Message */}
-      {!isLoading && !hasMoreRecipes && (
-        <Text style={styles.endOfListMessage}>
-          You've reached the last recipe.
-        </Text>
-      )}
-    </ScrollView>
+    <FlatList
+      data={recipes.filter((recipe): recipe is RecipeWithId => !!recipe.id)}
+      renderItem={({ item }) => <RecipeComponent recipe={item} />}
+      keyExtractor={(item, index) => item.id ?? index.toString()}
+      ListFooterComponent={
+        isLoading ? <ActivityIndicator size={'large'} /> : null
+      }
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+    />
   );
 };
+
+//   return (
+//     <ScrollView>
+//       <View style={styles.screenHeader}>
+//         <Text style={styles.h3}>Explore Recipes</Text>
+//       </View>
+
+//       {/* Loader */}
+//       {isLoading && <ActivityIndicator size={'large'} />}
+
+//       {/* Recipes List */}
+//       {!isLoading &&
+//         recipes.map((recipe) => {
+//           // Assert that each recipe is a RecipeWithId
+//           const recipeWithId = recipe as RecipeWithId;
+//           return (
+//             <RecipeComponent key={recipeWithId.id} recipe={recipeWithId} />
+//           );
+//         })}
+
+//       {/* Load More Button */}
+//       {!isLoading && hasMoreRecipes && (
+//         <TouchableOpacity
+//           onPress={handleLoadMore}
+//           style={styles.buttonTouchable}
+//         >
+//           <Button
+//             mode="contained"
+//             style={styles.loadMoreButton}
+//             labelStyle={styles.buttonLabel}
+//           >
+//             Load More Recipes
+//           </Button>
+//         </TouchableOpacity>
+//       )}
+
+//       {/* End of List Message */}
+//       {!isLoading && !hasMoreRecipes && (
+//         <Text style={styles.endOfListMessage}>
+//           You've reached the last recipe.
+//         </Text>
+//       )}
+//     </ScrollView>
+//   );
+// };
 
 const styles = StyleSheet.create({
   screenHeader: {
