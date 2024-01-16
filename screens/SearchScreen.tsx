@@ -162,6 +162,10 @@ function SearchScreen() {
           }}
           value={searchQuery}
           style={[styles.searchbar]}
+          inputStyle={{
+            fontFamily: 'Jost-Regular',
+            color: 'black',
+          }}
         />
 
         {/* Buttons to toggle between Users and Recipes */}
@@ -294,8 +298,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   searchbar: {
-    borderRadius: 10,
     width: '90%',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: 'black',
+    backgroundColor: '#fff',
   },
   emptySearchTextContainer: {
     display: 'flex',
