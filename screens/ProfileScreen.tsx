@@ -24,7 +24,7 @@ function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => navigateToScreen('Like')}>
+        <TouchableOpacity>
           <LikeIcon size={32} fill={'#232323'} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
