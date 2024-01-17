@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
 import { CustomUser } from '../api/model/userModel';
@@ -28,6 +29,7 @@ function CreateProfileScreen() {
   const [username, setUsername] = useState('');
   const [isFocused, setFocused] = useState(false);
   const dispatch = useAppDispatch();
+  const [checkboxState, setCheckboxState] = React.useState(false);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const showModal = () => setModalVisible(true);
@@ -211,6 +213,40 @@ function CreateProfileScreen() {
               secureTextEntry={true}
               onChangeText={(text) => setConfirmPassword(text)}
             />
+            <View style={styles.checkboxContainer}>
+              <View style={styles.checkbox}>
+                <BouncyCheckbox
+                  fillColor="#232323"
+                  size={20}
+                  onPress={() => setCheckboxState(!checkboxState)}
+                  isChecked={checkboxState}
+                  innerIconStyle={{
+                    borderRadius: 2,
+                  }}
+                  iconStyle={{ borderRadius: 2 }}
+                />
+                <Text style={styles.text}>
+                  I agree to the{' '}
+                  <Text style={styles.textMedium}>Terms and Conditions</Text>
+                </Text>
+              </View>
+              <View style={styles.checkbox}>
+                <BouncyCheckbox
+                  fillColor="#232323"
+                  size={20}
+                  onPress={() => setCheckboxState(!checkboxState)}
+                  isChecked={checkboxState}
+                  innerIconStyle={{
+                    borderRadius: 2,
+                  }}
+                  iconStyle={{ borderRadius: 2 }}
+                />
+                <Text style={styles.text}>
+                  I agree to the{' '}
+                  <Text style={styles.textMedium}>Integrity Policy</Text>
+                </Text>
+              </View>
+            </View>
             <View style={[styles.buttonContainer]}>
               <Button
                 mode="contained"
@@ -230,7 +266,9 @@ function CreateProfileScreen() {
               <Text style={[styles.termsText]}>
                 By signing up, you agree to PlateUp's
               </Text>
-              <Text onPress={showModal}>Terms of Use & Privacy Policy</Text>
+              <Text onPress={showModal} style={styles.termsTextBlack}>
+                Terms of Use & Privacy Policy
+              </Text>
             </View>
             <View style={[styles.linkContainer]}>
               <Text style={[styles.linkText1]}>Already have a profile?</Text>
@@ -285,6 +323,13 @@ const styles = StyleSheet.create({
   },
   termsText: {
     color: '#696969',
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
+  },
+  termsTextBlack: {
+    color: '#232323',
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
   },
   linkContainer: {
     display: 'flex',
@@ -302,6 +347,21 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     textDecorationStyle: 'solid',
     textDecorationColor: '#000',
+  },
+  checkbox: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  checkboxContainer: {
+    marginTop: 10,
+  },
+  text: {
+    fontFamily: 'Jost-Regular',
+  },
+  textMedium: {
+    fontFamily: 'Jost-Medium',
   },
 });
 
