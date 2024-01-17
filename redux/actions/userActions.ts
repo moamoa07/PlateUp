@@ -12,7 +12,7 @@ export const fetchUsers = () => async (dispatch: AppDispatch) => {
     // Dispatch success action to update the state
     dispatch(setUsers(fetchedData.users));
   } catch (error) {
-    // Handle error
+    console.log(error)
   } finally {
     dispatch(setLoading(false)); // Reset loading state
   }
