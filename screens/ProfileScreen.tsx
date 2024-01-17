@@ -1,16 +1,15 @@
 import { Link } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Avatar, useTheme } from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ImageGrid from '../components/ImageGrid';
+import UserProfileRecipeGrid from '../components/UserProfileRecipeGrid';
 import BookmarkIcon from '../components/icons/BookmarkIcon';
 import LikeIcon from '../components/icons/LikeIcon';
 import SettingsIcon from '../components/icons/SettingsIcon';
 import { useAppSelector } from '../hooks/reduxHooks';
 
-function ProfileScreen() {
-  const theme = useTheme();
+function ProfileScreen({ navigation }: { navigation: any }) {
   const user = useAppSelector((state) => state.user.user);
 
   console.log(user);
@@ -55,7 +54,8 @@ function ProfileScreen() {
       </View>
 
       <View>
-        <ImageGrid />
+        {/* <ImageGrid /> */}
+        <UserProfileRecipeGrid navigation={navigation} />
       </View>
     </SafeAreaView>
   );
