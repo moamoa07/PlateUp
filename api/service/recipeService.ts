@@ -10,6 +10,7 @@ import {
   query,
   setDoc,
   startAfter,
+  where,
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { FIREBASE_DB, FIREBASE_STORAGE } from '../../FirebaseConfig';
@@ -55,7 +56,8 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
 
 export async function getAllRecipes(
   lastFetchedRecipeId: string | null = null,
-  limitNumber: number = 3
+  limitNumber: number = 3,
+  userId?: string
 ) {
   // Base query with ordering and limiting
   let baseQuery = query(
@@ -63,6 +65,11 @@ export async function getAllRecipes(
     orderBy('updatedAt', 'desc'),
     limit(limitNumber)
   );
+
+  if (userId) {
+    // Add a constraint to filter by userId if provided
+    queryConstraints.push(where('userId', '==', userId));
+  }
 
   // Modify the query if lastFetchedRecipeId exists
   let finalQuery;
