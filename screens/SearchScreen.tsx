@@ -11,6 +11,10 @@ import {
 import { Avatar, Searchbar, Text } from 'react-native-paper';
 import { CustomUser } from '../api/model/userModel';
 import { getAllUsers } from '../api/service/userService';
+import { useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { getUsers } from '../redux/reducers/users';
+import { fetchUsers } from '../redux/actions/userActions';
 
 type Recipe = {
   id: string;
@@ -24,6 +28,8 @@ function SearchScreen() {
     (CustomUser | Recipe)[]
   >([]);
   const [searchType, setSearchType] = useState<'users' | 'recipes'>('recipes');
+  const dispatch = useAppDispatch();
+  const usersFromRedux = useAppSelector(getUsers);
 
   // Mocked list of recipes (replace with your actual list of users)
   const allRecipes: Recipe[] = [
@@ -67,27 +73,29 @@ function SearchScreen() {
   ];
 
   const handleSearch = async (query: string) => {
-    let filteredUsers: CustomUser[] = [];
- 
-    // Check if the current search type is 'users'
-    if (searchType === 'users') {
-      // Fetch users from Firebase
-      const { users } = await getAllUsers();
- 
-      // Filter users based on the search query
-      filteredUsers = users.filter((user) =>
-        user.displayName.toLowerCase().includes(query.toLowerCase())
-      );
+   try {
+      // Check if the current search type is 'users'
+      if (searchType === 'users') {
+        // Fetch users from Redux
+        await dispatch(fetchUsers());
+
+        // Now users are available in the Redux store
+        const filteredUsers = usersFromRedux.filter((user) =>
+          user.displayName.toLowerCase().includes(query.toLowerCase())
+        );
+
+        setFilteredResults(filteredUsers);
+      } else {
+        // Fetch recipes from your mocked data or wherever you have it
+        const filteredRecipes = allRecipes.filter((recipe) =>
+          recipe.title.toLowerCase().includes(query.toLowerCase())
+        );
+
+        setFilteredResults(filteredRecipes);
+      }
+    } catch (error) {
+      // Handle error
     }
- 
-    const filteredRecipes = allRecipes.filter((recipe) =>
-      recipe.title.toLowerCase().includes(query.toLowerCase())
-    );
- 
-    // Combine the results based on the active search type
-    const filtered = searchType === 'users' ? filteredUsers : filteredRecipes;
- 
-    setFilteredResults(filtered);
   };
  
   const filteredUsers = filteredResults.filter(
