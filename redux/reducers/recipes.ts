@@ -1,7 +1,30 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+  PayloadAction,
+} from '@reduxjs/toolkit';
 import { RecipeWithId } from '../../api/model/recipeModel';
+import { getAllRecipes } from '../../api/service/recipeService';
 import { LIMIT_NUMBER, RecipeState } from '../../types/Action';
 import { RootState } from '../store';
+
+// Thunk Action Creator (has to be in this file because of cycle dependency otherwise)
+export const fetchUserRecipes = createAsyncThunk(
+  'recipes/fetchUserRecipes',
+  async (userId: string, thunkAPI) => {
+    try {
+      const limit = 9; // Set your desired limit
+      const fetchedData = await getAllRecipes(null, limit, userId);
+      return {
+        recipes: fetchedData.recipes,
+        lastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
+      };
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const initialState: RecipeState = {
   recipes: [],
@@ -45,7 +68,6 @@ export const recipesSlice = createSlice({
               existingRecipe.id === newRecipe.id
           )
       );
-
       state.recipes = [...state.recipes, ...newRecipes];
       state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
       state.isLoading = false;
@@ -58,6 +80,31 @@ export const recipesSlice = createSlice({
       state.error = action.payload;
     },
     // Add other reducers like updateRecipe, deleteRecipe, etc. as needed
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserRecipes.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUserRecipes.fulfilled, (state, action) => {
+        // Ensure that we only add recipes that aren't already in the state
+        const newRecipes = action.payload.recipes.filter(
+          (newRecipe) =>
+            !state.recipes.some(
+              (existingRecipe) => existingRecipe.id === newRecipe.id
+            )
+        );
+        state.recipes = [...state.recipes, ...newRecipes];
+        state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
+        state.isLoading = false;
+        // Update hasMoreRecipes based on whether new recipes were added
+        state.hasMoreRecipes =
+          newRecipes.length === action.payload.recipes.length;
+      })
+      .addCase(fetchUserRecipes.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message ?? null;
+      });
   },
 });
 
@@ -86,8 +133,10 @@ export const selectLastFetchedRecipeId = (state: RootState) =>
 export const selectHasMoreRecipes = (state: RootState) =>
   state.recipes.hasMoreRecipes;
 
-// In your recipesSlice file
-export const selectUserRecipes = (state: RootState, userId: string) =>
-  state.recipes.recipes.filter((recipe) => recipe.userId === userId);
+// Memoized selector
+export const selectUserRecipes = createSelector(
+  [(state: RootState) => state.recipes.recipes, (_, userId: string) => userId],
+  (recipes, userId) => recipes.filter((recipe) => recipe.userId === userId)
+);
 
 export default recipesSlice.reducer;
