@@ -39,7 +39,6 @@ export const fetchRecipeById =
     try {
       dispatch({ type: FETCH_RECIPE_START });
       const recipe = await getRecipeById(recipeId); // API request
-      console.log('Fetched recipe:', recipe);
       if (recipe) {
         // Convert non-serializable values to serializable format
         const serializableRecipe = {
