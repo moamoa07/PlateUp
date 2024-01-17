@@ -61,7 +61,7 @@ function CreateProfileScreen() {
       //   return;
       // }
 
-      if (!termsCheckboxState || !privacyCheckboxState) {
+      if (!(termsCheckboxState && privacyCheckboxState)) {
         Alert.alert(
           'Please agree to both Terms and Conditions and Privacy Policy'
         );
@@ -235,7 +235,9 @@ function CreateProfileScreen() {
                 />
                 <Text style={styles.text}>
                   I agree to the{' '}
-                  <Text style={styles.textMedium}>Terms and Conditions</Text>
+                  <Text style={styles.textMedium} onPress={showModal}>
+                    Terms and Conditions
+                  </Text>
                 </Text>
               </View>
               <View style={styles.checkbox}>
@@ -251,7 +253,9 @@ function CreateProfileScreen() {
                 />
                 <Text style={styles.text}>
                   I agree to the{' '}
-                  <Text style={styles.textMedium}>Integrity Policy</Text>
+                  <Text style={styles.textMedium} onPress={showModal}>
+                    Privacy Policy
+                  </Text>
                 </Text>
               </View>
             </View>
@@ -369,7 +373,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
   },
   textMedium: {
-    fontFamily: 'Jost-Medium',
+    fontFamily: 'Jost-Regular',
+    textDecorationLine: 'underline',
   },
 });
 
