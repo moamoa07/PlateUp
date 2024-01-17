@@ -132,6 +132,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     margin: 20,
+    display: 'flex',
+    alignItems: 'center',
   },
   modalText: {
     fontFamily: 'Jost-Regular',
