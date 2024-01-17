@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Platform,
@@ -9,13 +9,15 @@ import {
   View,
 } from 'react-native';
 import { Avatar, Searchbar, Text } from 'react-native-paper';
+import { CustomUser } from '../api/model/userModel';
+import { getAllUsers } from '../api/service/userService';
 
-type User = {
-  id: string;
-  name: string;
-  image: string;
-  // ... other properties
-};
+// type User = {
+//   id: string;
+//   name: string;
+//   image: string;
+//   // ... other properties
+// };
 
 type Recipe = {
   id: string;
@@ -25,61 +27,10 @@ type Recipe = {
 
 function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredResults, setFilteredResults] = useState<(User | Recipe)[]>([]);
+  const [filteredResults, setFilteredResults] = useState<
+    (CustomUser | Recipe)[]
+  >([]);
   const [searchType, setSearchType] = useState<'users' | 'recipes'>('recipes');
-
-  // Mocked list of users (replace with your actual list of users)
-  const allUsers: User[] = [
-    {
-      id: '1',
-      name: 'Nathalie',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '2',
-      name: 'Moa',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '3',
-      name: 'Lisa-Marie',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '4',
-      name: 'Greta',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '5',
-      name: 'Anna',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '6',
-      name: 'Lennart',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '7',
-      name: 'Bella',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '8',
-      name: 'Ana',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    // ... other users
-  ];
 
   // Mocked list of recipes (replace with your actual list of users)
   const allRecipes: Recipe[] = [
@@ -122,22 +73,30 @@ function SearchScreen() {
     // ... other recipes
   ];
 
-  const handleSearch = (query: string) => {
-    // Separate filtering for users and recipes
-    const filteredUsers = allUsers.filter((user) =>
-      user.name.toLowerCase().includes(query.toLowerCase())
-    );
-
+  const handleSearch = async (query: string) => {
+    let filteredUsers: CustomUser[] = [];
+ 
+    // Check if the current search type is 'users'
+    if (searchType === 'users') {
+      // Fetch users from Firebase
+      const { users } = await getAllUsers();
+ 
+      // Filter users based on the search query
+      filteredUsers = users.filter((user) =>
+        user.displayName.toLowerCase().includes(query.toLowerCase())
+      );
+    }
+ 
     const filteredRecipes = allRecipes.filter((recipe) =>
       recipe.title.toLowerCase().includes(query.toLowerCase())
     );
-
+ 
     // Combine the results based on the active search type
     const filtered = searchType === 'users' ? filteredUsers : filteredRecipes;
-
+ 
     setFilteredResults(filtered);
   };
-
+ 
   const filteredUsers = filteredResults.filter(
     (result) => searchType === 'users'
   );
@@ -227,7 +186,7 @@ function SearchScreen() {
                   flexWrap: 'wrap',
                   justifyContent: 'space-between',
                   gap: 10,
-                  paddingHorizontal: 10
+                  paddingHorizontal: 10,
                 }}
               >
                 {filteredUsers.map((result) => (
@@ -236,10 +195,14 @@ function SearchScreen() {
                       <View style={[styles.userBox]}>
                         <Avatar.Image
                           size={50}
-                          source={{ uri: (result as User).image }}
+                          source={{
+                            uri:
+                              (result as CustomUser).photoURL ||
+                              'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+                          }}
                         />
                         <Text style={[styles.userName]}>
-                          {(result as User).name}
+                          {(result as CustomUser).displayName}
                         </Text>
                       </View>
                     </View>
@@ -331,7 +294,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginHorizontal: 10,
-    fontSize: 19
+    fontSize: 19,
   },
   activeButtonText: {
     fontWeight: 'bold',
