@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Platform,
@@ -8,14 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Avatar, Searchbar, Text } from 'react-native-paper';
-
-type User = {
-  id: string;
-  name: string;
-  image: string;
-  // ... other properties
-};
+import { ActivityIndicator, Avatar, Searchbar, Text } from 'react-native-paper';
+import { CustomUser } from '../api/model/userModel';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchUsers } from '../redux/actions/userActions';
+import { getUsers, isLoading } from '../redux/reducers/users';
 
 type Recipe = {
   id: string;
@@ -25,61 +22,13 @@ type Recipe = {
 
 function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredResults, setFilteredResults] = useState<(User | Recipe)[]>([]);
+  const [filteredResults, setFilteredResults] = useState<
+    (CustomUser | Recipe)[]
+  >([]);
   const [searchType, setSearchType] = useState<'users' | 'recipes'>('recipes');
-
-  // Mocked list of users (replace with your actual list of users)
-  const allUsers: User[] = [
-    {
-      id: '1',
-      name: 'Nathalie',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '2',
-      name: 'Moa',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '3',
-      name: 'Lisa-Marie',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '4',
-      name: 'Greta',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '5',
-      name: 'Anna',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '6',
-      name: 'Lennart',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '7',
-      name: 'Bella',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    {
-      id: '8',
-      name: 'Ana',
-      image:
-        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
-    },
-    // ... other users
-  ];
+  const dispatch = useAppDispatch();
+  const usersFromRedux = useAppSelector(getUsers);
+  const isSearchLoading = useAppSelector(isLoading);
 
   // Mocked list of recipes (replace with your actual list of users)
   const allRecipes: Recipe[] = [
@@ -122,20 +71,34 @@ function SearchScreen() {
     // ... other recipes
   ];
 
-  const handleSearch = (query: string) => {
-    // Separate filtering for users and recipes
-    const filteredUsers = allUsers.filter((user) =>
-      user.name.toLowerCase().includes(query.toLowerCase())
-    );
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
-    const filteredRecipes = allRecipes.filter((recipe) =>
-      recipe.title.toLowerCase().includes(query.toLowerCase())
-    );
+  const handleSearch = async (query: string) => {
+    try {
+      // Check if the current search type is 'users
+      if (searchType === 'users') {
+        const updateUsers = usersFromRedux;
 
-    // Combine the results based on the active search type
-    const filtered = searchType === 'users' ? filteredUsers : filteredRecipes;
+        // Now users are available in the Redux store
+        const filteredUsers = updateUsers.filter((user) =>
+          user.displayName.toLowerCase().includes(query.toLowerCase())
+        );
 
-    setFilteredResults(filtered);
+        setFilteredResults(filteredUsers);
+        console.log(filteredUsers);
+      } else {
+        // Fetch recipes from your mocked data or wherever you have it
+        const filteredRecipes = allRecipes.filter((recipe) =>
+          recipe.title.toLowerCase().includes(query.toLowerCase())
+        );
+
+        setFilteredResults(filteredRecipes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const filteredUsers = filteredResults.filter(
@@ -212,80 +175,99 @@ function SearchScreen() {
         </View>
 
         {/* Display Users or Recipes based on the active section */}
-        {searchQuery.length > 0 && filteredResults.length > 0 ? (
-          <ScrollView style={{ width: '100%', paddingHorizontal: 10 }}>
-            <View
-              style={{
-                width: '100%',
-                height: '100%',
-                paddingBottom: 300,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'column',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-between',
-                  gap: 10,
-                  paddingHorizontal: 10
-                }}
-              >
-                {filteredUsers.map((result) => (
-                  <View key={result.id}>
-                    <View style={[styles.userLayout]}>
-                      <View style={[styles.userBox]}>
-                        <Avatar.Image
-                          size={50}
-                          source={{ uri: (result as User).image }}
-                        />
-                        <Text style={[styles.userName]}>
-                          {(result as User).name}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                ))}
-              </View>
-              {/* // Render filtered results for recipes */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-between',
-                  gap: 10,
-                }}
-              >
-                {filteredRecipes.map((result) => (
-                  <View
-                    key={result.id}
-                    style={{ width: '48%', marginBottom: 10 }}
-                  >
-                    <View style={[styles.recipeBox]}>
-                      <Image
-                        style={[styles.recipeImage]}
-                        source={{ uri: (result as Recipe).image }}
-                      />
-                      <Text style={[styles.recipeText]}>
-                        {(result as Recipe).title}
-                      </Text>
-                    </View>
-                  </View>
-                ))}
-              </View>
-            </View>
-          </ScrollView>
-        ) : (
-          <View style={[styles.emptySearchTextContainer]}>
-            <Text style={[styles.emptySearchText]}>
-              {searchQuery.length > 0
-                ? searchType === 'users'
-                  ? 'No matching users found'
-                  : 'No matching recipes found'
-                : searchType === 'users'
-                ? 'Discover amazing users and connect with them!'
-                : 'Explore delicious recipes and get inspired!'}
-            </Text>
+        {isSearchLoading ? (
+          <View
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '70%',
+            }}
+          >
+            <ActivityIndicator size="large" color="#D6DED1" />
           </View>
+        ) : (
+          <>
+            {searchQuery.length > 0 && filteredResults.length > 0 ? (
+              <ScrollView style={{ width: '100%', paddingHorizontal: 10 }}>
+                <View
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    paddingBottom: 300,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      flexWrap: 'wrap',
+                      justifyContent: 'space-between',
+                      gap: 10,
+                      paddingHorizontal: 10,
+                    }}
+                  >
+                    {filteredUsers.map((result) => (
+                      <View key={result.id}>
+                        <View style={[styles.userLayout]}>
+                          <View style={[styles.userBox]}>
+                            <Avatar.Image
+                              size={50}
+                              source={{
+                                uri:
+                                  (result as CustomUser).photoURL ||
+                                  'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+                              }}
+                            />
+                            <Text style={[styles.userName]}>
+                              {(result as CustomUser).displayName}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                  {/* // Render filtered results for recipes */}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      justifyContent: 'space-between',
+                      gap: 10,
+                    }}
+                  >
+                    {filteredRecipes.map((result) => (
+                      <View
+                        key={result.id}
+                        style={{ width: '48%', marginBottom: 10 }}
+                      >
+                        <View style={[styles.recipeBox]}>
+                          <Image
+                            style={[styles.recipeImage]}
+                            source={{ uri: (result as Recipe).image }}
+                          />
+                          <Text style={[styles.recipeText]}>
+                            {(result as Recipe).title}
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </ScrollView>
+            ) : (
+              <View style={[styles.emptySearchTextContainer]}>
+                <Text style={[styles.emptySearchText]}>
+                  {searchQuery.length > 0
+                    ? searchType === 'users'
+                      ? 'No matching users found'
+                      : 'No matching recipes found'
+                    : searchType === 'users'
+                    ? 'Discover amazing users and connect with them!'
+                    : 'Explore delicious recipes and get inspired!'}
+                </Text>
+              </View>
+            )}
+          </>
         )}
       </View>
     </SafeAreaView>
@@ -331,7 +313,7 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginHorizontal: 10,
-    fontSize: 19
+    fontSize: 19,
   },
   activeButtonText: {
     fontWeight: 'bold',
