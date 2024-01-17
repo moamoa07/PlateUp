@@ -29,7 +29,8 @@ function CreateProfileScreen() {
   const [username, setUsername] = useState('');
   const [isFocused, setFocused] = useState(false);
   const dispatch = useAppDispatch();
-  const [checkboxState, setCheckboxState] = React.useState(false);
+  const [termsCheckboxState, setTermsCheckboxState] = React.useState(false);
+  const [privacyCheckboxState, setPrivacyCheckboxState] = React.useState(false);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const showModal = () => setModalVisible(true);
@@ -59,6 +60,13 @@ function CreateProfileScreen() {
       //   );
       //   return;
       // }
+
+      if (!termsCheckboxState || !privacyCheckboxState) {
+        Alert.alert(
+          'Please agree to both Terms and Conditions and Privacy Policy'
+        );
+        return;
+      }
 
       await CreateProfileSchema.validate(
         { email, password, username },
@@ -218,8 +226,8 @@ function CreateProfileScreen() {
                 <BouncyCheckbox
                   fillColor="#232323"
                   size={20}
-                  onPress={() => setCheckboxState(!checkboxState)}
-                  isChecked={checkboxState}
+                  onPress={() => setTermsCheckboxState(!termsCheckboxState)}
+                  isChecked={termsCheckboxState}
                   innerIconStyle={{
                     borderRadius: 2,
                   }}
@@ -234,8 +242,8 @@ function CreateProfileScreen() {
                 <BouncyCheckbox
                   fillColor="#232323"
                   size={20}
-                  onPress={() => setCheckboxState(!checkboxState)}
-                  isChecked={checkboxState}
+                  onPress={() => setPrivacyCheckboxState(!privacyCheckboxState)}
+                  isChecked={privacyCheckboxState}
                   innerIconStyle={{
                     borderRadius: 2,
                   }}
