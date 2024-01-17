@@ -7,6 +7,7 @@ const theme = {
     primary: '#232323',
     secondary: '#D6DED1',
     background: '#fff',
+    secondaryContainer: '#D6DED1',
   },
 
   fonts: {
