@@ -17,7 +17,7 @@ import { CustomUser } from '../api/model/userModel';
 import { CreateProfileSchema } from '../api/schema/createProfileSchema';
 import TermsAndPrivacyModal from '../components/TermsAndPrivacyModal';
 import { useAppDispatch } from '../hooks/reduxHooks';
-import { setUser } from '../redux/users';
+import { setUser } from '../redux/reducers/users';
 
 function CreateProfileScreen() {
   const theme = useTheme();
