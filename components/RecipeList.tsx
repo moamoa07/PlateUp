@@ -54,7 +54,9 @@ const RecipeList = () => {
         isLoading ? (
           <ActivityIndicator size={'large'} />
         ) : !hasMoreRecipes ? (
-          <Text style={styles.endOfListMessage}>You've reached the end!</Text>
+          <Text style={styles.endOfListMessage}>
+            You've reached the last recipe!
+          </Text>
         ) : null
       }
       onEndReached={handleLoadMore}
