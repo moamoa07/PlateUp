@@ -28,6 +28,10 @@ const RecipeList = () => {
   const isLoading = useAppSelector(selectIsLoading);
   const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
 
+  // For optimizing performance
+  // Prevents unnecessary re-renders of list items when the data hasn't changed
+  const RecipeComponentMemo = React.memo(RecipeComponent);
+
   useEffect(() => {
     if (!recipes.length) {
       dispatch(fetchRecipes(null, 3));
@@ -43,7 +47,7 @@ const RecipeList = () => {
   return (
     <FlatList
       data={recipes.filter((recipe): recipe is RecipeWithId => !!recipe.id)}
-      renderItem={({ item }) => <RecipeComponent recipe={item} />}
+      renderItem={({ item }) => <RecipeComponentMemo recipe={item} />}
       keyExtractor={(item, index) => item.id ?? index.toString()}
       ListHeaderComponent={
         <View style={styles.screenHeader}>
