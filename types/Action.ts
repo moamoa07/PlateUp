@@ -10,7 +10,7 @@ export const LIMIT_NUMBER = 3;
 // Define your RecipeState type
 export interface RecipeState {
   recipes: (Recipe | RecipeWithId)[];
-  lastFetchedRecipeId: string | null; // Update here
+  lastFetchedRecipeId: string | null;
   isLoading: boolean;
   currentRecipe: Recipe | RecipeWithId | null;
   error: string | null;
@@ -21,7 +21,7 @@ export interface FetchRecipesAction {
   type: typeof FETCH_RECIPES;
   payload: {
     recipes: (Recipe | RecipeWithId)[];
-    lastFetchedRecipeId: string | null; // Updated from lastFetchedRecipe
+    lastFetchedRecipeId: string | null;
   };
 }
 
