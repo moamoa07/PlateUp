@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   title: {
-    fontFamily: 'Crake-Bold',
+    fontFamily: 'Crake-Regular',
     fontSize: 24,
   },
   titleContainer: {
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     borderRadius: 10,
+    fontFamily: 'Jost-Regular',
   },
   modalButtonContainer: {
     display: 'flex',
