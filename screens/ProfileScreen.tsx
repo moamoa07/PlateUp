@@ -1,6 +1,6 @@
-import { Link } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Avatar, useTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ImageGrid from '../components/ImageGrid';
@@ -15,18 +15,24 @@ function ProfileScreen() {
 
   console.log(user);
 
+  const navigation = useNavigation<any>();
+
+  const navigateToScreen = (screenName: string) => {
+    navigation.navigate(screenName);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.iconContainer}>
-        <Link to={{ screen: 'Like' }}>
+        <TouchableOpacity>
           <LikeIcon size={32} fill={'#232323'} />
-        </Link>
-        <Link to={{ screen: 'Bookmark' }}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
           <BookmarkIcon size={32} fill={'#232323'} />
-        </Link>
-        <Link to={{ screen: 'Setting' }}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
           <SettingsIcon size={32} fill={'#232323'} />
-        </Link>
+        </TouchableOpacity>
       </View>
       <View style={styles.avatar}>
         <Avatar.Image
