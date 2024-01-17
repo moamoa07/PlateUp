@@ -1,4 +1,5 @@
 export interface Recipe {
+  id?: string;
   imageUrl: string | null;
   // imageUrls: string[]; Om vi ska spara flera bilder längre fram
   title: string;
@@ -30,4 +31,8 @@ export interface InstructionGroup {
 
 export interface InstructionStep {
   instruction: string;
+}
+
+export interface RecipeWithId extends Recipe {
+  id: string;
 }

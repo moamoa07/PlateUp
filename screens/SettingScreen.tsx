@@ -8,7 +8,7 @@ import AccountIcon from '../components/icons/AccountIcon';
 import HelpIcon from '../components/icons/HelpIcon';
 import SignOutIcon from '../components/icons/SignOutIcon';
 import { useAppDispatch } from '../hooks/reduxHooks';
-import { setSignOutState } from '../redux/users';
+import { setSignOutState } from '../redux/reducers/users';
 
 function SettingScreen() {
   const theme = useTheme();

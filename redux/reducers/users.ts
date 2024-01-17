@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CustomUser } from '../api/model/userModel';
-import type { RootState } from './store';
+import { CustomUser } from '../../api/model/userModel';
+import type { RootState } from '../store';
 
 // Define a type for the slice state
 export interface UserState {
@@ -27,7 +27,7 @@ export const userSlice = createSlice({
     },
     setSignOutState: (state) => {
       state.user = null;
-    }
+    },
   },
 });
 

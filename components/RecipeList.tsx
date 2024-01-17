@@ -1,91 +1,71 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   ActivityIndicator,
+  FlatList,
   PixelRatio,
-  ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import { Button } from 'react-native-paper';
 import theme from '../Theme';
-import { Recipe } from '../api/model/recipeModel';
-import { getAllRecipes } from '../api/service/recipeService';
+import { RecipeWithId } from '../api/model/recipeModel';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchRecipes } from '../redux/actions/recipeActions';
+import {
+  selectHasMoreRecipes,
+  selectIsLoading,
+  selectLastFetchedRecipeId,
+  selectRecipes,
+} from '../redux/reducers/recipes';
 import RecipeComponent from './RecipeComponent';
-
-// Define a new type that includes the 'id' property
-interface RecipeWithId extends Recipe {
-  id: string;
-}
 
 const thinBorder = 1 / PixelRatio.get();
 
-const RecipesList = () => {
-  const [recipes, setRecipes] = useState<RecipeWithId[]>([]);
-  const [lastFetchedRecipe, setLastFetchedRecipe] =
-    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
-  const [isLoading, setLoading] = useState(true);
-  const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const [hasMoreRecipes, setHasMoreRecipes] = useState(true);
+const RecipeList = () => {
+  const dispatch = useAppDispatch();
+  const recipes = useAppSelector(selectRecipes);
+  const lastFetchedRecipeId = useAppSelector(selectLastFetchedRecipeId);
+  const isLoading = useAppSelector(selectIsLoading);
+  const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
 
-  const fetchRecipes = async (
-    lastRecipe: QueryDocumentSnapshot<DocumentData> | null = null
-  ) => {
-    if (isFetchingMore) {
-      return; // Prevent multiple fetches at the same time
-    }
-
-    setIsFetchingMore(true);
-    const fetchedData = await getAllRecipes(lastRecipe);
-    setRecipes((prev) =>
-      lastRecipe ? [...prev, ...fetchedData.recipes] : fetchedData.recipes
-    );
-    setLastFetchedRecipe(fetchedData.lastFetchedRecipe);
-    setHasMoreRecipes(!!fetchedData.lastFetchedRecipe);
-    setLoading(false);
-    setIsFetchingMore(false);
-  };
+  // For optimizing performance
+  // Prevents unnecessary re-renders of list items when the data hasn't changed
+  const RecipeComponentMemo = React.memo(RecipeComponent);
 
   useEffect(() => {
-    fetchRecipes();
-  }, []);
+    if (!recipes.length) {
+      dispatch(fetchRecipes(null, 3));
+    }
+  }, [dispatch]);
+
+  const handleLoadMore = () => {
+    if (hasMoreRecipes) {
+      dispatch(fetchRecipes(lastFetchedRecipeId, 3));
+    }
+  };
 
   return (
-    <ScrollView>
-      <View style={styles.screenHeader}>
-        <Text style={styles.h3}>Explore Recipes</Text>
-      </View>
-      {isLoading ? (
-        <ActivityIndicator size={'large'} />
-      ) : (
-        <>
-          {recipes.map((recipe) => (
-            <RecipeComponent key={recipe.id} recipeId={recipe.id} />
-          ))}
-        </>
-      )}
-      {hasMoreRecipes && (
-        <TouchableOpacity
-          onPress={() => fetchRecipes(lastFetchedRecipe)}
-          disabled={isFetchingMore}
-          style={styles.buttonTouchable}
-        >
-          <Button
-            mode="contained"
-            style={styles.loadMoreButton}
-            labelStyle={styles.buttonLabel}
-          >
-            Load More Recipes
-          </Button>
-        </TouchableOpacity>
-      )}
-
-      {!hasMoreRecipes && !isLoading && (
-        <Text style={styles.endOfListMessage}>You've reached the last recipe.</Text>
-      )}
-    </ScrollView>
+    <FlatList
+      data={recipes.filter((recipe): recipe is RecipeWithId => !!recipe.id)}
+      renderItem={({ item }) => <RecipeComponentMemo recipe={item} />}
+      keyExtractor={(item, index) => item.id ?? index.toString()}
+      ListHeaderComponent={
+        <View style={styles.screenHeader}>
+          <Text style={styles.h3}>Explore Recipes</Text>
+        </View>
+      }
+      ListFooterComponent={
+        isLoading ? (
+          <ActivityIndicator size={'large'} />
+        ) : !hasMoreRecipes ? (
+          <Text style={styles.endOfListMessage}>
+            You've reached the last recipe!
+          </Text>
+        ) : null
+      }
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+    />
   );
 };
 
@@ -102,25 +82,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.colors.primary,
   },
-  buttonTouchable: {
-    borderRadius: 10,
-    flex: 1,
-  },
-  loadMoreButton: {
-    fontFamily: 'Jost-Regular',
-    borderRadius: 10,
-    backgroundColor: theme.colors.primary,
-    marginTop: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 2,
-    marginBottom: 20,
-    marginHorizontal: 16,
-  },
-  buttonLabel: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
-  },
   endOfListMessage: {
     fontFamily: 'Jost-Regular',
     textAlign: 'center',
@@ -130,4 +91,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RecipesList;
+export default RecipeList;

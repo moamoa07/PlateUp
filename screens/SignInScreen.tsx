@@ -15,7 +15,7 @@ import {
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { useAppDispatch } from '../hooks/reduxHooks';
-import { setUser } from '../redux/users';
+import { setUser } from '../redux/reducers/users';
 
 function SignInScreen() {
   const theme = useTheme();

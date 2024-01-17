@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -9,43 +8,25 @@ import {
   View,
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
-import { Recipe } from '../api/model/recipeModel';
-import { getRecipeById } from '../api/service/recipeService';
+import { RecipeWithId } from '../api/model/recipeModel';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
 
 interface RecipeComponentProps {
-  recipeId: string;
+  recipe: RecipeWithId;
 }
 
-const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [isLoading, setLoading] = useState(true);
+function RecipeComponent({ recipe }: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      setLoading(true);
-      const recipeData = await getRecipeById(recipeId); // Using the recipeId prop
-      setRecipe(recipeData as Recipe);
-      setLoading(false);
-    };
-
-    fetchRecipe();
-  }, [recipeId]);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
   };
 
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-
   if (!recipe) {
-    return <Text>No recipe found</Text>;
+    return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
 
   return (
@@ -190,9 +171,14 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
+  noRecipeFoundMessage: {
+    fontFamily: 'Crake-Regular',
+    fontSize: 28,
+    textAlign: 'center',
+  },
   container: {
     paddingBottom: 16,
   },
