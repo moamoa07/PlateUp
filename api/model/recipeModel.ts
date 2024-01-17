@@ -34,8 +34,5 @@ export interface InstructionStep {
 
 export interface RecipeWithId extends Recipe {
   id: string;
-}
-
-export interface RecipeWithUser extends Recipe {
-  userId: string;
+  userId?: string;
 }
