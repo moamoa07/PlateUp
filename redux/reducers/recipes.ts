@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Recipe, RecipeWithId } from '../../api/model/recipeModel';
+import { RecipeWithId } from '../../api/model/recipeModel';
 import { LIMIT_NUMBER, RecipeState } from '../../types/Action';
 import { RootState } from '../store';
 
@@ -20,7 +20,7 @@ export const recipesSlice = createSlice({
     updateRecipesState: (
       state,
       action: PayloadAction<{
-        recipes: (Recipe | RecipeWithId)[];
+        recipes: RecipeWithId[];
         lastFetchedRecipeId: string | null;
       }>
     ) => {
@@ -39,11 +39,13 @@ export const recipesSlice = createSlice({
       }>
     ) => {
       const newRecipes = action.payload.recipes.filter(
-        (newRecipe) =>
+        (newRecipe): newRecipe is RecipeWithId =>
           !state.recipes.some(
-            (existingRecipe) => existingRecipe.id === newRecipe.id
+            (existingRecipe): existingRecipe is RecipeWithId =>
+              existingRecipe.id === newRecipe.id
           )
       );
+
       state.recipes = [...state.recipes, ...newRecipes];
       state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
       state.isLoading = false;
@@ -70,8 +72,8 @@ export const {
 // Update your selector and other parts of the code where you use this reducer
 
 // Selector to get the recipes from the state
-export const selectRecipes = (state: RootState) =>
-  state.recipes.recipes as (Recipe | RecipeWithId)[];
+export const selectRecipes = (state: RootState): RecipeWithId[] =>
+  state.recipes.recipes;
 
 // Selector to get the isLoading flag from the state
 export const selectIsLoading = (state: RootState) => state.recipes.isLoading;
@@ -84,9 +86,8 @@ export const selectLastFetchedRecipeId = (state: RootState) =>
 export const selectHasMoreRecipes = (state: RootState) =>
   state.recipes.hasMoreRecipes;
 
-  // In your recipesSlice file
+// In your recipesSlice file
 export const selectUserRecipes = (state: RootState, userId: string) =>
-state.recipes.recipes.filter(recipe => recipe.userId === userId);
-
+  state.recipes.recipes.filter((recipe) => recipe.userId === userId);
 
 export default recipesSlice.reducer;
