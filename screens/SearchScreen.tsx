@@ -12,13 +12,6 @@ import { Avatar, Searchbar, Text } from 'react-native-paper';
 import { CustomUser } from '../api/model/userModel';
 import { getAllUsers } from '../api/service/userService';
 
-// type User = {
-//   id: string;
-//   name: string;
-//   image: string;
-//   // ... other properties
-// };
-
 type Recipe = {
   id: string;
   title: string;
