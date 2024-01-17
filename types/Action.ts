@@ -7,7 +7,7 @@ export const FETCH_RECIPE_SUCCESS = 'FETCH_RECIPE_SUCCESS';
 export const FETCH_RECIPE_ERROR = 'FETCH_RECIPE_ERROR';
 export const LIMIT_NUMBER = 3;
 
-// Define your RecipeState type
+// Define RecipeState type
 export interface RecipeState {
   recipes: (Recipe | RecipeWithId)[];
   lastFetchedRecipeId: string | null;
