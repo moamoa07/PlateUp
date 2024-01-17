@@ -18,6 +18,7 @@ const theme = {
     },
     labelMedium: {
       fontFamily: 'Jost-Regular',
+      fontSize: 14,
     },
     labelLarge: {
       fontFamily: 'Jost-Regular',

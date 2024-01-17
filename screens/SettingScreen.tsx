@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   title: {
-    fontFamily: 'Crake-Bold',
+    fontFamily: 'Crake-Regular',
     fontSize: 24,
   },
   titleContainer: {
@@ -132,6 +132,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     margin: 20,
+    display: 'flex',
+    alignItems: 'center',
   },
   modalText: {
     fontFamily: 'Jost-Regular',
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     borderRadius: 10,
+    fontFamily: 'Jost-Regular',
   },
   modalButtonContainer: {
     display: 'flex',
