@@ -84,4 +84,9 @@ export const selectLastFetchedRecipeId = (state: RootState) =>
 export const selectHasMoreRecipes = (state: RootState) =>
   state.recipes.hasMoreRecipes;
 
+  // In your recipesSlice file
+export const selectUserRecipes = (state: RootState, userId: string) =>
+state.recipes.recipes.filter(recipe => recipe.userId === userId);
+
+
 export default recipesSlice.reducer;
