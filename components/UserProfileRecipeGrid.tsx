@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
   gridContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'mistyrose',
     padding: containerPadding,
   },
   thumbnailContainer: {},
