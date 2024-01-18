@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
+import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
 import FillBookmarkIcon from './icons/FillBookmarkIcon';
 import LikeIcon from './icons/LikeIcon';
@@ -16,13 +17,23 @@ import TimerIcon from './icons/TimerIcon';
 
 interface RecipeComponentProps {
   recipe: RecipeWithId;
+  isBookmarked: boolean;
+  onToggleBookmark: () => void;
 }
 
-function RecipeComponent({ recipe }: RecipeComponentProps) {
+function RecipeComponent({
+  recipe,
+  isBookmarked,
+  onToggleBookmark,
+}: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
+  };
+
+  const toggleBookmark = () => {
+    onToggleBookmark();
   };
 
   if (!recipe) {
@@ -49,8 +60,12 @@ function RecipeComponent({ recipe }: RecipeComponentProps) {
           <View style={styles.actions}>
             <LikeIcon size={32} fill={'#232323'} />
 
-            <TouchableOpacity>
-              <FillBookmarkIcon size={32} fill={'#232323'} />
+            <TouchableOpacity onPress={toggleBookmark}>
+              {isBookmarked ? (
+                <FillBookmarkIcon size={32} fill={'#232323'} />
+              ) : (
+                <BookmarkIcon size={32} fill={'#232323'} />
+              )}
             </TouchableOpacity>
           </View>
           <View style={styles.recipeInfo}>
