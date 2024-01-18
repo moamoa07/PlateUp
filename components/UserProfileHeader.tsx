@@ -69,7 +69,9 @@ function UserProfileHeader() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    marginBottom: 10,
+  },
   avatar: {
     display: 'flex',
     alignItems: 'center',
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
     gap: 4,
-    backgroundColor: 'lightblue',
+    width: '100%',
   },
 });
 
