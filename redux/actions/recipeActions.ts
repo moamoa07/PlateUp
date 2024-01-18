@@ -6,6 +6,9 @@ import {
 } from '../../types/Action';
 import {
   fetchRecipesSuccess,
+  fetchUserRecipesError,
+  fetchUserRecipesStart,
+  fetchUserRecipesSuccess,
   setHasMoreRecipes,
   setLoading,
 } from '../reducers/recipes';
@@ -61,6 +64,39 @@ export const fetchRecipeById =
           type: FETCH_RECIPE_ERROR,
           payload: 'An unexpected error occurred',
         });
+      }
+    }
+  };
+
+export const fetchUserRecipes =
+  (userId: string, lastFetchedRecipeId: string | null, limit: number) =>
+  async (dispatch: AppDispatch) => {
+    console.log('Dispatching fetchUserRecipes', {
+      userId,
+      lastFetchedRecipeId,
+      limit,
+    });
+    dispatch(fetchUserRecipesStart());
+    try {
+      const fetchedData = await getAllRecipes(
+        lastFetchedRecipeId,
+        limit,
+        userId
+      );
+      console.log('Fetched data:', fetchedData);
+      dispatch(
+        fetchUserRecipesSuccess({
+          userRecipes: fetchedData.recipes,
+          userLastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
+          limit: limit, // Include the limit here
+        })
+      );
+    } catch (error) {
+      console.error('Error in fetchUserRecipes:', error);
+      if (error instanceof Error) {
+        dispatch(fetchUserRecipesError(error.message));
+      } else {
+        dispatch(fetchUserRecipesError('An unexpected error occurred'));
       }
     }
   };
