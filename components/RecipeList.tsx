@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import theme from '../Theme';
-import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchRecipes } from '../redux/actions/recipeActions';
 import {
@@ -46,7 +45,7 @@ const RecipeList = () => {
 
   return (
     <FlatList
-      data={recipes.filter((recipe): recipe is RecipeWithId => !!recipe.id)}
+      data={recipes}
       renderItem={({ item }) => <RecipeComponentMemo recipe={item} />}
       keyExtractor={(item, index) => item.id ?? index.toString()}
       ListHeaderComponent={
