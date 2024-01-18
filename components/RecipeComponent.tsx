@@ -1,8 +1,5 @@
-import { getAuth } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -11,85 +8,25 @@ import {
   View,
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
-import { FIREBASE_DB } from '../FirebaseConfig';
-import { Recipe } from '../api/model/recipeModel';
-import {
-  addBookmarkedRecipe,
-  getBookmarkedRecipes,
-  getRecipeById,
-} from '../api/service/recipeService';
-import { useAppSelector } from '../hooks/reduxHooks';
-import BookmarkIcon from './icons/BookmarkIcon';
+import { RecipeWithId } from '../api/model/recipeModel';
 import EatIcon from './icons/EatIcon';
 import FillBookmarkIcon from './icons/FillBookmarkIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
 
 interface RecipeComponentProps {
-  recipeId: string;
+  recipe: RecipeWithId;
 }
 
-const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [isLoading, setLoading] = useState(true);
+function RecipeComponent({ recipe }: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
-  const [isBookmarked, setBookmarked] = useState(false);
-  const user = useAppSelector((state) => state.user.user);
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      const recipeData = await getRecipeById(recipeId);
-
-      setRecipe(recipeData as Recipe);
-      setLoading(false);
-    };
-
-    fetchRecipe();
-  }, []);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
   };
 
-  const handleBookmark = async () => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-
-    if (!user) {
-      console.error('No authenticated user found');
-      throw new Error('Unauthorized access');
-    }
-
-    try {
-      setBookmarked(!isBookmarked);
-      const bookmarkedRecipes = await getBookmarkedRecipes(user.uid);
-
-      console.log('bookmarkedRecipes:', bookmarkedRecipes);
-
-      if (isBookmarked) {
-        const updatedBookmarks = bookmarkedRecipes.filter(
-          (id: string) => id !== recipeId
-        );
-
-        console.log('updatedBookmarks:', updatedBookmarks);
-
-        await setDoc(doc(FIREBASE_DB, 'bookmarks', user.uid), {
-          bookmarkedRecipeIds: updatedBookmarks,
-        });
-      } else {
-        await addBookmarkedRecipe(user.uid, recipeId);
-      }
-    } catch (error) {
-      console.error('Error handling bookmark:', error);
-    }
-  };
-
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-
   if (!recipe) {
-    return <Text>No recipe found</Text>;
+    return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
 
   return (
@@ -100,7 +37,7 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
             size={50}
             source={require('../assets/cupcakeprofile.png')}
           />
-          <Text style={styles.username}>{user?.displayName}</Text>
+          <Text style={styles.username}>moa</Text>
         </View>
         {recipe.imageUrl && (
           <Image
@@ -108,125 +45,156 @@ const RecipeComponent: React.FC<RecipeComponentProps> = ({ recipeId }) => {
             style={{ width: 'auto', height: 500 }}
           />
         )}
-        <View style={styles.actions}>
-          <LikeIcon size={32} fill={'#232323'} />
+        <View style={styles.textContainer}>
+          <View style={styles.actions}>
+            <LikeIcon size={32} fill={'#232323'} />
 
-          <TouchableOpacity onPress={handleBookmark}>
-            {isBookmarked ? (
+            <TouchableOpacity>
               <FillBookmarkIcon size={32} fill={'#232323'} />
-            ) : (
-              <BookmarkIcon size={32} fill={'#232323'} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <View style={styles.recipeInfo}>
-          <Text style={styles.textMedium}>801 Likes</Text>
-        </View>
-      </View>
-      <View style={styles.information}>
-        <Text style={styles.title}>{recipe.title}</Text>
-        <View style={styles.details}>
-          <EatIcon size={24} fill={'#232323'} />
-          <Text style={styles.text}>{recipe.servingDetails}</Text>
-        </View>
-        <View style={styles.details}>
-          <TimerIcon size={24} fill={'#232323'} />
-          <Text style={styles.text}>
-            <Text style={styles.textMedium}>Preptime:</Text> {recipe.prepTime}
-          </Text>
-          {recipe.cookTime && (
-            <View>
-              <Text style={styles.text}>
-                <Text style={styles.textMedium}>Cooktime:</Text>{' '}
-                {recipe.cookTime}
-              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.recipeInfo}>
+            <Text style={styles.textMedium}>801 Likes</Text>
+          </View>
+          <View style={styles.information}>
+            <Text style={styles.title}>{recipe.title}</Text>
+            <View style={styles.recipeNotes}>
+              <View style={styles.servings}>
+                <EatIcon size={24} fill={'#232323'} />
+                <Text style={styles.text}>{recipe.servingDetails}</Text>
+              </View>
+              <View style={styles.time}>
+                <TimerIcon size={24} fill={'#232323'} />
+                <Text style={styles.text}>
+                  <Text style={styles.textMedium}>Prep Time: </Text>
+                  {recipe.prepTime}
+                </Text>
+                {recipe.cookTime && (
+                  <View>
+                    <Text style={styles.text}>
+                      <Text style={styles.textMedium}>Cook Time: </Text>
+                      {recipe.cookTime}
+                    </Text>
+                  </View>
+                )}
+              </View>
             </View>
-          )}
-        </View>
-        <Text style={styles.text}>{recipe.description}</Text>
+            <Text style={styles.text}>{recipe.description}</Text>
 
-        {/* Buttons to toggle between Ingredients and Instructions */}
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={[styles.button, showIngredients && styles.activeButton]}
-            onPress={() => toggleSection('ingredients')}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                showIngredients && styles.activeButtonText,
-              ]}
-            >
-              Ingredients
-            </Text>
-          </TouchableOpacity>
-          <Text style={styles.divider}>|</Text>
-          <TouchableOpacity
-            style={[styles.button, !showIngredients && styles.activeButton]}
-            onPress={() => toggleSection('instructions')}
-          >
-            <Text
-              style={[
-                styles.buttonText,
-                !showIngredients && styles.activeButtonText,
-              ]}
-            >
-              Instructions
-            </Text>
-          </TouchableOpacity>
-        </View>
+            {/* Buttons to toggle between Ingredients and Instructions */}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity
+                style={[styles.button, showIngredients && styles.activeButton]}
+                onPress={() => toggleSection('ingredients')}
+              >
+                <Text
+                  style={[
+                    styles.buttonText,
+                    showIngredients && styles.activeButtonText,
+                  ]}
+                >
+                  Ingredients
+                </Text>
+              </TouchableOpacity>
+              <Text style={styles.divider}>|</Text>
+              <TouchableOpacity
+                style={[styles.button, !showIngredients && styles.activeButton]}
+                onPress={() => toggleSection('instructions')}
+              >
+                <Text
+                  style={[
+                    styles.buttonText,
+                    !showIngredients && styles.activeButtonText,
+                  ]}
+                >
+                  Instructions
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Display Ingredients or Instructions based on the selected section */}
-        {showIngredients
-          ? recipe.ingredients?.map((group, index) => (
-              <View key={index} style={styles.group}>
-                {group.ingredientSubtitle && (
-                  <Text style={styles.subtitle}>
-                    {group.ingredientSubtitle}
-                  </Text>
-                )}
-                {group.items?.map((ingredient, i) => (
-                  <Text
-                    key={i}
-                    style={styles.listIngredients}
-                  >{`${ingredient.quantity} ${ingredient.name}`}</Text>
+            {/* Ingredients or Instructions */}
+            {showIngredients ? (
+              // Ingredients list
+              <View style={styles.ingredientsList}>
+                {recipe.ingredients?.map((group, index) => (
+                  <View key={index} style={styles.group}>
+                    {group.ingredientSubtitle && (
+                      <Text style={styles.subtitle}>
+                        {group.ingredientSubtitle}
+                      </Text>
+                    )}
+                    {group.items?.map((ingredient, i) => (
+                      <View key={i} style={styles.ingredientItem}>
+                        <Text
+                          style={styles.ingredientQuantity}
+                        >{`${ingredient.quantity}`}</Text>
+                        <Text style={styles.ingredientName}>
+                          {ingredient.name}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
                 ))}
               </View>
-            ))
-          : recipe.instructions?.map((group, index) => (
-              <View key={index} style={styles.group}>
-                {group.instructionSubtitle && (
-                  <Text style={styles.subtitle}>
-                    {group.instructionSubtitle}
-                  </Text>
-                )}
-                {group.steps?.map((step, i) => (
-                  <Text key={i} style={styles.listInstructions}>{`${i + 1}. ${
-                    step.instruction
-                  }`}</Text>
+            ) : (
+              // Instructions list
+              <View style={styles.instructionsList}>
+                {recipe.instructions?.map((group, index) => (
+                  <View key={index} style={styles.group}>
+                    {group.instructionSubtitle && (
+                      <Text style={styles.subtitle}>
+                        {group.instructionSubtitle}
+                      </Text>
+                    )}
+                    {group.steps?.map((step, i) => (
+                      <View key={i} style={styles.instructionItem}>
+                        <Text style={styles.stepNumber}>{`${i + 1}.`}</Text>
+                        <Text style={styles.instructionText}>
+                          {step.instruction}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
                 ))}
               </View>
-            ))}
+            )}
 
-        {/* Render other recipe details here */}
+            {recipe.additionalNotes && (
+              <View style={styles.additionalNotesContainer}>
+                <Text style={styles.additionalNotesTitle}>
+                  Additional Notes
+                </Text>
+                <Text style={styles.additionalNotesText}>
+                  {recipe.additionalNotes}
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
+  noRecipeFoundMessage: {
+    fontFamily: 'Crake-Regular',
+    fontSize: 28,
+    textAlign: 'center',
+  },
   container: {
-    justifyContent: 'center',
-    // padding: 16,
-    // marginTop: 48,
-    // gap: 24,
+    paddingBottom: 16,
+  },
+  textContainer: {
+    marginHorizontal: 8,
+    paddingTop: 8,
     marginVertical: 10,
   },
   actions: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 5,
+    marginHorizontal: 4,
   },
   title: {
     fontFamily: 'Jost-Medium',
@@ -240,7 +208,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: 'Jost-Medium',
     fontSize: 16,
-    marginBottom: 2,
+    marginBottom: 5,
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -265,7 +233,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'Jost-Medium',
   },
-  details: {
+  recipeNotes: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    gap: 8,
+  },
+  servings: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  time: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -274,12 +253,57 @@ const styles = StyleSheet.create({
   divider: {
     marginHorizontal: 10,
   },
-  listInstructions: {
+  ingredientItem: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  ingredientQuantity: {
+    width: 60,
+    marginRight: 8,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
-    marginVertical: 3,
   },
-  listIngredients: {
+  ingredientName: {
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+  },
+  ingredientsList: {
+    // fontFamily: 'Jost-Regular',
+    // fontSize: 16,
+  },
+  instructionsList: {
+    // fontFamily: 'Jost-Regular',
+    // fontSize: 16,
+  },
+  instructionItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 10, // Space between instructions
+  },
+  stepNumber: {
+    width: 22, // Fixed width for the step numbers
+    marginRight: 6, // Space between number and instruction
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+  },
+  instructionText: {
+    flex: 1, // Take up the rest of the space in the row
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+  },
+  additionalNotesContainer: {
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+
+  additionalNotesTitle: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  additionalNotesText: {
     fontFamily: 'Jost-Regular',
     fontSize: 16,
   },
@@ -299,8 +323,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginHorizontal: 10,
-    marginBottom: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginHorizontal: 16,
   },
   username: {
     fontFamily: 'Jost-Medium',

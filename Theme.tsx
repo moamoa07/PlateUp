@@ -7,13 +7,21 @@ const theme = {
     primary: '#232323',
     secondary: '#D6DED1',
     background: '#fff',
+    secondaryContainer: '#D6DED1',
   },
 
   fonts: {
     ...MD3LightTheme.fonts,
     regular: {
-      fontFamily: 'Jost',
+      fontFamily: 'Jost-Regular',
       fontWeight: 'normal',
+    },
+    labelMedium: {
+      fontFamily: 'Jost-Regular',
+      fontSize: 14,
+    },
+    labelLarge: {
+      fontFamily: 'Jost-Regular',
     },
   },
 };

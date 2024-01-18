@@ -8,13 +8,16 @@ import { Provider } from 'react-redux';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import { initApp } from './Init';
 import theme from './Theme';
+import { CustomUser } from './api/model/userModel';
+import { useAppDispatch, useAppSelector } from './hooks/reduxHooks';
 import RootNavigator from './navigators/RootNavigator';
+import { currentUser, setUser } from './redux/reducers/users';
+import { store } from './redux/store';
 import BookmarkScreen from './screens/BookmarkScreen';
 import CreateProfileScreen from './screens/CreateProfileScreen';
 import SettingScreen from './screens/SettingScreen';
 import SignInScreen from './screens/SignInScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
-import { store } from './redux/store'
 
 const Stack = createNativeStackNavigator();
 const StartStack = createNativeStackNavigator();
@@ -64,8 +67,9 @@ function InsideLayout() {
   );
 }
 
-function App() {
-  const [user, setUser] = useState<User | null>(null);
+function AppContainer() {
+  const user = useAppSelector(currentUser);
+  const dispatch = useAppDispatch();
   const [appReady, setAppReady] = useState(false);
 
   useEffect(() => {
@@ -76,14 +80,36 @@ function App() {
       setAppReady(true);
     };
 
+    const handleAuthStateChanged = (userData: User | null) => {
+      // If userData is null, set null in the Redux store
+      if (!userData) {
+        dispatch(setUser(null));
+        return;
+      } // Convert User to CustomUser
+
+      const customUserData: CustomUser = {
+        id: userData.uid,
+        email: userData.email || '',
+        displayName: userData.displayName || '',
+        photoURL: userData.photoURL || null,
+      }; // Dispatch action to update user state in Redux
+
+      dispatch(setUser(customUserData));
+    };
+
     console.log('Before loading app resources');
+
     loadAppResources();
+
+    const unsubscribeAuthStateChange = onAuthStateChanged(
+      FIREBASE_AUTH,
+      handleAuthStateChanged
+    );
+
     console.log('After loading app resources');
 
-    onAuthStateChanged(FIREBASE_AUTH, (userData) => {
-      setUser(userData);
-    });
-  }, []); // Empty dependency array to run the effect only once on mount
+    return () => unsubscribeAuthStateChange();
+  }, [dispatch]); // Empty dependency array to run the effect only once on mount
 
   if (!appReady) {
     return null;
@@ -91,28 +117,34 @@ function App() {
 
   return (
     <SafeAreaProvider>
-      <Provider store={store}>
-        <PaperProvider theme={theme}>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName="StartLayout">
-              {user ? (
-                <Stack.Screen
-                  name="InsideLayout"
-                  component={InsideLayout}
-                  options={{ headerShown: false }}
-                />
-              ) : (
-                <Stack.Screen
-                  name="StartLayout"
-                  component={StartLayout}
-                  options={{ headerShown: false }}
-                />
-              )}
-            </Stack.Navigator>
-          </NavigationContainer>
-        </PaperProvider>
-      </Provider>
+      <PaperProvider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="StartLayout">
+            {user ? (
+              <Stack.Screen
+                name="InsideLayout"
+                component={InsideLayout}
+                options={{ headerShown: false }}
+              />
+            ) : (
+              <Stack.Screen
+                name="StartLayout"
+                component={StartLayout}
+                options={{ headerShown: false }}
+              />
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
     </SafeAreaProvider>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <AppContainer />
+    </Provider>
   );
 }
 

@@ -1,17 +1,19 @@
+import * as ImageManipulator from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import theme from '../Theme';
+import { PickImageProps } from '../types/PickImageProps';
 import ImageViewer from './ImageViewer';
 
 function PickImage({
   onChange,
-  resetTrigger, // new prop to listen for a reset signal
-}: {
-  onChange: (imageUrl: string | null) => void;
-  resetTrigger: boolean; // this could be a number that increments to indicate a reset
-}) {
+  resetTrigger,
+  onResetComplete,
+  errorMessage,
+  onImageUploadError,
+}: PickImageProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const pickImageAsync = async () => {
@@ -20,31 +22,44 @@ function PickImage({
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-      onChange(result.assets[0].uri);
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const selectedAsset = result.assets[0];
 
-      // await addImage({
-      //   imageUrl: result.assets[0].uri,
-      // });
+      try {
+        const compressedImage = await ImageManipulator.manipulateAsync(
+          selectedAsset.uri,
+          [{ resize: { width: 1080 } }], // Might have to adjust this after testing
+          { compress: 0.7 } // Compression 70% - might have to adjust this after testing
+        );
+
+        setSelectedImage(compressedImage.uri);
+        onChange(compressedImage.uri);
+        onImageUploadError?.('');
+      } catch (error) {
+        console.error('Error during image manipulation:', error);
+        onImageUploadError?.('Error compressing the image');
+      }
     } else {
+      onImageUploadError?.('');
       alert('You did not select any image.');
     }
   };
 
-  // Effect to reset the image when the form is submitted
   useEffect(() => {
     if (resetTrigger) {
-      setSelectedImage(null); // this clears the local state for the image
-      onChange(null); // this tells the parent component to clear its image state as well
+      setSelectedImage(null);
+      onChange(null);
+      if (onResetComplete) {
+        onResetComplete();
+      }
     }
-  }, [resetTrigger, onChange]);
+  }, [resetTrigger, onChange, onResetComplete]);
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageViewer
-          placeholderImageSource={require('../assets/waffle.jpg')}
+          placeholderImageSource={require('../assets/img/add-new-recipe-placeholder.png')}
           selectedImage={selectedImage}
         />
       </View>
@@ -56,9 +71,11 @@ function PickImage({
       >
         Add image
       </Button>
+      {errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     // margin: 10,
@@ -78,6 +95,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 400,
     // height: 40,
+  },
+  errorMessage: {
+    fontFamily: 'Jost-Regular',
+    color: 'red',
+    fontSize: 16,
+    marginTop: 6,
   },
 });
 

@@ -45,7 +45,7 @@ function Welcome({ navigation }: Props) {
         mode="contained"
         buttonColor={theme.colors.primary}
         style={styles.containedButton}
-        labelStyle={{ marginHorizontal: 10 }}
+        labelStyle={{ marginVertical: 12 }}
         onPress={() => navigation.navigate('CreateProfileScreen')}
       >
         <Text style={[styles.textBtn]}>Create a profile</Text>
@@ -54,7 +54,7 @@ function Welcome({ navigation }: Props) {
         mode="outlined"
         textColor={theme.colors.primary}
         style={styles.outlinedButton}
-        labelStyle={{ marginHorizontal: 0 }}
+        labelStyle={{ marginHorizontal: 50, marginVertical: 10 }}
         onPress={() => navigation.navigate('SignInScreen')}
       >
         <Text style={[styles.textBtn]}>Sign in</Text>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   textBtn: {
     fontFamily: 'Jost-Regular',
-    fontSize: 15,
+    fontSize: 16,
   },
   containedButton: {
     borderRadius: 10,

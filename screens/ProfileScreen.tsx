@@ -24,22 +24,24 @@ function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.iconContainer}>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity onPress={() => navigateToScreen('Like')}>
-            <LikeIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
-            <BookmarkIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
-            <SettingsIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity>
+          <LikeIcon size={32} fill={'#232323'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
+          <BookmarkIcon size={32} fill={'#232323'} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
+          <SettingsIcon size={32} fill={'#232323'} />
+        </TouchableOpacity>
       </View>
       <View style={styles.avatar}>
         <Avatar.Image
           size={140}
-          source={require('../assets/cupcakeprofile.png')}
+          source={
+            user?.photoURL
+              ? { uri: user.photoURL }
+              : require('../assets/img/chokladkaka.jpeg')
+          }
         />
         <Text style={styles.textUsername}>{user?.displayName}</Text>
       </View>

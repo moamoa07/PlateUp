@@ -2,24 +2,82 @@ import { Link } from '@react-navigation/native';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { addDoc, collection } from 'firebase/firestore';
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { Button, Text, TextInput, useTheme } from 'react-native-paper';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../FirebaseConfig';
 import { CustomUser } from '../api/model/userModel';
+import { CreateProfileSchema } from '../api/schema/createProfileSchema';
+import TermsAndPrivacyModal from '../components/TermsAndPrivacyModal';
 import { useAppDispatch } from '../hooks/reduxHooks';
-import { setUser } from '../redux/users';
+import { setUser } from '../redux/reducers/users';
 
 function CreateProfileScreen() {
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const auth = FIREBASE_AUTH;
   const [username, setUsername] = useState('');
   const [isFocused, setFocused] = useState(false);
   const dispatch = useAppDispatch();
+  const [termsCheckboxState, setTermsCheckboxState] = React.useState(false);
+  const [privacyCheckboxState, setPrivacyCheckboxState] = React.useState(false);
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  const showModal = () => setModalVisible(true);
+  const hideModal = () => setModalVisible(false);
+
+  // This code works, but is blocked by the rules on db, will keep this if we have time to
+  // do it in another way but still keep this code here :)
+
+  // const checkUsernameAvailability = async (username: string) => {
+  //   const usersCollection = collection(FIREBASE_DB, 'users');
+  //   const usernameQuery = query(
+  //     usersCollection,
+  //     where('displayName', '==', username)
+  //   );
+  //   const querySnapshot = await getDocs(usernameQuery);
+
+  //   return querySnapshot.size > 0; // If size > 0, username is taken; otherwise, it's available.
+  // };
 
   const createProfile = async () => {
     try {
+      // const usernameExists = await checkUsernameAvailability(username);
+
+      // if (usernameExists) {
+      //   Alert.alert(
+      //     'Username is already taken. Please choose a different one.'
+      //   );
+      //   return;
+      // }
+
+      if (!(termsCheckboxState && privacyCheckboxState)) {
+        Alert.alert(
+          'Please agree to both Terms and Conditions and Privacy Policy'
+        );
+        return;
+      }
+
+      await CreateProfileSchema.validate(
+        { email, password, username },
+        { abortEarly: false }
+      );
+
+      if (password !== confirmPassword) {
+        Alert.alert('Password does not match');
+        return;
+      }
+
       console.log('Before creating user');
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -35,7 +93,8 @@ function CreateProfileScreen() {
         throw new Error('Authentication failed'); // Handle this case appropriately
       }
 
-      const defaultProfileImageUrl = '../assets/img/chokladkaka.jpeg';
+      const defaultProfileImageUrl =
+        'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7';
 
       await updateProfile(user, {
         displayName: username,
@@ -54,96 +113,185 @@ function CreateProfileScreen() {
 
       dispatch(setUser(newUser));
 
-      alert('Profile created successfully. Check your email!');
+      Alert.alert('Profile created successfully!');
     } catch (error: any) {
-      console.log('Error creating user profile:', error.message);
-      alert('Registration failed, try again!' + error.message);
+      if (error.name === 'ValidationError') {
+        const errorMessage = error.errors.join('\n');
+        Alert.alert('Validation failed', errorMessage);
+      } else {
+        console.log('Error creating user profile:', error.message);
+        Alert.alert('Registration failed', `Error: ${error.message}`);
+      }
     }
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}
     >
-      <KeyboardAvoidingView behavior="padding">
-        <Text style={[styles.title]}>Create a profile</Text>
-        <TextInput
-          value={username}
-          label={<Text style={{ fontFamily: 'Jost-Regular' }}>Username</Text>}
-          mode="outlined"
-          autoCapitalize="none"
-          contentStyle={{ fontFamily: 'Jost-Regular' }}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          outlineStyle={{
-            borderRadius: 10,
-            borderColor: isFocused
-              ? theme.colors.primary
-              : theme.colors.secondary,
-          }}
-          style={[styles.textInput, { marginBottom: 10 }]}
-          onChangeText={(text) => setUsername(text)}
-        />
-        <TextInput
-          value={email}
-          label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
-          mode="outlined"
-          autoCapitalize="none"
-          contentStyle={{ fontFamily: 'Jost-Regular' }}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          outlineStyle={{
-            borderRadius: 10,
-            borderColor: isFocused
-              ? theme.colors.primary
-              : theme.colors.secondary,
-          }}
-          style={[styles.textInput, { marginBottom: 10 }]}
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          value={password}
-          label={<Text style={{ fontFamily: 'Jost-Regular' }}>Password</Text>}
-          mode="outlined"
-          autoCapitalize="none"
-          contentStyle={{ fontFamily: 'Jost-Regular' }}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          outlineStyle={{
-            borderRadius: 10,
-            borderColor: isFocused
-              ? theme.colors.primary
-              : theme.colors.secondary,
-          }}
-          style={[styles.textInput]}
-          secureTextEntry={true}
-          onChangeText={(text) => setPassword(text)}
-        />
-        <View style={[styles.buttonContainer]}>
-          <Button
-            mode="contained"
-            buttonColor={theme.colors.primary}
-            labelStyle={{ marginHorizontal: 0 }}
-            style={[styles.button]}
-            onPress={createProfile}
-          >
-            <Text style={styles.textWhite}>Sign up</Text>
-          </Button>
-        </View>
-        <View style={[styles.termsTextContainer]}>
-          <Text style={[styles.termsText]}>
-            By signing up, you agree to PlateUp's
-          </Text>
-          <Text>Terms of Use & Privacy Policy</Text>
-        </View>
-        <View style={[styles.linkContainer]}>
-          <Text style={[styles.linkText1]}>Already have a profile?</Text>
-          <Link to={{ screen: 'SignInScreen' }}>
-            <Text style={[styles.linkText2]}>Sign in</Text>
-          </Link>
-        </View>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={{
+          flex: 1,
+          backgroundColor: theme.colors.background,
+          paddingTop: 130,
+        }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <Text style={[styles.title]}>Create a profile</Text>
+            <TextInput
+              value={username}
+              label={
+                <Text style={{ fontFamily: 'Jost-Regular' }}>Username</Text>
+              }
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput, { marginBottom: 10 }]}
+              onChangeText={(text) => setUsername(text)}
+            />
+            <TextInput
+              value={email}
+              label={<Text style={{ fontFamily: 'Jost-Regular' }}>Email</Text>}
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput, { marginBottom: 10 }]}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              value={password}
+              label={
+                <Text style={{ fontFamily: 'Jost-Regular' }}>Password</Text>
+              }
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput, { marginBottom: 10 }]}
+              secureTextEntry={true}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <TextInput
+              value={confirmPassword}
+              label={
+                <Text style={{ fontFamily: 'Jost-Regular' }}>
+                  Confirm password
+                </Text>
+              }
+              mode="outlined"
+              autoCapitalize="none"
+              contentStyle={{ fontFamily: 'Jost-Regular' }}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              outlineStyle={{
+                borderRadius: 10,
+                borderColor: isFocused
+                  ? theme.colors.primary
+                  : theme.colors.secondary,
+              }}
+              style={[styles.textInput]}
+              secureTextEntry={true}
+              onChangeText={(text) => setConfirmPassword(text)}
+            />
+            <View style={styles.checkboxContainer}>
+              <View style={styles.checkbox}>
+                <BouncyCheckbox
+                  fillColor="#232323"
+                  size={20}
+                  onPress={() => setTermsCheckboxState(!termsCheckboxState)}
+                  isChecked={termsCheckboxState}
+                  innerIconStyle={{
+                    borderRadius: 2,
+                  }}
+                  iconStyle={{ borderRadius: 2 }}
+                />
+                <Text style={styles.text}>
+                  I agree to the{' '}
+                  <Text style={styles.textMedium} onPress={showModal}>
+                    Terms and Conditions
+                  </Text>
+                </Text>
+              </View>
+              <View style={styles.checkbox}>
+                <BouncyCheckbox
+                  fillColor="#232323"
+                  size={20}
+                  onPress={() => setPrivacyCheckboxState(!privacyCheckboxState)}
+                  isChecked={privacyCheckboxState}
+                  innerIconStyle={{
+                    borderRadius: 2,
+                  }}
+                  iconStyle={{ borderRadius: 2 }}
+                />
+                <Text style={styles.text}>
+                  I agree to the{' '}
+                  <Text style={styles.textMedium} onPress={showModal}>
+                    Privacy Policy
+                  </Text>
+                </Text>
+              </View>
+            </View>
+            <View style={[styles.buttonContainer]}>
+              <Button
+                mode="contained"
+                buttonColor={theme.colors.primary}
+                labelStyle={{ marginVertical: 10 }}
+                style={[styles.button]}
+                onPress={createProfile}
+              >
+                <Text style={styles.textWhite}>Sign up</Text>
+              </Button>
+            </View>
+            <TermsAndPrivacyModal
+              isVisible={isModalVisible}
+              hideModal={hideModal}
+            />
+            <View style={[styles.termsTextContainer]}>
+              <Text style={[styles.termsText]}>
+                By signing up, you agree to PlateUp's
+              </Text>
+              <Text onPress={showModal} style={styles.termsTextBlack}>
+                Terms of Use & Privacy Policy
+              </Text>
+            </View>
+            <View style={[styles.linkContainer]}>
+              <Text style={[styles.linkText1]}>Already have a profile?</Text>
+              <Link to={{ screen: 'SignInScreen' }}>
+                <Text style={[styles.linkText2]}>Sign in</Text>
+              </Link>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -151,17 +299,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    paddingHorizontal: 10,
-    paddingTop: 70,
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontFamily: 'Crake-Regular',
     textAlign: 'center',
     fontSize: 24,
     height: 30,
-    marginBottom: 15,
+    marginBottom: 20,
   },
   textInput: {
     width: 260,
@@ -178,7 +325,7 @@ const styles = StyleSheet.create({
   },
   textWhite: {
     fontFamily: 'Jost-Regular',
-    fontSize: 15,
+    fontSize: 16,
     color: '#fff',
   },
   termsTextContainer: {
@@ -188,6 +335,13 @@ const styles = StyleSheet.create({
   },
   termsText: {
     color: '#696969',
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
+  },
+  termsTextBlack: {
+    color: '#232323',
+    fontFamily: 'Jost-Regular',
+    fontSize: 15,
   },
   linkContainer: {
     display: 'flex',
@@ -205,6 +359,22 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     textDecorationStyle: 'solid',
     textDecorationColor: '#000',
+  },
+  checkbox: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  checkboxContainer: {
+    marginTop: 10,
+  },
+  text: {
+    fontFamily: 'Jost-Regular',
+  },
+  textMedium: {
+    fontFamily: 'Jost-Regular',
+    textDecorationLine: 'underline',
   },
 });
 

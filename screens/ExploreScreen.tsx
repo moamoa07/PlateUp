@@ -1,15 +1,12 @@
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
-import RecipeComponent from '../components/RecipeComponent';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
+import RecipeList from '../components/RecipeList';
 
 function ExploreScreen() {
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View>
-          <RecipeComponent recipeId="MF6gUpKXslP7auPYphPm" />
-          <RecipeComponent recipeId="TOGlPQ4OOIJPjhPxouEg" />
-        </View>
-      </ScrollView>
+      <View>
+        <RecipeList />
+      </View>
     </SafeAreaView>
   );
 }
