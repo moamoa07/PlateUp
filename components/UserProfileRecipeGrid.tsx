@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
@@ -18,13 +19,17 @@ import {
   selectUserLastFetchedRecipeId,
   selectUserRecipes,
 } from '../redux/reducers/recipes';
+import UserProfileHeader from './UserProfileHeader';
 
 // Get the screen width
 // Calculation for styling of grid container
 const { width } = Dimensions.get('window');
+const containerPadding = 10; // This is the padding you want for the grid container
 const numColumns = 3;
 const marginSize = 4; // You can adjust the margin size here
-const imageSize = (width - (numColumns + 1) * marginSize) / numColumns;
+// Subtract container padding from the total width before dividing by the number of columns
+const imageSize =
+  (width - containerPadding * 2 - (numColumns + 1) * marginSize) / numColumns;
 
 function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
   const dispatch = useAppDispatch();
@@ -50,25 +55,32 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
     }
   };
 
+  const renderHeader = () => {
+    return <UserProfileHeader />;
+  };
+
   const renderRecipeThumbnail = ({ item }: { item: RecipeWithId }) => (
     <TouchableOpacity
       onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}
     >
-      <Image
-        source={{
-          uri:
-            item.imageUrl ??
-            require('../assets/img/add-new-recipe-placeholder.png'),
-        }}
-        style={styles.thumbnail}
-        resizeMode="cover"
-      />
-      <Text style={styles.recipeTitle}>{item.title}</Text>
+      <View style={styles.thumbnailContainer}>
+        <Image
+          source={{
+            uri:
+              item.imageUrl ??
+              require('../assets/img/add-new-recipe-placeholder.png'),
+          }}
+          style={styles.thumbnail}
+          resizeMode="cover"
+        />
+        {/* <Text style={styles.recipeTitle}>{item.title}</Text> */}
+      </View>
     </TouchableOpacity>
   );
 
   return (
     <FlatList
+      ListHeaderComponent={renderHeader}
       data={userRecipes}
       renderItem={renderRecipeThumbnail}
       contentContainerStyle={styles.gridContainer}
@@ -94,12 +106,16 @@ const styles = StyleSheet.create({
   gridContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: marginSize,
+    backgroundColor: 'mistyrose',
+    padding: containerPadding,
   },
+  thumbnailContainer: {},
   thumbnail: {
     width: imageSize, // Width calculated based on screen width and margins
     height: imageSize, // Same value for height to maintain aspect ratio
     margin: marginSize,
+    borderWidth: 1, // Width of the border
+    borderColor: '#000',
   },
   endOfListMessage: {
     fontFamily: 'Jost-Regular',
@@ -112,11 +128,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Jost-Regular',
     fontSize: 16,
     textAlign: 'center',
-  },
-  userId: {
-    fontFamily: 'Jost-Regular',
-    fontSize: 16,
-    textAlign: 'center',
+    width: imageSize,
   },
 });
 
