@@ -20,7 +20,9 @@ function BookmarkScreen({
       <Text style={styles.h3}>Bookmarked Recipes</Text>
 
       {bookmarkedRecipes.length === 0 ? (
-        <Text style={styles.noBookmarksText}>No bookmarked recipes</Text>
+        <Text style={styles.noBookmarksText}>
+          You haven't bookmarked any recipes yet!
+        </Text>
       ) : (
         <BookmarksGrid
           updatedBookmarks={mockRecipes.filter((recipe) =>
