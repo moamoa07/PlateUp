@@ -31,7 +31,13 @@ export const fetchRecipes =
       );
       dispatch(setHasMoreRecipes(fetchedData.lastFetchedRecipeId != null));
     } catch (error) {
-      // Handle error
+      dispatch({
+        type: FETCH_RECIPE_ERROR,
+        payload:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred',
+      });
     } finally {
       dispatch(setLoading(false)); // Reset loading state
     }
