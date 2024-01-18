@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -68,9 +69,7 @@ function UserProfileHeader() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: 8,
-  },
+  container: {},
   avatar: {
     display: 'flex',
     alignItems: 'center',
@@ -117,6 +116,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
     gap: 4,
+    backgroundColor: 'lightblue',
   },
 });
 
