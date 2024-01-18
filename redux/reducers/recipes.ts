@@ -70,15 +70,21 @@ export const recipesSlice = createSlice({
       action: PayloadAction<{
         userRecipes: RecipeWithId[];
         userLastFetchedRecipeId: string | null;
-        limit: number; // Assuming you added this field
+        limit: number;
       }>
     ) => {
-      state.userRecipes = [...state.userRecipes, ...action.payload.userRecipes];
+      // Filter out any recipes already in state
+      const newRecipes = action.payload.userRecipes.filter(
+        (newRecipe) =>
+          !state.userRecipes.some(
+            (existingRecipe) => existingRecipe.id === newRecipe.id
+          )
+      );
+
+      state.userRecipes = [...state.userRecipes, ...newRecipes];
       state.userLastFetchedRecipeId = action.payload.userLastFetchedRecipeId;
       state.loadingUserRecipes = false;
-      // Use the passed limit to determine if there are more recipes
-      state.hasMoreUserRecipes =
-        action.payload.userRecipes.length === action.payload.limit;
+      state.hasMoreUserRecipes = newRecipes.length === action.payload.limit;
     },
 
     // Reducer for user recipe fetch error
