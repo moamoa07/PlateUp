@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
-import { useAppSelector } from '../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchUsers } from '../redux/actions/userActions';
 import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
@@ -23,6 +24,12 @@ interface RecipeFeedProps {
 function RecipeFeed({ recipe }: RecipeFeedProps) {
   const [showIngredients, setShowIngredients] = useState(true);
   const users = useAppSelector(getUsers);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    // Fetch users when the component mounts
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
@@ -32,8 +39,7 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
 
-//   const user = users.find((user) => user.id === recipe.userId);
-//   console.log(user)
+  const user = users.find((user) => user.id === recipe.userId);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
