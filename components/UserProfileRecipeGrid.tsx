@@ -43,7 +43,7 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
             require('../assets/img/add-new-recipe-placeholder.png'),
         }}
         style={styles.thumbnail}
-        resizeMode="cover"
+        resizeMode="cover" 
       />
     </TouchableOpacity>
   );
