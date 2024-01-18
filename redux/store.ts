@@ -13,6 +13,9 @@ export const store = configureStore({
         ignoredActions: [
           'recipes/fetchRecipesSuccess',
           'recipes/fetchRecipeByIdSuccess',
+          'recipes/fetchUserRecipes/fulfilled',
+          'recipes/fetchUserRecipes/rejected',
+          'recipes/fetchUserRecipes/pending',
         ],
         ignoredPaths: ['recipes.currentRecipe', 'recipes.recipes'],
       },

@@ -1,4 +1,4 @@
-import { Recipe, RecipeWithId } from '../api/model/recipeModel';
+import { RecipeWithId } from '../api/model/recipeModel';
 
 export const FETCH_RECIPES = 'FETCH_RECIPES';
 export const SET_LOADING = 'SET_LOADING';
@@ -9,10 +9,10 @@ export const LIMIT_NUMBER = 3;
 
 // Define RecipeState type
 export interface RecipeState {
-  recipes: (Recipe | RecipeWithId)[];
+  recipes: RecipeWithId[];
   lastFetchedRecipeId: string | null;
   isLoading: boolean;
-  currentRecipe: Recipe | RecipeWithId | null;
+  currentRecipe: RecipeWithId | null;
   error: string | null;
   hasMoreRecipes: boolean;
 }
@@ -20,7 +20,7 @@ export interface RecipeState {
 export interface FetchRecipesAction {
   type: typeof FETCH_RECIPES;
   payload: {
-    recipes: (Recipe | RecipeWithId)[];
+    recipes: RecipeWithId[];
     lastFetchedRecipeId: string | null;
   };
 }
@@ -36,7 +36,7 @@ export interface FetchRecipeStartAction {
 
 export interface FetchRecipeSuccessAction {
   type: typeof FETCH_RECIPE_SUCCESS;
-  payload: Recipe | RecipeWithId;
+  payload: RecipeWithId;
 }
 
 export interface FetchRecipeErrorAction {
