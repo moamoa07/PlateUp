@@ -1,30 +1,7 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-  PayloadAction,
-} from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RecipeWithId } from '../../api/model/recipeModel';
-import { getAllRecipes } from '../../api/service/recipeService';
-import { LIMIT_NUMBER, RecipeState } from '../../types/Action';
+import { GENERAL_RECIPES_LIMIT, RecipeState } from '../../types/Action';
 import { RootState } from '../store';
-
-// Thunk Action Creator (has to be in this file because of cycle dependency otherwise)
-export const fetchUserRecipes = createAsyncThunk(
-  'recipes/fetchUserRecipes',
-  async (userId: string, thunkAPI) => {
-    try {
-      const limit = 9; // Set your desired limit
-      const fetchedData = await getAllRecipes(null, limit, userId);
-      return {
-        recipes: fetchedData.recipes,
-        lastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
-      };
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
 
 const initialState: RecipeState = {
   recipes: [],
@@ -33,6 +10,10 @@ const initialState: RecipeState = {
   currentRecipe: null,
   error: null,
   hasMoreRecipes: true,
+  userRecipes: [],
+  userLastFetchedRecipeId: null,
+  loadingUserRecipes: false,
+  hasMoreUserRecipes: false,
 };
 
 export const recipesSlice = createSlice({
@@ -71,7 +52,7 @@ export const recipesSlice = createSlice({
       state.recipes = [...state.recipes, ...newRecipes];
       state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
       state.isLoading = false;
-      state.hasMoreRecipes = newRecipes.length === LIMIT_NUMBER; //  2 is the limit per fetch
+      state.hasMoreRecipes = newRecipes.length === GENERAL_RECIPES_LIMIT;
     },
     setHasMoreRecipes: (state, action: PayloadAction<boolean>) => {
       state.hasMoreRecipes = action.payload;
@@ -79,32 +60,32 @@ export const recipesSlice = createSlice({
     fetchRecipeError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
-    // Add other reducers like updateRecipe, deleteRecipe, etc. as needed
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchUserRecipes.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(fetchUserRecipes.fulfilled, (state, action) => {
-        // Ensure that we only add recipes that aren't already in the state
-        const newRecipes = action.payload.recipes.filter(
-          (newRecipe) =>
-            !state.recipes.some(
-              (existingRecipe) => existingRecipe.id === newRecipe.id
-            )
-        );
-        state.recipes = [...state.recipes, ...newRecipes];
-        state.lastFetchedRecipeId = action.payload.lastFetchedRecipeId;
-        state.isLoading = false;
-        // Update hasMoreRecipes based on whether new recipes were added
-        state.hasMoreRecipes =
-          newRecipes.length === action.payload.recipes.length;
-      })
-      .addCase(fetchUserRecipes.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message ?? null;
-      });
+    // Reducer for starting user recipe fetch
+    fetchUserRecipesStart: (state) => {
+      state.loadingUserRecipes = true;
+    },
+    // Reducer for successful user recipe fetch
+    fetchUserRecipesSuccess: (
+      state,
+      action: PayloadAction<{
+        userRecipes: RecipeWithId[];
+        userLastFetchedRecipeId: string | null;
+        limit: number; // Assuming you added this field
+      }>
+    ) => {
+      state.userRecipes = [...state.userRecipes, ...action.payload.userRecipes];
+      state.userLastFetchedRecipeId = action.payload.userLastFetchedRecipeId;
+      state.loadingUserRecipes = false;
+      // Use the passed limit to determine if there are more recipes
+      state.hasMoreUserRecipes =
+        action.payload.userRecipes.length === action.payload.limit;
+    },
+
+    // Reducer for user recipe fetch error
+    fetchUserRecipesError: (state, action: PayloadAction<string>) => {
+      state.loadingUserRecipes = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -114,6 +95,9 @@ export const {
   fetchRecipesSuccess,
   setHasMoreRecipes,
   fetchRecipeError,
+  fetchUserRecipesStart,
+  fetchUserRecipesSuccess,
+  fetchUserRecipesError,
 } = recipesSlice.actions;
 
 // Update your selector and other parts of the code where you use this reducer
@@ -133,10 +117,20 @@ export const selectLastFetchedRecipeId = (state: RootState) =>
 export const selectHasMoreRecipes = (state: RootState) =>
   state.recipes.hasMoreRecipes;
 
-// Memoized selector
-export const selectUserRecipes = createSelector(
-  [(state: RootState) => state.recipes.recipes, (_, userId: string) => userId],
-  (recipes, userId) => recipes.filter((recipe) => recipe.userId === userId)
-);
+// Selector to get user-specific recipes from the state
+export const selectUserRecipes = (state: RootState) =>
+  state.recipes.userRecipes;
+
+// Selector to get the loading state for user-specific recipes
+export const selectLoadingUserRecipes = (state: RootState) =>
+  state.recipes.loadingUserRecipes;
+
+// Selector to get the last fetched user recipe ID from the state
+export const selectUserLastFetchedRecipeId = (state: RootState) =>
+  state.recipes.userLastFetchedRecipeId;
+
+// Selector to get the flag indicating if there are more user recipes
+export const selectHasMoreUserRecipes = (state: RootState) =>
+  state.recipes.hasMoreUserRecipes;
 
 export default recipesSlice.reducer;
