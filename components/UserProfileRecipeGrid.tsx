@@ -1,3 +1,4 @@
+import { getAuth } from 'firebase/auth';
 import React, { useEffect } from 'react';
 import {
   ActivityIndicator,
@@ -32,19 +33,19 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
   const userLastFetchedRecipeId = useAppSelector(selectUserLastFetchedRecipeId);
   const hasMoreUserRecipes = useAppSelector(selectHasMoreUserRecipes);
   const INITIAL_FETCH_LIMIT = 9;
+  const auth = getAuth();
+  const userId = auth.currentUser?.uid ?? '';
 
   useEffect(() => {
-    dispatch(fetchUserRecipes('currentUserId', null, INITIAL_FETCH_LIMIT));
-  }, [dispatch]);
+    if (userId) {
+      dispatch(fetchUserRecipes(userId, null, INITIAL_FETCH_LIMIT));
+    }
+  }, [userId, dispatch]);
 
   const handleLoadMore = () => {
     if (hasMoreUserRecipes && !loadingUserRecipes) {
       dispatch(
-        fetchUserRecipes(
-          'currentUserId',
-          userLastFetchedRecipeId,
-          INITIAL_FETCH_LIMIT
-        )
+        fetchUserRecipes(userId, userLastFetchedRecipeId, INITIAL_FETCH_LIMIT)
       );
     }
   };
@@ -63,7 +64,6 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
         resizeMode="cover"
       />
       <Text style={styles.recipeTitle}>{item.title}</Text>
-      <Text style={styles.userId}>{item.userId}</Text>
     </TouchableOpacity>
   );
 
