@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
-  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
@@ -9,13 +8,7 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RecipeWithId } from '../api/model/recipeModel';
-import {
-  fetchUserRecipes,
-  selectHasMoreRecipes,
-  selectIsLoading,
-  selectLastFetchedRecipeId,
-  selectUserRecipes,
-} from '../redux/reducers/recipes';
+import { fetchUserRecipes, selectUserRecipes } from '../redux/reducers/recipes';
 import { currentUser } from '../redux/reducers/users';
 import { AppDispatch, RootState } from '../redux/store';
 
@@ -32,22 +25,12 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
   const userRecipes = useSelector((state: RootState) =>
     selectUserRecipes(state, userId)
   );
-  const isLoading = useSelector(selectIsLoading);
-  const hasMoreRecipes = useSelector(selectHasMoreRecipes);
-  const lastFetchedRecipeId = useSelector(selectLastFetchedRecipeId);
 
   useEffect(() => {
     if (userId) {
-      dispatch(fetchUserRecipes({ userId, limit: 9 })); // Make sure to pass an object with userId and limit to fetchUserRecipes
+      dispatch(fetchUserRecipes(userId));
     }
   }, [userId, dispatch]);
-
-  // Handle loading more recipes
-  const handleLoadMore = useCallback(() => {
-    if (hasMoreRecipes && !isLoading) {
-      dispatch(fetchUserRecipes({ userId, lastFetchedRecipeId, limit: 9 })); // Use the same limit as initially used
-    }
-  }, [dispatch, hasMoreRecipes, isLoading, lastFetchedRecipeId, userId]);
 
   const renderRecipeThumbnail = ({ item }: { item: RecipeWithId }) => (
     <TouchableOpacity
@@ -73,11 +56,6 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
       // Define styles for numColumns and other layout properties
       numColumns={3}
       keyExtractor={(item) => item.id}
-      ListFooterComponent={
-        isLoading ? <ActivityIndicator size="large" /> : null
-      }
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.5} // Trigger the load more threshold
     />
   );
 }
