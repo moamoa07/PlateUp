@@ -69,126 +69,142 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
           </View>
           <View style={styles.recipeInfo}>
             <Text style={styles.textMedium}>801 Likes</Text>
-            <Text style={styles.title}>{recipe.title}</Text>
           </View>
-          <TouchableOpacity onPress={toggleWholeRecipe}>
-            <Text>Se mer</Text>
-          </TouchableOpacity>
-
-          {showWholeRecipe && ( 
-          <View style={styles.information}>
-            <View style={styles.recipeNotes}>
-              <View style={styles.servings}>
-                <EatIcon size={24} fill={'#232323'} />
-                <Text style={styles.text}>{recipe.servingDetails}</Text>
-              </View>
-              <View style={styles.time}>
-                <TimerIcon size={24} fill={'#232323'} />
-                <Text style={styles.text}>
-                  <Text style={styles.textMedium}>Prep Time: </Text>
-                  {recipe.prepTime}
-                </Text>
-                {recipe.cookTime && (
-                  <View>
-                    <Text style={styles.text}>
-                      <Text style={styles.textMedium}>Cook Time: </Text>
-                      {recipe.cookTime}
-                    </Text>
-                  </View>
-                )}
-              </View>
+          <View style={styles.nameTitleToggleBox}>
+            <View style={styles.nameAndTitle}>
+              <Text style={styles.usernameInRecipe}>
+                {user?.displayName} {''}
+                <Text style={styles.title}>{recipe.title}</Text>
+              </Text>
             </View>
-            <Text style={styles.text}>{recipe.description}</Text>
-
-            {/* Buttons to toggle between Ingredients and Instructions */}
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity
-                style={[styles.button, showIngredients && styles.activeButton]}
-                onPress={() => toggleSection('ingredients')}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    showIngredients && styles.activeButtonText,
-                  ]}
-                >
-                  Ingredients
-                </Text>
-              </TouchableOpacity>
-              <Text style={styles.divider}>|</Text>
-              <TouchableOpacity
-                style={[styles.button, !showIngredients && styles.activeButton]}
-                onPress={() => toggleSection('instructions')}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    !showIngredients && styles.activeButtonText,
-                  ]}
-                >
-                  Instructions
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Ingredients or Instructions */}
-            {showIngredients ? (
-              // Ingredients list
-              <View style={styles.ingredientsList}>
-                {recipe.ingredients?.map((group, index) => (
-                  <View key={index} style={styles.group}>
-                    {group.ingredientSubtitle && (
-                      <Text style={styles.subtitle}>
-                        {group.ingredientSubtitle}
-                      </Text>
-                    )}
-                    {group.items?.map((ingredient, i) => (
-                      <View key={i} style={styles.ingredientItem}>
-                        <Text
-                          style={styles.ingredientQuantity}
-                        >{`${ingredient.quantity}`}</Text>
-                        <Text style={styles.ingredientName}>
-                          {ingredient.name}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </View>
-            ) : (
-              // Instructions list
-              <View style={styles.instructionsList}>
-                {recipe.instructions?.map((group, index) => (
-                  <View key={index} style={styles.group}>
-                    {group.instructionSubtitle && (
-                      <Text style={styles.subtitle}>
-                        {group.instructionSubtitle}
-                      </Text>
-                    )}
-                    {group.steps?.map((step, i) => (
-                      <View key={i} style={styles.instructionItem}>
-                        <Text style={styles.stepNumber}>{`${i + 1}.`}</Text>
-                        <Text style={styles.instructionText}>
-                          {step.instruction}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                ))}
-              </View>
-            )}
-
-            {recipe.additionalNotes && (
-              <View style={styles.additionalNotesContainer}>
-                <Text style={styles.additionalNotesTitle}>
-                  Additional Notes
-                </Text>
-                <Text style={styles.additionalNotesText}>
-                  {recipe.additionalNotes}
-                </Text>
-              </View>
-            )}
+            <TouchableOpacity
+              onPress={toggleWholeRecipe}
+              style={styles.toggleBox}
+            >
+              <Text>Se mer</Text>
+            </TouchableOpacity>
           </View>
+
+          {showWholeRecipe && (
+            <View style={styles.information}>
+              <View style={styles.recipeNotes}>
+                <View style={styles.servings}>
+                  <EatIcon size={24} fill={'#232323'} />
+                  <Text style={styles.text}>{recipe.servingDetails}</Text>
+                </View>
+                <View style={styles.time}>
+                  <TimerIcon size={24} fill={'#232323'} />
+                  <Text style={styles.text}>
+                    <Text style={styles.textMedium}>Prep Time: </Text>
+                    {recipe.prepTime}
+                  </Text>
+                  {recipe.cookTime && (
+                    <View>
+                      <Text style={styles.text}>
+                        <Text style={styles.textMedium}>Cook Time: </Text>
+                        {recipe.cookTime}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+              <Text style={styles.text}>{recipe.description}</Text>
+
+              {/* Buttons to toggle between Ingredients and Instructions */}
+              <View style={styles.buttonsContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.button,
+                    showIngredients && styles.activeButton,
+                  ]}
+                  onPress={() => toggleSection('ingredients')}
+                >
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      showIngredients && styles.activeButtonText,
+                    ]}
+                  >
+                    Ingredients
+                  </Text>
+                </TouchableOpacity>
+                <Text style={styles.divider}>|</Text>
+                <TouchableOpacity
+                  style={[
+                    styles.button,
+                    !showIngredients && styles.activeButton,
+                  ]}
+                  onPress={() => toggleSection('instructions')}
+                >
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      !showIngredients && styles.activeButtonText,
+                    ]}
+                  >
+                    Instructions
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Ingredients or Instructions */}
+              {showIngredients ? (
+                // Ingredients list
+                <View style={styles.ingredientsList}>
+                  {recipe.ingredients?.map((group, index) => (
+                    <View key={index} style={styles.group}>
+                      {group.ingredientSubtitle && (
+                        <Text style={styles.subtitle}>
+                          {group.ingredientSubtitle}
+                        </Text>
+                      )}
+                      {group.items?.map((ingredient, i) => (
+                        <View key={i} style={styles.ingredientItem}>
+                          <Text
+                            style={styles.ingredientQuantity}
+                          >{`${ingredient.quantity}`}</Text>
+                          <Text style={styles.ingredientName}>
+                            {ingredient.name}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                // Instructions list
+                <View style={styles.instructionsList}>
+                  {recipe.instructions?.map((group, index) => (
+                    <View key={index} style={styles.group}>
+                      {group.instructionSubtitle && (
+                        <Text style={styles.subtitle}>
+                          {group.instructionSubtitle}
+                        </Text>
+                      )}
+                      {group.steps?.map((step, i) => (
+                        <View key={i} style={styles.instructionItem}>
+                          <Text style={styles.stepNumber}>{`${i + 1}.`}</Text>
+                          <Text style={styles.instructionText}>
+                            {step.instruction}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
+                  ))}
+                </View>
+              )}
+
+              {recipe.additionalNotes && (
+                <View style={styles.additionalNotesContainer}>
+                  <Text style={styles.additionalNotesTitle}>
+                    Additional Notes
+                  </Text>
+                  <Text style={styles.additionalNotesText}>
+                    {recipe.additionalNotes}
+                  </Text>
+                </View>
+              )}
+            </View>
           )}
         </View>
       </View>
@@ -216,9 +232,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   title: {
-    fontFamily: 'Jost-Medium',
+    fontFamily: 'Jost-Regular',
     fontSize: 20,
-    marginTop: 10,
+    paddingLeft: 10,
   },
   information: {
     marginHorizontal: 10,
@@ -316,7 +332,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
   },
-
   additionalNotesTitle: {
     fontFamily: 'Jost-Medium',
     fontSize: 16,
@@ -337,6 +352,17 @@ const styles = StyleSheet.create({
   recipeInfo: {
     marginHorizontal: 10,
   },
+  nameTitleToggleBox: {
+    paddingHorizontal: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  nameAndTitle: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1,
+  },
   user: {
     display: 'flex',
     flexDirection: 'row',
@@ -349,6 +375,18 @@ const styles = StyleSheet.create({
   username: {
     fontFamily: 'Jost-Medium',
     fontSize: 20,
+  },
+  usernameInRecipe: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 20,
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 9,
+  },
+  toggleBox: {
+    marginLeft: 10,
+    justifyContent: 'flex-start',
+    marginTop: 7,
   },
   group: { marginVertical: 5 },
 });
