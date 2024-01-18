@@ -13,6 +13,8 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchUsers } from '../redux/actions/userActions';
 import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
+import ChevronDownIcon from './icons/ChevronIconDown';
+import ChevronRightIcon from './icons/ChevronIconRight';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
@@ -81,7 +83,11 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
               onPress={toggleWholeRecipe}
               style={styles.toggleBox}
             >
-              <Text>Se mer</Text>
+              {showWholeRecipe ? (
+                <ChevronDownIcon size={32} fill={'#232323'} />
+              ) : (
+                <ChevronRightIcon size={32} fill={'#232323'} />
+              )}
             </TouchableOpacity>
           </View>
 
@@ -386,7 +392,6 @@ const styles = StyleSheet.create({
   toggleBox: {
     marginLeft: 10,
     justifyContent: 'flex-start',
-    marginTop: 7,
   },
   group: { marginVertical: 5 },
 });
