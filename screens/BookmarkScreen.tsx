@@ -1,7 +1,6 @@
 import React from 'react';
-import { FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import RecipeComponent from '../components/RecipeComponent';
+import BookmarksGrid from './BookmarksGrid';
 import { mockRecipes } from './HomeScreen';
 
 interface BookmarkScreenProps {
@@ -15,16 +14,11 @@ function BookmarkScreen({
 }: BookmarkScreenProps) {
   return (
     <SafeAreaView>
-      <FlatList
-        data={bookmarkedRecipes}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => (
-          <RecipeComponent
-            recipe={mockRecipes.find((recipe) => recipe.id === item)!}
-            isBookmarked={true}
-            onToggleBookmark={() => toggleBookmark(item)}
-          />
+      <BookmarksGrid
+        updatedBookmarks={mockRecipes.filter((recipe) =>
+          bookmarkedRecipes.includes(recipe.id)
         )}
+        onRecipePress={(item: any) => console.log('Pressed recipe:', item)}
       />
     </SafeAreaView>
   );

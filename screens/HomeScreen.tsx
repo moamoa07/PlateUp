@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RecipeComponent from '../components/RecipeComponent';
+import BookmarksGrid from './BookmarksGrid';
 
 export const mockRecipes = [
   {
@@ -126,6 +127,7 @@ function HomeScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <View>
           <Text>Home Screen</Text>
+          {/* Render the RecipeComponent as before */}
           {mockRecipes.map((recipe) => (
             <RecipeComponent
               key={recipe.id}
@@ -134,6 +136,14 @@ function HomeScreen() {
               onToggleBookmark={() => toggleBookmark(recipe.id)}
             />
           ))}
+
+          {/* Render the BookmarksGrid component */}
+          <BookmarksGrid
+            updatedBookmarks={mockRecipes.filter((recipe) =>
+              bookmarkedRecipes.includes(recipe.id)
+            )}
+            onRecipePress={(item: any) => console.log('Pressed recipe:', item)}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
