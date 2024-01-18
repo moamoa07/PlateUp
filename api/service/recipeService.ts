@@ -1,5 +1,6 @@
 import { getAuth } from 'firebase/auth';
 import {
+  QueryConstraint,
   addDoc,
   collection,
   doc,
@@ -10,6 +11,7 @@ import {
   query,
   setDoc,
   startAfter,
+  where,
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { FIREBASE_DB, FIREBASE_STORAGE } from '../../FirebaseConfig';
@@ -55,28 +57,36 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
 
 export async function getAllRecipes(
   lastFetchedRecipeId: string | null = null,
-  limitNumber: number = 3
+  limitNumber: number = 3,
+  userId?: string
 ) {
-  // Base query with ordering and limiting
-  let baseQuery = query(
-    collection(FIREBASE_DB, 'recipes'),
+  // Create an array for query constraints
+  let queryConstraints: Array<QueryConstraint> = [
     orderBy('updatedAt', 'desc'),
-    limit(limitNumber)
-  );
+    limit(limitNumber),
+  ];
+
+  // Filter by userId if provided
+  if (userId) {
+    queryConstraints.push(where('userId', '==', userId));
+  }
 
   // Modify the query if lastFetchedRecipeId exists
-  let finalQuery;
   if (lastFetchedRecipeId) {
     const lastSnapshot = await getDoc(
       doc(FIREBASE_DB, 'recipes', lastFetchedRecipeId)
     );
-    finalQuery = query(baseQuery, startAfter(lastSnapshot));
-  } else {
-    finalQuery = baseQuery;
+    queryConstraints.push(startAfter(lastSnapshot));
   }
 
-  const querySnapshot = await getDocs(finalQuery);
+  // Construct the final query using the query constraints
+  const finalQuery = query(
+    collection(FIREBASE_DB, 'recipes'),
+    ...queryConstraints
+  );
 
+  // Execute the query and process the results
+  const querySnapshot = await getDocs(finalQuery);
   const fetchedRecipes = querySnapshot.docs.map((doc) => ({
     ...(doc.data() as Recipe),
     id: doc.id,
