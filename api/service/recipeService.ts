@@ -43,21 +43,9 @@ export async function addRecipe(recipeData: Recipe): Promise<string> {
   }
 }
 
-// Fetch all recipes from Firestore
-// export async function getAllRecipes() {
-//   const recipes: Array<Recipe & { id: string }> = []; // Define the type of array with an additional 'id' property
-//   const querySnapshot = await getDocs(collection(FIREBASE_DB, 'recipes'));
-//   querySnapshot.forEach((doc) => {
-//     // Combine the document data with the document ID
-//     const recipeData = doc.data() as Recipe; // Cast the document data to the Recipe type
-//     recipes.push({ ...recipeData, id: doc.id }); // Add the id property
-//   });
-//   return recipes;
-// }
-
 export async function getAllRecipes(
-  lastFetchedRecipeId: string | null = null,
-  limitNumber: number = 3,
+  lastFetchedRecipeId: string | null,
+  limitNumber: number,
   userId?: string
 ) {
   // Create an array for query constraints
@@ -97,7 +85,7 @@ export async function getAllRecipes(
     querySnapshot.docs.length === limitNumber
       ? querySnapshot.docs[querySnapshot.docs.length - 1].id
       : null;
-
+  console.log('Recipes fetched:', fetchedRecipes);
   return {
     recipes: fetchedRecipes,
     lastFetchedRecipeId: newLastFetchedRecipeId,
