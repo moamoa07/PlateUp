@@ -23,6 +23,7 @@ interface RecipeFeedProps {
 
 function RecipeFeed({ recipe }: RecipeFeedProps) {
   const [showIngredients, setShowIngredients] = useState(true);
+  const [showWholeRecipe, setShowWholeRecipe] = useState(false);
   const users = useAppSelector(getUsers);
   const dispatch = useAppDispatch();
 
@@ -30,6 +31,10 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
     // Fetch users when the component mounts
     dispatch(fetchUsers());
   }, [dispatch]);
+
+  const toggleWholeRecipe = () => {
+    setShowWholeRecipe(!showWholeRecipe);
+  };
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
@@ -64,9 +69,14 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
           </View>
           <View style={styles.recipeInfo}>
             <Text style={styles.textMedium}>801 Likes</Text>
-          </View>
-          <View style={styles.information}>
             <Text style={styles.title}>{recipe.title}</Text>
+          </View>
+          <TouchableOpacity onPress={toggleWholeRecipe}>
+            <Text>Se mer</Text>
+          </TouchableOpacity>
+
+          {showWholeRecipe && ( 
+          <View style={styles.information}>
             <View style={styles.recipeNotes}>
               <View style={styles.servings}>
                 <EatIcon size={24} fill={'#232323'} />
@@ -179,6 +189,7 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
               </View>
             )}
           </View>
+          )}
         </View>
       </View>
     </ScrollView>
