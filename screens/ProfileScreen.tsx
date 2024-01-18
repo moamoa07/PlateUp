@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UserProfileRecipeGrid from '../components/UserProfileRecipeGrid';
 import BookmarkIcon from '../components/icons/BookmarkIcon';
 import LikeIcon from '../components/icons/LikeIcon';
 import SettingsIcon from '../components/icons/SettingsIcon';
@@ -54,7 +55,7 @@ function ProfileScreen({ navigation }: { navigation: any }) {
 
       <View>
         {/* <ImageGrid /> */}
-        {/* <UserProfileRecipeGrid navigation={navigation} /> */}
+        <UserProfileRecipeGrid navigation={navigation} />
       </View>
     </SafeAreaView>
   );
