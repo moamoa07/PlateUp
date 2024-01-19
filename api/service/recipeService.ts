@@ -100,7 +100,8 @@ export async function getRecipeById(recipeId: string) {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      return docSnap.data(); // Returns the document data
+      // Convert Firestore document to RecipeWithId type
+      return convertFirestoreRecipeToAppRecipe(docSnap);
     } else {
       console.log('No such document!');
       return null;
