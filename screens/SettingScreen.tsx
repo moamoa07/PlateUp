@@ -32,11 +32,8 @@ function SettingScreen() {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.background}>
       <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Settings</Text>
-        </View>
         <Link to={{ screen: 'Home' }} style={styles.link}>
           <View style={styles.linkContent}>
             <AccountIcon size={32} fill={'#232323'} />
@@ -94,6 +91,9 @@ function SettingScreen() {
 const styles = StyleSheet.create({
   container: {
     margin: 10,
+  },
+  background: {
+    backgroundColor: '#fff',
   },
   title: {
     fontFamily: 'Crake-Regular',
