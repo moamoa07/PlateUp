@@ -13,25 +13,29 @@ import { CustomUser } from '../api/model/userModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchUsers } from '../redux/actions/userActions';
 import { getUsers, isLoading } from '../redux/reducers/users';
-
-type Recipe = {
-  id: string;
-  title: string;
-  image: string;
-};
+import { selectHasMoreRecipes, selectLastFetchedRecipeId, selectRecipes } from '../redux/reducers/recipes';
+import { fetchRecipes } from '../redux/actions/recipeActions';
+import { RecipeWithId } from '../api/model/recipeModel';
 
 function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState<
-    (CustomUser | Recipe)[]
+    (CustomUser | RecipeWithId)[]
   >([]);
   const [searchType, setSearchType] = useState<'users' | 'recipes'>('recipes');
   const dispatch = useAppDispatch();
   const usersFromRedux = useAppSelector(getUsers);
   const isSearchLoading = useAppSelector(isLoading);
+  const recipes = useAppSelector(selectRecipes);
+  const lastFetchedRecipeId = useAppSelector(selectLastFetchedRecipeId);
+  const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
 
   useEffect(() => {
     dispatch(fetchUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchRecipes(null, 6));
   }, [dispatch]);
 
   const handleSearch = async (query: string) => {
@@ -49,7 +53,7 @@ function SearchScreen() {
         console.log(filteredUsers);
       } else {
         // Fetch recipes from your mocked data or wherever you have it
-        const filteredRecipes = allRecipes.filter((recipe) =>
+        const filteredRecipes = recipes.filter((recipe) =>
           recipe.title.toLowerCase().includes(query.toLowerCase())
         );
 
@@ -202,10 +206,14 @@ function SearchScreen() {
                         <View style={[styles.recipeBox]}>
                           <Image
                             style={[styles.recipeImage]}
-                            source={{ uri: (result as Recipe).image }}
+                            source={{
+                              uri:
+                                (result as RecipeWithId).imageUrl ||
+                                'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+                            }}
                           />
                           <Text style={[styles.recipeText]}>
-                            {(result as Recipe).title}
+                            {(result as RecipeWithId).title}
                           </Text>
                         </View>
                       </View>
