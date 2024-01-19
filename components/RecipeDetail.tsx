@@ -10,6 +10,7 @@ import {
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppSelector } from '../hooks/reduxHooks';
+import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
@@ -21,7 +22,9 @@ interface RecipeComponentProps {
 
 function RecipeDetail({ recipe }: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
-  const user = useAppSelector((state) => state.user.user);
+  const users = useAppSelector(getUsers);
+
+  const user = users.find((user) => user.id === recipe.userId);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
@@ -40,7 +43,7 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
             source={
               user?.photoURL
                 ? { uri: user.photoURL }
-                : require('../assets/img/chokladkaka.jpeg')
+                : require('../assets/cupcakeprofile.png')
             }
           />
           <Text style={styles.username}>{user?.displayName}</Text>
