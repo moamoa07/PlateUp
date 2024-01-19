@@ -20,6 +20,22 @@ export const recipesSlice = createSlice({
   name: 'recipes',
   initialState,
   reducers: {
+    // Handle the action for adding a recipe
+    addRecipeSuccess: (
+      state,
+      action: PayloadAction<{
+        recipe: RecipeWithId;
+        userId: string | undefined;
+      }>
+    ) => {
+      const { recipe, userId } = action.payload;
+      state.recipes = [recipe, ...state.recipes];
+
+      // Add to userRecipes if it belongs to the current user
+      if (userId && recipe.userId === userId) {
+        state.userRecipes = [recipe, ...state.userRecipes];
+      }
+    },
     // Updates the state based on the fetched recipes
     updateRecipesState: (
       state,
@@ -101,6 +117,7 @@ export const recipesSlice = createSlice({
 });
 
 export const {
+  addRecipeSuccess,
   updateRecipesState,
   setLoading,
   fetchRecipesSuccess,
