@@ -21,7 +21,11 @@ function UserProfileHeader() {
   const navigation = useNavigation<any>();
 
   const navigateToScreen = (screenName: string) => {
-    navigation.navigate(screenName);
+    if (screenName === 'Settings') {
+      navigation.navigate('ProfileStackNavigator', { screen: 'Settings' });
+    } else {
+      navigation.navigate(screenName);
+    }
   };
 
   return (
