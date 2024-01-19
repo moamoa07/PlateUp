@@ -54,6 +54,11 @@ export const recipesSlice = createSlice({
       state.isLoading = false;
       state.hasMoreRecipes = newRecipes.length === GENERAL_RECIPES_LIMIT;
     },
+    // New reducer for handling fetched recipe details
+    fetchRecipeSuccess: (state, action: PayloadAction<RecipeWithId>) => {
+      state.currentRecipe = action.payload;
+      state.isLoading = false;
+    },
     setHasMoreRecipes: (state, action: PayloadAction<boolean>) => {
       state.hasMoreRecipes = action.payload;
     },
@@ -99,6 +104,7 @@ export const {
   updateRecipesState,
   setLoading,
   fetchRecipesSuccess,
+  fetchRecipeSuccess,
   setHasMoreRecipes,
   fetchRecipeError,
   fetchUserRecipesStart,
@@ -111,6 +117,10 @@ export const {
 // Selector to get the recipes from the state
 export const selectRecipes = (state: RootState): RecipeWithId[] =>
   state.recipes.recipes;
+
+// Selector to get the current recipe from the state
+export const selectCurrentRecipe = (state: RootState) =>
+  state.recipes.currentRecipe;
 
 // Selector to get the isLoading flag from the state
 export const selectIsLoading = (state: RootState) => state.recipes.isLoading;
