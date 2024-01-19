@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 4,
     gap: 4,
     width: '100%',
   },
