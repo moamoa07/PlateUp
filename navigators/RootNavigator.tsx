@@ -8,8 +8,8 @@ import SearchIcon from '../components/icons/SearchIcon';
 import AddRecipeScreen from '../screens/AddRecipeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
+import ProfileStackNavigator from './ProfileStack';
 
 type RootTabsParamList = {
   Home: undefined;
@@ -66,7 +66,7 @@ function RootNavigator() {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileStackNavigator}
         options={{
           tabBarIcon: ({ color }) => <ProfileIcon size={32} fill={color} />,
         }}
