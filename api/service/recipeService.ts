@@ -93,6 +93,52 @@ export async function getAllRecipes(
   };
 }
 
+export async function getAllSearchedRecipes(
+  lastFetchedRecipeId: string | null,
+  userId?: string
+) {
+  // Create an array for query constraints
+  let queryConstraints: Array<QueryConstraint> = [orderBy('updatedAt', 'desc')];
+
+  // Filter by userId if provided
+  if (userId) {
+    queryConstraints.push(where('userId', '==', userId));
+  }
+
+  // Modify the query if lastFetchedRecipeId exists
+  if (lastFetchedRecipeId) {
+    const lastSnapshot = await getDoc(
+      doc(FIREBASE_DB, 'recipes', lastFetchedRecipeId)
+    );
+    queryConstraints.push(startAfter(lastSnapshot));
+  }
+
+  // Construct the final query using the query constraints
+  const finalQuery = query(
+    collection(FIREBASE_DB, 'recipes'),
+    ...queryConstraints
+  );
+
+  // Execute the query and process the results
+  const querySnapshot = await getDocs(finalQuery);
+  const fetchedRecipes = querySnapshot.docs.map(
+    convertFirestoreRecipeToAppRecipe
+  );
+
+  // Determine the new 'lastFetchedRecipeId' for pagination
+  const newLastFetchedRecipeId =
+    querySnapshot.docs.length > 0
+      ? querySnapshot.docs[querySnapshot.docs.length - 1].id
+      : null;
+
+  console.log('Searched recipes fetched:', fetchedRecipes);
+
+  return {
+    recipes: fetchedRecipes,
+    lastFetchedRecipeId: newLastFetchedRecipeId,
+  };
+}
+
 // Get recipe by id from Firestore database
 export async function getRecipeById(recipeId: string) {
   try {
