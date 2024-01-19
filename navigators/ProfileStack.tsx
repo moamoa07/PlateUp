@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import BookmarkScreen from '../screens/BookmarkScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import SettingScreen from '../screens/SettingScreen';
@@ -12,7 +13,9 @@ function ProfileStackNavigator() {
       screenOptions={{
         headerMode: 'screen',
         headerTintColor: 'black',
-        headerStyle: { backgroundColor: '#fff' },
+        headerStyle: {
+          backgroundColor: '#fff',
+        },
         cardStyle: { backgroundColor: '#fff' },
         cardShadowEnabled: false,
       }}
@@ -39,6 +42,7 @@ function ProfileStackNavigator() {
             fontFamily: 'Crake-Regular',
             fontSize: 28,
           },
+          headerBackTitleVisible: false,
         }}
       />
       <ProfileStack.Screen
@@ -51,6 +55,20 @@ function ProfileStackNavigator() {
             fontFamily: 'Crake-Regular',
             fontSize: 28,
           },
+          headerBackTitleVisible: false,
+        }}
+      />
+      <ProfileStack.Screen
+        name="Bookmark"
+        component={BookmarkScreen}
+        options={{
+          headerTitle: 'Bookmarks',
+          headerTitleStyle: {
+            color: '#232323',
+            fontFamily: 'Crake-Regular',
+            fontSize: 28,
+          },
+          headerBackTitleVisible: false,
         }}
       />
     </ProfileStack.Navigator>
