@@ -9,13 +9,13 @@ import {
   View,
 } from 'react-native';
 import { ActivityIndicator, Avatar, Searchbar, Text } from 'react-native-paper';
+import { RecipeWithId } from '../api/model/recipeModel';
 import { CustomUser } from '../api/model/userModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchSearchedRecipes } from '../redux/actions/recipeActions';
 import { fetchUsers } from '../redux/actions/userActions';
+import { selectRecipes } from '../redux/reducers/recipes';
 import { getUsers, isLoading } from '../redux/reducers/users';
-import { selectHasMoreRecipes, selectLastFetchedRecipeId, selectRecipes } from '../redux/reducers/recipes';
-import { fetchRecipes } from '../redux/actions/recipeActions';
-import { RecipeWithId } from '../api/model/recipeModel';
 
 function SearchScreen() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,15 +27,13 @@ function SearchScreen() {
   const usersFromRedux = useAppSelector(getUsers);
   const isSearchLoading = useAppSelector(isLoading);
   const recipes = useAppSelector(selectRecipes);
-  const lastFetchedRecipeId = useAppSelector(selectLastFetchedRecipeId);
-  const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
 
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchRecipes(null, 6));
+    dispatch(fetchSearchedRecipes(null));
   }, [dispatch]);
 
   const handleSearch = async (query: string) => {
@@ -208,7 +206,7 @@ function SearchScreen() {
                             style={[styles.recipeImage]}
                             source={{
                               uri:
-                                (result as RecipeWithId).imageUrl ||
+                                // (result as RecipeWithId).imageUrl ||
                                 'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
                             }}
                           />
