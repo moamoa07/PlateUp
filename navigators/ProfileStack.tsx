@@ -12,16 +12,24 @@ function ProfileStackNavigator() {
         name="UserProfile"
         component={ProfileScreen}
         options={{
-          headerTitle: 'User Profile',
-          headerTitleStyle: { fontFamily: 'Jost-Regular', fontSize: 20 },
+          headerTitle: 'Your Profile',
+          headerTitleStyle: {
+            fontFamily: 'Crake-Regular',
+            fontSize: 28,
+            color: '#232323',
+          },
         }}
       />
       <ProfileStack.Screen
         name="RecipeDetail"
         component={RecipeDetailScreen}
         options={{
-          headerTitle: 'Recipe Detail',
-          headerTitleStyle: { fontFamily: 'Jost-Regular', fontSize: 20 },
+          headerTitle: 'Recipe',
+          headerTitleStyle: {
+            color: '#232323',
+            fontFamily: 'Crake-Regular',
+            fontSize: 28,
+          },
         }}
       />
     </ProfileStack.Navigator>
