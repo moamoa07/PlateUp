@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchUserRecipes } from '../redux/actions/recipeActions';
@@ -94,7 +95,7 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
           <ActivityIndicator size={'large'} color="#D6DED1" />
         ) : !hasMoreUserRecipes ? (
           <Text style={styles.endOfListMessage}>
-            You've reached the last recipe!
+            You've loaded all recipes!
           </Text>
         ) : null
       }
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   thumbnail: {
-    backgroundColor: 'mistyrose',
+    backgroundColor: theme.colors.secondary,
     width: imageSize,
     height: imageSize,
     margin: marginSize / 2, // Apply half margin size to each side
