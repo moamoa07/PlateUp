@@ -16,6 +16,7 @@ function ProfileStackNavigator() {
         headerStyle: {
           backgroundColor: '#fff',
         },
+        headerTitleStyle: { fontFamily: 'Jost-Regular' },
         cardStyle: { backgroundColor: '#fff' },
         cardShadowEnabled: false,
       }}
