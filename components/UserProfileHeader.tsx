@@ -50,7 +50,7 @@ function UserProfileHeader() {
             source={
               user?.photoURL
                 ? { uri: user.photoURL }
-                : require('../assets/img/chokladkaka.jpeg')
+                : require('../assets/cupcakeprofile.png')
             }
           />
           <Text style={styles.textUsername}>{user?.displayName}</Text>
