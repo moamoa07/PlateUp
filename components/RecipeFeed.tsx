@@ -359,7 +359,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   nameTitleToggleBox: {
-    paddingHorizontal: 10,
+    paddingLeft: 10,
+    paddingRight: 4,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
