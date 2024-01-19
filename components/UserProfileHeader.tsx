@@ -23,6 +23,8 @@ function UserProfileHeader() {
   const navigateToScreen = (screenName: string) => {
     if (screenName === 'Settings') {
       navigation.navigate('ProfileStackNavigator', { screen: 'Settings' });
+    } else if (screenName === 'Bookmarks') {
+      navigation.navigate('ProfileStackNavigator', { screen: 'Bookmarks' });
     } else {
       navigation.navigate(screenName);
     }
