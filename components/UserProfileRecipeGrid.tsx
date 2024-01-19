@@ -1,15 +1,14 @@
 import { getAuth } from 'firebase/auth';
 import React, { useEffect } from 'react';
 import {
-  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from 'react-native';
+import { ActivityIndicator } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchUserRecipes } from '../redux/actions/recipeActions';
@@ -26,10 +25,13 @@ import UserProfileHeader from './UserProfileHeader';
 const { width } = Dimensions.get('window');
 const containerPadding = 10; // This is the padding you want for the grid container
 const numColumns = 3;
-const marginSize = 4; // You can adjust the margin size here
+const marginSize = 8;
 // Subtract container padding from the total width before dividing by the number of columns
+// Total margin space taken by the gaps between thumbnails
+const totalMarginSpace = (numColumns - 1) * marginSize;
+// Subtract the total margin space and the padding from the width
 const imageSize =
-  (width - containerPadding * 2 - (numColumns + 1) * marginSize) / numColumns;
+  (width - totalMarginSpace - containerPadding * 2) / numColumns;
 
 function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
   const dispatch = useAppDispatch();
@@ -63,18 +65,15 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
     <TouchableOpacity
       onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}
     >
-      <View style={styles.thumbnailContainer}>
-        <Image
-          source={{
-            uri:
-              item.imageUrl ??
-              require('../assets/img/add-new-recipe-placeholder.png'),
-          }}
-          style={styles.thumbnail}
-          resizeMode="cover"
-        />
-        {/* <Text style={styles.recipeTitle}>{item.title}</Text> */}
-      </View>
+      <Image
+        source={{
+          uri:
+            item.imageUrl ??
+            require('../assets/img/add-new-recipe-placeholder.png'),
+        }}
+        style={styles.thumbnail}
+        resizeMode="cover"
+      />
     </TouchableOpacity>
   );
 
@@ -105,16 +104,15 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   gridContainer: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center', // Changed to 'stretch' to fill the container width
     padding: containerPadding,
+    width: '100%',
   },
-  thumbnailContainer: {},
   thumbnail: {
-    width: imageSize, // Width calculated based on screen width and margins
-    height: imageSize, // Same value for height to maintain aspect ratio
-    margin: marginSize,
-    borderWidth: 1, // Width of the border
-    borderColor: '#000',
+    backgroundColor: 'mistyrose',
+    width: imageSize,
+    height: imageSize,
+    margin: marginSize / 2, // Apply half margin size to each side
   },
   endOfListMessage: {
     fontFamily: 'Jost-Regular',
