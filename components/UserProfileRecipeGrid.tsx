@@ -90,7 +90,7 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
       onEndReachedThreshold={0.5}
       ListFooterComponent={
         loadingUserRecipes ? (
-          <ActivityIndicator size={'large'} />
+          <ActivityIndicator size={'large'} color="#D6DED1" />
         ) : !hasMoreUserRecipes ? (
           <Text style={styles.endOfListMessage}>
             You've reached the last recipe!
