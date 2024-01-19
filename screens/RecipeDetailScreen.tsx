@@ -5,12 +5,12 @@ import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import CustomLoader from '../components/CustomLoader';
 import RecipeDetail from '../components/RecipeDetail';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import { RootStackParamList } from '../navigators/RootStackParamList';
 import { fetchRecipeById } from '../redux/actions/recipeActions';
 import {
   selectCurrentRecipe,
   selectIsLoading,
 } from '../redux/reducers/recipes';
+import { RootStackParamList } from '../types/RootStackParamList';
 
 type RecipeDetailScreenRouteProp = RouteProp<
   RootStackParamList,
@@ -55,7 +55,7 @@ function RecipeDetailScreen({ route }: RecipeDetailScreenProps) {
   }
   console.log(currentRecipe);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
         <RecipeDetail recipe={currentRecipe} />
       </View>
