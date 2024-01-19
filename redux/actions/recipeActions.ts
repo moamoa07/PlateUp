@@ -1,10 +1,7 @@
 import { getAllRecipes, getRecipeById } from '../../api/service/recipeService';
+import { FETCH_RECIPE_ERROR, FETCH_RECIPE_START } from '../../types/Action';
 import {
-  FETCH_RECIPE_ERROR,
-  FETCH_RECIPE_START,
-  FETCH_RECIPE_SUCCESS,
-} from '../../types/Action';
-import {
+  fetchRecipeSuccess,
   fetchRecipesSuccess,
   fetchUserRecipesError,
   fetchUserRecipesStart,
@@ -49,13 +46,7 @@ export const fetchRecipeById =
       dispatch({ type: FETCH_RECIPE_START });
       const recipe = await getRecipeById(recipeId); // API request
       if (recipe) {
-        // Convert non-serializable values to serializable format
-        const serializableRecipe = {
-          ...recipe,
-          createdAt: recipe.createdAt.toDate().toISOString(),
-          updatedAt: recipe.updatedAt.toDate().toISOString(),
-        };
-        dispatch({ type: FETCH_RECIPE_SUCCESS, payload: serializableRecipe });
+        dispatch(fetchRecipeSuccess(recipe)); // Dispatch the action with the recipe
       } else {
         dispatch({ type: FETCH_RECIPE_ERROR, payload: 'No such recipe found' });
       }
