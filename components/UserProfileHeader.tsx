@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -25,40 +26,42 @@ function UserProfileHeader() {
 
   return (
     <SafeAreaView>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity>
-          <LikeIcon size={32} fill={'#232323'} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
-          <BookmarkIcon size={32} fill={'#232323'} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
-          <SettingsIcon size={32} fill={'#232323'} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.avatar}>
-        <Avatar.Image
-          size={100}
-          source={
-            user?.photoURL
-              ? { uri: user.photoURL }
-              : require('../assets/img/chokladkaka.jpeg')
-          }
-        />
-        <Text style={styles.textUsername}>{user?.displayName}</Text>
-      </View>
-      <View style={styles.profileInfo}>
-        <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>10</Text>
-          <Text style={styles.text}>Recipes</Text>
+      <View style={styles.container}>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity>
+            <LikeIcon size={32} fill={'#232323'} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
+            <BookmarkIcon size={32} fill={'#232323'} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
+            <SettingsIcon size={32} fill={'#232323'} />
+          </TouchableOpacity>
         </View>
-        <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>38K</Text>
-          <Text style={styles.text}>Likes</Text>
+        <View style={styles.avatar}>
+          <Avatar.Image
+            size={120}
+            source={
+              user?.photoURL
+                ? { uri: user.photoURL }
+                : require('../assets/img/chokladkaka.jpeg')
+            }
+          />
+          <Text style={styles.textUsername}>{user?.displayName}</Text>
         </View>
-        <View style={styles.profileInfoGroup}>
-          <Text style={styles.textBold}>500K</Text>
-          <Text style={styles.text}>Followers</Text>
+        <View style={styles.profileInfo}>
+          <View style={styles.profileInfoGroup}>
+            <Text style={styles.textBold}>10</Text>
+            <Text style={styles.text}>Recipes</Text>
+          </View>
+          <View style={styles.profileInfoGroup}>
+            <Text style={styles.textBold}>38K</Text>
+            <Text style={styles.text}>Likes</Text>
+          </View>
+          <View style={styles.profileInfoGroup}>
+            <Text style={styles.textBold}>500K</Text>
+            <Text style={styles.text}>Followers</Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -66,6 +69,9 @@ function UserProfileHeader() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 10,
+  },
   avatar: {
     display: 'flex',
     alignItems: 'center',
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
     gap: 4,
+    width: '100%',
   },
 });
 

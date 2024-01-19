@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Recipe {
   imageUrl: string | null;
   // imageUrls: string[]; Om vi ska spara flera bilder längre fram
@@ -9,8 +11,8 @@ export interface Recipe {
   ingredients: IngredientGroup[];
   instructions: InstructionGroup[];
   additionalNotes?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IngredientGroup {
