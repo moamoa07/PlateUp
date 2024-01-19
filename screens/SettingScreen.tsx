@@ -2,7 +2,6 @@ import { Link } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, Modal, Portal, useTheme } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import AccountIcon from '../components/icons/AccountIcon';
 import HelpIcon from '../components/icons/HelpIcon';
@@ -32,7 +31,7 @@ function SettingScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.background}>
+    <View style={styles.background}>
       <View style={styles.container}>
         <Link to={{ screen: 'Home' }} style={styles.link}>
           <View style={styles.linkContent}>
@@ -84,7 +83,7 @@ function SettingScreen() {
           </Modal>
         </Portal>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
