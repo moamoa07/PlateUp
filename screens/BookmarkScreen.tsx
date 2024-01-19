@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import theme from '../Theme';
@@ -20,9 +20,11 @@ function BookmarkScreen({
       <Text style={styles.h3}>Bookmarked Recipes</Text>
 
       {bookmarkedRecipes.length === 0 ? (
-        <Text style={styles.noBookmarksText}>
-          You haven't bookmarked any recipes yet!
-        </Text>
+        <View style={styles.noBookmarksTextContainer}>
+          <Text style={styles.noBookmarksText}>
+            You haven't bookmarked any recipes yet!
+          </Text>
+        </View>
       ) : (
         <BookmarksGrid
           updatedBookmarks={mockRecipes.filter((recipe) =>
@@ -53,6 +55,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  noBookmarksTextContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '70%',
+    paddingHorizontal: 20,
   },
 });
 
