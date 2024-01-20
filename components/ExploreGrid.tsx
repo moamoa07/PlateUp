@@ -81,6 +81,7 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
       renderItem={renderRecipeItem}
       keyExtractor={(item, index) => item.id ?? index.toString()}
       numColumns={numColumns}
+      contentContainerStyle={styles.gridContainer}
       ListFooterComponent={
         isLoading ? (
           <ActivityIndicator size={'large'} />
@@ -97,6 +98,12 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
 };
 
 const styles = StyleSheet.create({
+  gridContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: containerPadding,
+    width: '100%',
+  },
   screenHeader: {
     marginTop: 32,
     paddingBottom: 16,
