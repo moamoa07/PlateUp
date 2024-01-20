@@ -75,7 +75,7 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
         style={styles.thumbnail}
         resizeMode="cover"
       />
-      <Text>{item.title}</Text>
+      {/* <Text>{item.title}</Text> */}
     </TouchableOpacity>
   );
 
