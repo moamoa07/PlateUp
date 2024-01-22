@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the opacity as needed
+    backgroundColor: 'rgba(0, 0, 0, 0.342)', // Adjust the opacity as needed
     zIndex: 1,
   },
 });
