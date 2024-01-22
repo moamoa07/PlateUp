@@ -45,7 +45,8 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
   }, [dispatch, userId]);
 
   useEffect(() => {
-    setIsBookmarked(bookmarks.includes(recipe.id));
+    const bookmarkIds = bookmarks.map((bookmark) => bookmark.id);
+    setIsBookmarked(bookmarkIds.includes(recipe.id));
   }, [bookmarks, recipe.id]);
 
   const handleBookmarkToggle = () => {
@@ -54,6 +55,7 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
     } else {
       dispatch(addBookmark(userId, recipe.id));
     }
+    // Update the bookmark status immediately for a responsive UI
     setIsBookmarked(!isBookmarked);
   };
   const toggleSection = (section: 'ingredients' | 'instructions') => {
