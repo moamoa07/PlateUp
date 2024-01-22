@@ -2,6 +2,7 @@ import {
   QueryConstraint,
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -182,5 +183,26 @@ export async function uploadImageToFirestore(
   } catch (error) {
     console.error('Error uploading image:', error);
     return null; // Return null in case of error
+  }
+}
+
+export async function deleteRecipe(
+  recipeId: string,
+  userId: string | undefined
+): Promise<void> {
+  try {
+    // Check if the user trying to delete the recipe is the owner (optional)
+    const recipe = await getRecipeById(recipeId);
+    if (recipe && recipe.userId === userId) {
+      // User is the owner, proceed with deletion
+      await deleteDoc(doc(FIREBASE_DB, 'recipes', recipeId));
+      console.log('Recipe deleted successfully');
+    } else {
+      // Recipe not found or user is not the owner
+      console.log('Recipe not found or user is not the owner');
+    }
+  } catch (error) {
+    console.error('Error deleting recipe:', error);
+    throw error;
   }
 }
