@@ -15,15 +15,15 @@ import { Button } from 'react-native-paper';
 import * as Yup from 'yup';
 import theme from '../Theme';
 import { recipeSchema } from '../api/schema/recipeSchema';
-import uploadImageToFirestore, {
-  addRecipe,
-} from '../api/service/recipeService';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { addRecipe } from '../redux/actions/recipeActions';
 import { FormErrors } from '../types/FormErrors';
 import PickImage from './PickImage';
 import RemoveIcon from './icons/RemoveIcon';
 import TimerIcon from './icons/TimerIcon';
 
 const AddRecipeForm = () => {
+  const dispatch = useAppDispatch();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -150,11 +150,13 @@ const AddRecipeForm = () => {
   const handleSubmit = async () => {
     Keyboard.dismiss();
 
+    // Check if the image URL is present
     if (!imageUrl) {
       setFormErrors((prevErrors) => ({
         ...prevErrors,
         imageUrl: 'An image is required',
       }));
+      Alert.alert('Error', 'Please add an image to your recipe.');
       return;
     }
 
@@ -184,6 +186,7 @@ const AddRecipeForm = () => {
         { abortEarly: false }
       );
 
+      // Construct the new recipe object
       const newRecipe = {
         imageUrl,
         title,
@@ -196,14 +199,8 @@ const AddRecipeForm = () => {
         additionalNotes,
       };
 
-      // Add the recipe and get the recipeId
-      const recipeId = await addRecipe(newRecipe);
-      console.log('Recipe added successfully, ID:', recipeId);
-
-      // Now we'll use the recipeId for further operations, such as uploading an image
-      if (imageUrl) {
-        await uploadImageToFirestore(imageUrl, recipeId);
-      }
+      // Dispatch the addRecipe action with the newRecipe and imageUrl
+      dispatch(addRecipe(newRecipe, imageUrl));
 
       // Reset form fields after successful submission
       setImageUrl(null);

@@ -1,5 +1,6 @@
 import { RecipeWithId } from '../api/model/recipeModel';
 
+export const ADD_RECIPE_SUCCESS = 'ADD_RECIPE_SUCCESS';
 export const FETCH_RECIPES = 'FETCH_RECIPES';
 export const SET_LOADING = 'SET_LOADING';
 export const FETCH_RECIPE_START = 'FETCH_RECIPE_START';
@@ -24,6 +25,11 @@ export interface RecipeState {
   loadingUserRecipes: boolean;
   hasMoreUserRecipes: boolean;
 }
+
+export const addRecipeSuccess = (recipe: RecipeWithId) => ({
+  type: ADD_RECIPE_SUCCESS,
+  payload: recipe,
+});
 
 export interface FetchRecipesAction {
   type: typeof FETCH_RECIPES;
