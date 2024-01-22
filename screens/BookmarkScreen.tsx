@@ -1,10 +1,14 @@
-import { Text, View } from 'react-native';
+import React from 'react';
+import { SafeAreaView, View } from 'react-native';
+import BookmarkGrid from '../components/BookmarkGrid';
 
-function BookmarkScreen() {
+function BookmarkScreen({ navigation }: { navigation: any }) {
   return (
-    <View>
-      <Text>Bookmark Screen</Text>
-    </View>
+    <SafeAreaView>
+      <View>
+        <BookmarkGrid navigation={navigation} />
+      </View>
+    </SafeAreaView>
   );
 }
 
