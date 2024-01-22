@@ -50,8 +50,7 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
         style={styles.thumbnail}
         resizeMode="cover"
       />
-      <Text style={styles.titleText}>{item.title}</Text> // When for testing
-      purposes only
+      <Text style={styles.titleText}>{item.title}</Text>
     </TouchableOpacity>
   );
 
@@ -59,7 +58,6 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
     <FlatList
       data={bookmarks}
       renderItem={renderBookmarkItem}
-      // keyExtractor={(item: RecipeWithId, index) => item.id ?? index.toString()}
       keyExtractor={(item) => item.id}
       numColumns={numColumns}
       contentContainerStyle={styles.gridContainer}
