@@ -179,38 +179,6 @@ export async function getImageById(imageId: string) {
   }
 }
 
-// Upload recipe image to Firestore
-// export default function uploadImageToFirestore(
-//   localFilePath: string,
-//   recipeId: string
-// ) {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       // Create a storage reference with the recipe ID
-//       const storageRef = ref(FIREBASE_STORAGE, `recipes/${recipeId}.jpg`);
-
-//       // Convert the local file path to a Blob or File object
-//       const response = await fetch(localFilePath);
-//       const blob = await response.blob();
-
-//       // Upload the file to Firebase Storage
-//       await uploadBytes(storageRef, blob);
-
-//       // Get the download URL
-//       const downloadURL = await getDownloadURL(storageRef);
-
-//       // Save the download URL to Firestore
-//       const recipeRef = doc(FIREBASE_DB, 'recipes', recipeId);
-//       await setDoc(recipeRef, { imageUrl: downloadURL }, { merge: true });
-
-//       resolve(downloadURL);
-//     } catch (error) {
-//       console.error('Error uploading image:', error);
-//       reject(error);
-//     }
-//   });
-// }
-
 export async function uploadImageToFirestore(
   localFilePath: string,
   recipeId: string
