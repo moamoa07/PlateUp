@@ -1,6 +1,8 @@
 import {
   QueryConstraint,
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   doc,
   getDoc,
@@ -14,6 +16,7 @@ import {
 } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { FIREBASE_DB, FIREBASE_STORAGE } from '../../FirebaseConfig';
+import { UserBookmarks } from '../../types/UserBookmarks';
 import convertFirestoreRecipeToAppRecipe from '../../utils/convertFirestoreRecipeToAppRecipe';
 import { Recipe } from '../model/recipeModel';
 
@@ -197,4 +200,39 @@ export async function uploadImageToFirestore(
     console.error('Error uploading image:', error);
     return null; // Return null in case of error
   }
+}
+
+// Firestore service functions for bookmarks
+const bookmarksRef = collection(FIREBASE_DB, 'bookmarks');
+
+export async function addBookmarkToFirestore(
+  userId: string,
+  recipeId: string
+): Promise<void> {
+  const userBookmarkDocRef = doc(bookmarksRef, userId);
+  await updateDoc(userBookmarkDocRef, {
+    recipeIds: arrayUnion(recipeId),
+  });
+}
+
+export async function removeBookmarkFromFirestore(
+  userId: string,
+  recipeId: string
+): Promise<void> {
+  const userBookmarkDocRef = doc(bookmarksRef, userId);
+  await updateDoc(userBookmarkDocRef, {
+    recipeIds: arrayRemove(recipeId),
+  });
+}
+
+export async function getBookmarksFromFirestore(
+  userId: string
+): Promise<string[]> {
+  const userBookmarkDocRef = doc(bookmarksRef, userId);
+  const docSnap = await getDoc(userBookmarkDocRef);
+  if (docSnap.exists()) {
+    const data = docSnap.data() as UserBookmarks;
+    return data.recipeIds;
+  }
+  return [];
 }
