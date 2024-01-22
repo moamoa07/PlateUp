@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import {
@@ -31,6 +32,7 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
   const [isOverlayVisible, setOverlayVisible] = useState(false);
   const auth = getAuth();
   const userId = auth.currentUser?.uid ?? '';
+  const navigation = useNavigation();
 
   const users = useAppSelector(getUsers);
   const dispatch = useAppDispatch();
@@ -55,7 +57,7 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
       await deleteRecipe(recipe.id, user?.id);
       // Close the delete modal after successful deletion
       setDeleteModalVisible(false);
-      // Optionally, you can navigate the user to a different screen or perform any other action
+      navigation.goBack();
     } catch (error) {
       console.error('Error deleting recipe:', error);
       // Handle error (e.g., show an error message)
