@@ -1,11 +1,12 @@
 import { SafeAreaView, View } from 'react-native';
-import RecipeList from '../components/RecipeList';
+import ExploreGrid from '../components/ExploreGrid';
 
-function ExploreScreen() {
+function ExploreScreen({ navigation }: { navigation: any }) {
   return (
     <SafeAreaView>
       <View>
-        <RecipeList />
+        {/* <RecipeList /> */}
+        <ExploreGrid navigation={navigation} />
       </View>
     </SafeAreaView>
   );

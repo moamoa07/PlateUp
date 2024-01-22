@@ -6,9 +6,9 @@ import HomeIcon from '../components/icons/HomeIcon';
 import ProfileIcon from '../components/icons/ProfileIcon';
 import SearchIcon from '../components/icons/SearchIcon';
 import AddRecipeScreen from '../screens/AddRecipeScreen';
-import ExploreScreen from '../screens/ExploreScreen';
 import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
+import ExploreStackNavigator from './ExploreStack';
 import ProfileStackNavigator from './ProfileStack';
 
 type RootTabsParamList = {
@@ -59,7 +59,7 @@ function RootNavigator() {
       />
       <Tab.Screen
         name="Explore"
-        component={ExploreScreen}
+        component={ExploreStackNavigator}
         options={{
           tabBarIcon: ({ color }) => <ExploreIcon size={32} fill={color} />,
         }}
