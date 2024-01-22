@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { getAuth } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -9,10 +10,17 @@ import {
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
-import { useAppSelector } from '../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import {
+  addBookmark,
+  fetchBookmarks,
+  removeBookmark,
+} from '../redux/actions/bookmarkActions';
+import { selectBookmarks } from '../redux/reducers/bookmarks';
 import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
+import FilledBookmarkIcon from './icons/FilledBookmarkIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
 
@@ -21,11 +29,33 @@ interface RecipeComponentProps {
 }
 
 function RecipeDetail({ recipe }: RecipeComponentProps) {
-  const [showIngredients, setShowIngredients] = useState(true);
+  const dispatch = useAppDispatch();
   const users = useAppSelector(getUsers);
-
   const user = users.find((user) => user.id === recipe.userId);
+  const bookmarks = useAppSelector(selectBookmarks);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [showIngredients, setShowIngredients] = useState(true);
+  const auth = getAuth();
+  const userId = auth.currentUser?.uid ?? '';
 
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchBookmarks(userId));
+    }
+  }, [dispatch, userId]);
+
+  useEffect(() => {
+    setIsBookmarked(bookmarks.includes(recipe.id));
+  }, [bookmarks, recipe.id]);
+
+  const handleBookmarkToggle = () => {
+    if (isBookmarked) {
+      dispatch(removeBookmark(userId, recipe.id));
+    } else {
+      dispatch(addBookmark(userId, recipe.id));
+    }
+    setIsBookmarked(!isBookmarked);
+  };
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
   };
@@ -57,7 +87,13 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
         <View style={styles.textContainer}>
           <View style={styles.actions}>
             <LikeIcon size={32} fill={'#232323'} />
-            <BookmarkIcon size={32} fill={'#232323'} />
+            <TouchableOpacity onPress={handleBookmarkToggle}>
+              {isBookmarked ? (
+                <FilledBookmarkIcon size={32} fill={'#232323'} />
+              ) : (
+                <BookmarkIcon size={32} fill={'#232323'} />
+              )}
+            </TouchableOpacity>
           </View>
           <View style={styles.recipeInfo}>
             <Text style={styles.textMedium}>801 Likes</Text>
