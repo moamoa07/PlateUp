@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import { getAuth } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,7 +11,12 @@ import {
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
+import { deleteRecipe } from '../api/service/recipeService';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchUsers } from '../redux/actions/userActions';
+import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
+import DotsIcon from './icons/DotsIcon';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
@@ -20,14 +27,44 @@ interface RecipeComponentProps {
 
 function RecipeDetail({ recipe }: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const auth = getAuth();
+  const userId = auth.currentUser?.uid ?? '';
+
+  const users = useAppSelector(getUsers);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    // Fetch users when the component mounts
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
   };
 
+  const toggleDeleteModal = () => {
+    setDeleteModalVisible(!isDeleteModalVisible);
+  };
+
+  async function handleDeleteRecipe() {
+    try {
+      // Call the deleteRecipe function with the recipeId and userId
+      await deleteRecipe(recipe.id, user?.id);
+      // Close the delete modal after successful deletion
+      setDeleteModalVisible(false);
+      // Optionally, you can navigate the user to a different screen or perform any other action
+    } catch (error) {
+      console.error('Error deleting recipe:', error);
+      // Handle error (e.g., show an error message)
+    }
+  }
+
   if (!recipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
+
+  const user = users.find((user) => user.id === recipe.userId);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -37,7 +74,12 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
             size={50}
             source={require('../assets/cupcakeprofile.png')}
           />
-          <Text style={styles.username}>moa</Text>
+          <Text style={styles.username}>{user?.displayName}</Text>
+          {user?.id === userId && (
+            <TouchableOpacity onPress={toggleDeleteModal}>
+              <DotsIcon size={32} fill={'#232323'} />
+            </TouchableOpacity>
+          )}
         </View>
         {recipe.imageUrl && (
           <Image
@@ -169,6 +211,28 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
           </View>
         </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isDeleteModalVisible}
+        onRequestClose={toggleDeleteModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
+              Are you sure you want to delete this recipe?
+            </Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity onPress={handleDeleteRecipe}>
+                <Text style={styles.deleteButton}>Delete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={toggleDeleteModal}>
+                <Text style={styles.cancelButton}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -328,6 +392,36 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   group: { marginVertical: 5 },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  deleteButton: {
+    color: '#FF0000',
+    fontFamily: 'Jost-Medium',
+    fontSize: 16,
+  },
+  cancelButton: {
+    color: '#000',
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+  },
 });
 
 export default RecipeDetail;
