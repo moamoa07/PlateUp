@@ -47,7 +47,7 @@ function ProfileStackNavigator() {
         }}
       />
       <ProfileStack.Screen
-        name="Setting"
+        name="Settings"
         component={SettingScreen}
         options={{
           headerTitle: 'Settings',
@@ -60,10 +60,10 @@ function ProfileStackNavigator() {
         }}
       />
       <ProfileStack.Screen
-        name="Bookmark"
+        name="Bookmarks"
         component={BookmarkScreen}
         options={{
-          headerTitle: 'Bookmarks',
+          headerTitle: 'Your Saved Recipes',
           headerTitleStyle: {
             color: '#232323',
             fontFamily: 'Crake-Regular',
