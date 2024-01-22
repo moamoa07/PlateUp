@@ -28,6 +28,7 @@ interface RecipeComponentProps {
 function RecipeDetail({ recipe }: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [isOverlayVisible, setOverlayVisible] = useState(false);
   const auth = getAuth();
   const userId = auth.currentUser?.uid ?? '';
 
@@ -45,6 +46,7 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
 
   const toggleDeleteModal = () => {
     setDeleteModalVisible(!isDeleteModalVisible);
+    setOverlayVisible(!isOverlayVisible);
   };
 
   async function handleDeleteRecipe() {
@@ -225,16 +227,23 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
               Are you sure you want to delete this recipe?
             </Text>
             <View style={styles.modalButtons}>
-              <TouchableOpacity onPress={handleDeleteRecipe}>
-                <Text style={styles.deleteButton}>Delete</Text>
+              <TouchableOpacity
+                onPress={handleDeleteRecipe}
+                style={styles.deleteButton}
+              >
+                <Text style={styles.deleteButtonText}>Delete</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={toggleDeleteModal}>
-                <Text style={styles.cancelButton}>Cancel</Text>
+              <TouchableOpacity
+                onPress={toggleDeleteModal}
+                style={styles.cancelButton}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
+      {isOverlayVisible && <View style={styles.overlay} />}
     </ScrollView>
   );
 }
@@ -418,18 +427,38 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
   },
   deleteButton: {
-    color: '#FF0000',
+    backgroundColor: '#232323',
+    padding: 10,
+    width: 100,
+    borderRadius: 10,
+  },
+  deleteButtonText: {
+    color: '#fff',
     fontFamily: 'Jost-Medium',
     fontSize: 16,
+    textAlign: 'center',
   },
   cancelButton: {
+    backgroundColor: '#f1f1f1',
+    padding: 10,
+    width: 100,
+    borderRadius: 10,
+  },
+  cancelButtonText: {
     color: '#000',
     fontFamily: 'Jost-Regular',
     fontSize: 16,
+    textAlign: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the opacity as needed
+    zIndex: 1,
   },
 });
 
