@@ -8,7 +8,6 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchBookmarks } from '../redux/actions/bookmarkActions';
@@ -38,7 +37,9 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
 
   const renderBookmarkItem = ({ item }: { item: RecipeWithId }) => (
     <TouchableOpacity
-      onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
+      onPressIn={() =>
+        navigation.navigate('RecipeDetail', { recipeId: item.id })
+      }
     >
       <Image
         source={{
@@ -49,7 +50,8 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
         style={styles.thumbnail}
         resizeMode="cover"
       />
-      <Text>{item.title}</Text>
+      <Text style={styles.titleText}>{item.title}</Text> // When for testing
+      purposes only
     </TouchableOpacity>
   );
 
@@ -57,7 +59,8 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
     <FlatList
       data={bookmarks}
       renderItem={renderBookmarkItem}
-      keyExtractor={(item: RecipeWithId, index) => item.id ?? index.toString()}
+      // keyExtractor={(item: RecipeWithId, index) => item.id ?? index.toString()}
+      keyExtractor={(item) => item.id}
       numColumns={numColumns}
       contentContainerStyle={styles.gridContainer}
     />
@@ -72,11 +75,8 @@ const styles = StyleSheet.create({
     width: '100%',
     // backgroundColor: 'mistyrose',
   },
-  h3: {
-    fontSize: 28,
-    fontFamily: 'Crake-Regular',
-    textAlign: 'center',
-    color: theme.colors.primary,
+  titleText: {
+    maxWidth: 100,
   },
   endOfListMessage: {
     fontFamily: 'Jost-Regular',
