@@ -4,6 +4,7 @@ import {
   addBookmarkToFirestore,
   getBookmarksFromFirestore,
   getRecipeById,
+  getRecipesByIdsFromFirestore,
   removeBookmarkFromFirestore,
 } from '../../api/service/recipeService';
 import {
@@ -17,26 +18,19 @@ export const fetchBookmarks =
   (userId: string) => async (dispatch: AppDispatch) => {
     dispatch(setBookmarksLoading(true));
     try {
-      // Get an array of bookmarked recipe IDs
       const bookmarkIds = await getBookmarksFromFirestore(userId);
+      const bookmarkRecipes = await getRecipesByIdsFromFirestore(bookmarkIds);
 
-      // Fetch each recipe's full details
-      const bookmarkRecipes = await Promise.all(
-        bookmarkIds.map((id) => getRecipeById(id))
-      );
-
-      // Filter out any null values (in case some recipes weren't found)
+      // Filter out null values
       const validRecipes = bookmarkRecipes.filter(
         (recipe): recipe is RecipeWithId => recipe !== null
       );
 
-      // Dispatch action to set the fetched bookmarks
       dispatch(setBookmarks(validRecipes));
     } catch (error) {
       if (error instanceof Error) {
         dispatch(setBookmarksError(error.message));
       } else {
-        // Handle cases where the error is not an instance of Error
         dispatch(setBookmarksError('An unknown error occurred'));
       }
     } finally {
