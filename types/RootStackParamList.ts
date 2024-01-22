@@ -5,5 +5,6 @@ export type RootStackParamList = {
   Bookmark: undefined;
   ExploreScreen: undefined;
   RecipeDetail: { recipeId: string };
+  SearchComponent: undefined;
   // ... other screens with parameters
 };

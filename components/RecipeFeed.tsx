@@ -52,9 +52,13 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
     <ScrollView contentContainerStyle={styles.container}>
       <View>
         <View style={styles.user}>
-          <Avatar.Image
+        <Avatar.Image
             size={50}
-            source={require('../assets/cupcakeprofile.png')}
+            source={
+              user?.photoURL
+                ? { uri: user.photoURL }
+                : require('../assets/cupcakeprofile.png')
+            }
           />
           <Text style={styles.username}>{user?.displayName}</Text>
         </View>

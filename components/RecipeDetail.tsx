@@ -77,7 +77,11 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
           <View style={styles.userInfo}>
             <Avatar.Image
               size={50}
-              source={require('../assets/cupcakeprofile.png')}
+              source={
+                user?.photoURL
+                  ? { uri: user.photoURL }
+                  : require('../assets/cupcakeprofile.png')
+              }
             />
             <Text style={styles.username}>{user?.displayName}</Text>
           </View>
