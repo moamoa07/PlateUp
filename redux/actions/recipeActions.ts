@@ -1,17 +1,60 @@
-import { getAllRecipes, getRecipeById } from '../../api/service/recipeService';
+import { Recipe, RecipeWithId } from '../../api/model/recipeModel';
 import {
-  FETCH_RECIPE_ERROR,
-  FETCH_RECIPE_START,
-  FETCH_RECIPE_SUCCESS,
-} from '../../types/Action';
+  addRecipeToFirestore,
+  getAllRecipes,
+  getAllSearchedRecipes,
+  getRecipeById,
+  uploadImageToFirestore,
+} from '../../api/service/recipeService';
+import { FETCH_RECIPE_ERROR, FETCH_RECIPE_START } from '../../types/Action';
 import {
+  addRecipeSuccess,
+  fetchRecipeSuccess,
   fetchRecipesSuccess,
+  fetchUserRecipesError,
+  fetchUserRecipesStart,
+  fetchUserRecipesSuccess,
   setHasMoreRecipes,
   setLoading,
 } from '../reducers/recipes';
-import { AppDispatch } from '../store';
+import { currentUser } from '../reducers/users';
+import { AppDispatch, RootState } from '../store';
 
 // THUNK ACTION CREATOR
+
+// Thunk action creator for adding a recipe
+export const addRecipe =
+  (recipeData: Recipe, localImagePath: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      dispatch(setLoading(true));
+      const userId = currentUser(getState())?.id;
+      if (!userId) {
+        console.error('No user ID found');
+        return;
+      }
+
+      const recipeId = await addRecipeToFirestore(recipeData, userId);
+      let downloadURL = null;
+
+      if (localImagePath) {
+        downloadURL = await uploadImageToFirestore(localImagePath, recipeId);
+      }
+
+      const newRecipe: RecipeWithId = {
+        ...recipeData,
+        id: recipeId,
+        imageUrl: downloadURL,
+        userId, // userId is added here
+      };
+
+      dispatch(addRecipeSuccess({ recipe: newRecipe, userId }));
+    } catch (error) {
+      console.error('Error in addRecipe thunk:', error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
 
 // Adjust the fetchRecipes thunk action
 export const fetchRecipes =
@@ -28,9 +71,41 @@ export const fetchRecipes =
       );
       dispatch(setHasMoreRecipes(fetchedData.lastFetchedRecipeId != null));
     } catch (error) {
-      // Handle error
+      dispatch({
+        type: FETCH_RECIPE_ERROR,
+        payload:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred',
+      });
     } finally {
       dispatch(setLoading(false)); // Reset loading state
+    }
+  };
+
+export const fetchSearchedRecipes =
+  (lastFetchedRecipeId: string | null) => async (dispatch: AppDispatch) => {
+    dispatch(setLoading(true));
+
+    try {
+      const fetchedData = await getAllSearchedRecipes(lastFetchedRecipeId);
+      dispatch(
+        fetchRecipesSuccess({
+          recipes: fetchedData.recipes,
+          lastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
+        })
+      );
+      dispatch(setHasMoreRecipes(fetchedData.lastFetchedRecipeId != null));
+    } catch (error) {
+      dispatch({
+        type: FETCH_RECIPE_ERROR,
+        payload:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred',
+      });
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -40,13 +115,7 @@ export const fetchRecipeById =
       dispatch({ type: FETCH_RECIPE_START });
       const recipe = await getRecipeById(recipeId); // API request
       if (recipe) {
-        // Convert non-serializable values to serializable format
-        const serializableRecipe = {
-          ...recipe,
-          createdAt: recipe.createdAt.toDate().toISOString(),
-          updatedAt: recipe.updatedAt.toDate().toISOString(),
-        };
-        dispatch({ type: FETCH_RECIPE_SUCCESS, payload: serializableRecipe });
+        dispatch(fetchRecipeSuccess(recipe)); // Dispatch the action with the recipe
       } else {
         dispatch({ type: FETCH_RECIPE_ERROR, payload: 'No such recipe found' });
       }
@@ -61,6 +130,39 @@ export const fetchRecipeById =
           type: FETCH_RECIPE_ERROR,
           payload: 'An unexpected error occurred',
         });
+      }
+    }
+  };
+
+export const fetchUserRecipes =
+  (userId: string, lastFetchedRecipeId: string | null, limit: number) =>
+  async (dispatch: AppDispatch) => {
+    console.log('Dispatching fetchUserRecipes', {
+      userId,
+      lastFetchedRecipeId,
+      limit,
+    });
+    dispatch(fetchUserRecipesStart());
+    try {
+      const fetchedData = await getAllRecipes(
+        lastFetchedRecipeId,
+        limit,
+        userId
+      );
+      console.log('Fetched data:', fetchedData);
+      dispatch(
+        fetchUserRecipesSuccess({
+          userRecipes: fetchedData.recipes,
+          userLastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
+          limit: limit, // Include the limit here
+        })
+      );
+    } catch (error) {
+      console.error('Error in fetchUserRecipes:', error);
+      if (error instanceof Error) {
+        dispatch(fetchUserRecipesError(error.message));
+      } else {
+        dispatch(fetchUserRecipesError('An unexpected error occurred'));
       }
     }
   };

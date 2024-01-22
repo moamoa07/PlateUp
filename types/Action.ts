@@ -1,11 +1,16 @@
 import { RecipeWithId } from '../api/model/recipeModel';
 
+export const ADD_RECIPE_SUCCESS = 'ADD_RECIPE_SUCCESS';
 export const FETCH_RECIPES = 'FETCH_RECIPES';
 export const SET_LOADING = 'SET_LOADING';
 export const FETCH_RECIPE_START = 'FETCH_RECIPE_START';
 export const FETCH_RECIPE_SUCCESS = 'FETCH_RECIPE_SUCCESS';
 export const FETCH_RECIPE_ERROR = 'FETCH_RECIPE_ERROR';
-export const LIMIT_NUMBER = 3;
+export const FETCH_USER_RECIPES_START = 'FETCH_USER_RECIPES_START';
+export const FETCH_USER_RECIPES_SUCCESS = 'FETCH_USER_RECIPES_SUCCESS';
+export const FETCH_USER_RECIPES_ERROR = 'FETCH_USER_RECIPES_ERROR';
+export const GENERAL_RECIPES_LIMIT = 3;
+export const USER_RECIPES_LIMIT = 9;
 
 // Define RecipeState type
 export interface RecipeState {
@@ -15,7 +20,16 @@ export interface RecipeState {
   currentRecipe: RecipeWithId | null;
   error: string | null;
   hasMoreRecipes: boolean;
+  userRecipes: RecipeWithId[];
+  userLastFetchedRecipeId: string | null;
+  loadingUserRecipes: boolean;
+  hasMoreUserRecipes: boolean;
 }
+
+export const addRecipeSuccess = (recipe: RecipeWithId) => ({
+  type: ADD_RECIPE_SUCCESS,
+  payload: recipe,
+});
 
 export interface FetchRecipesAction {
   type: typeof FETCH_RECIPES;
@@ -43,9 +57,30 @@ export interface FetchRecipeErrorAction {
   type: typeof FETCH_RECIPE_ERROR;
   payload: string;
 }
+
+export interface FetchUserRecipesStartAction {
+  type: typeof FETCH_USER_RECIPES_START;
+}
+
+export interface FetchUserRecipesSuccessAction {
+  type: typeof FETCH_USER_RECIPES_SUCCESS;
+  payload: {
+    userRecipes: RecipeWithId[];
+    userLastFetchedRecipeId: string | null;
+  };
+}
+
+export interface FetchUserRecipesErrorAction {
+  type: typeof FETCH_USER_RECIPES_ERROR;
+  payload: string;
+}
+
 export type RecipeActionTypes =
   | FetchRecipesAction
   | SetLoadingAction
   | FetchRecipeStartAction
   | FetchRecipeSuccessAction
-  | FetchRecipeErrorAction;
+  | FetchRecipeErrorAction
+  | FetchUserRecipesStartAction
+  | FetchUserRecipesSuccessAction
+  | FetchUserRecipesErrorAction;

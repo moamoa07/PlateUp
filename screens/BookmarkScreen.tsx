@@ -1,5 +1,7 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import theme from '../Theme';
 import BookmarksGrid from './BookmarksGrid';
 import { mockRecipes } from './HomeScreen';
 
@@ -14,14 +16,39 @@ function BookmarkScreen({
 }: BookmarkScreenProps) {
   return (
     <SafeAreaView>
-      <BookmarksGrid
-        updatedBookmarks={mockRecipes.filter((recipe) =>
-          bookmarkedRecipes.includes(recipe.id)
-        )}
-        onRecipePress={(item: any) => console.log('Pressed recipe:', item)}
-      />
+      <View>
+        <Text>Bookmark Screen</Text>
+      </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  h3: {
+    fontSize: 28,
+    fontFamily: 'Crake-Regular',
+    textAlign: 'center',
+    color: theme.colors.primary,
+  },
+  noBookmarksText: {
+    fontFamily: 'Crake-Regular',
+    fontSize: 35,
+    textAlign: 'center',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noBookmarksTextContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '70%',
+    paddingHorizontal: 20,
+  },
+});
 
 export default BookmarkScreen;

@@ -17,7 +17,14 @@ export const store = configureStore({
           'recipes/fetchUserRecipes/rejected',
           'recipes/fetchUserRecipes/pending',
         ],
-        ignoredPaths: ['recipes.currentRecipe', 'recipes.recipes'],
+        ignoredPaths: [
+          'recipes.currentRecipe.createdAt',
+          'recipes.currentRecipe.updatedAt',
+          'recipes.recipes.*.createdAt',
+          'recipes.recipes.*.updatedAt',
+          'recipes.userRecipes.*.createdAt',
+          'recipes.userRecipes.*.updatedAt',
+        ],
       },
     }),
 });

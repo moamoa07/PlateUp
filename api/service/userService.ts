@@ -7,7 +7,7 @@ export async function getAllUsers() {
 
   const fetchedUsers = querySnapshot.docs.map((doc) => ({
     ...(doc.data() as CustomUser),
-    id: doc.id,
+    docId: doc.id,
   }));
 
   return {

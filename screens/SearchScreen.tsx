@@ -1,78 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import {
   Image,
+  Keyboard,
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { ActivityIndicator, Avatar, Searchbar, Text } from 'react-native-paper';
+import { RecipeWithId } from '../api/model/recipeModel';
 import { CustomUser } from '../api/model/userModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchSearchedRecipes } from '../redux/actions/recipeActions';
 import { fetchUsers } from '../redux/actions/userActions';
+import { selectRecipes } from '../redux/reducers/recipes';
 import { getUsers, isLoading } from '../redux/reducers/users';
 
-type Recipe = {
-  id: string;
-  title: string;
-  image: string;
-};
-
-function SearchScreen() {
+function SearchScreen({ navigation }: { navigation: any }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState<
-    (CustomUser | Recipe)[]
+    (CustomUser | RecipeWithId)[]
   >([]);
   const [searchType, setSearchType] = useState<'users' | 'recipes'>('recipes');
   const dispatch = useAppDispatch();
   const usersFromRedux = useAppSelector(getUsers);
   const isSearchLoading = useAppSelector(isLoading);
-
-  // Mocked list of recipes (replace with your actual list of users)
-  const allRecipes: Recipe[] = [
-    {
-      id: '11',
-      title: 'Chokladkaka',
-      image:
-        'https://cdn-rdb.arla.com/Files/arla-se/3181484453/def2d890-b9c5-4f30-b60b-626fb40e74dc.jpg?crop=(0,0,0,-148)&w=1269&h=715&mode=crop&ak=f525e733&hm=bd2594bd',
-    },
-    {
-      id: '22',
-      title: 'Citronkaka',
-      image:
-        'https://img.koket.se/standard-mega/mjuk-citronkaka-med-syrlig-glasyr-dansukker.png.webp',
-    },
-    {
-      id: '33',
-      title: 'Macarons',
-      image:
-        'https://cdn-rdb.arla.com/Files/arla-se/3269212119/01bd1421-10fa-497e-8a5b-ee2c5101e31d.jpg?w=1269&h=715&mode=crop&ak=f525e733&hm=b762ca1a',
-    },
-    {
-      id: '111',
-      title: 'Hallontårta',
-      image:
-        'https://assets.icanet.se/e_sharpen:80,q_auto,dpr_1.25,w_718,h_718,c_lfill/imagevaultfiles/id_240376/cf_259/hallontarta.jpg',
-    },
-    {
-      id: '222',
-      title: 'Rosa marängbakelser med bär, mandel och grädde',
-      image:
-        'https://static.cdn-expressen.se/images/35/bb/35bb78298d9b4cc884b21ea8f5affed7/16x9/1000@40.jpg',
-    },
-    {
-      id: '333',
-      title: 'Kladdig kladdkaka',
-      image:
-        'https://assets.icanet.se/e_sharpen:80,q_auto,dpr_1.25,w_718,h_718,c_lfill/imagevaultfiles/id_221660/cf_259/kladdig_kladdkaka.jpg',
-    },
-    // ... other recipes
-  ];
+  const recipes = useAppSelector(selectRecipes);
 
   useEffect(() => {
     dispatch(fetchUsers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchSearchedRecipes(null));
   }, [dispatch]);
 
   const handleSearch = async (query: string) => {
@@ -90,7 +53,7 @@ function SearchScreen() {
         console.log(filteredUsers);
       } else {
         // Fetch recipes from your mocked data or wherever you have it
-        const filteredRecipes = allRecipes.filter((recipe) =>
+        const filteredRecipes = recipes.filter((recipe) =>
           recipe.title.toLowerCase().includes(query.toLowerCase())
         );
 
@@ -108,168 +71,178 @@ function SearchScreen() {
     (result) => searchType === 'recipes'
   );
 
+  const handleRecipePress = (recipeId: string) => {
+    navigation.navigate('RecipeDetail', { recipeId });
+  };
+
   return (
     <SafeAreaView>
-      <View
-        style={[
-          styles.container,
-          Platform.OS === 'android' && { marginTop: 50 },
-          Platform.OS === 'ios' && { marginTop: 20 },
-        ]}
-      >
-        <Searchbar
-          placeholder="Search"
-          onChangeText={(query) => {
-            setSearchQuery(query);
-            handleSearch(query);
-          }}
-          value={searchQuery}
-          style={[styles.searchbar]}
-          inputStyle={{
-            fontFamily: 'Jost-Regular',
-            color: 'black',
-          }}
-        />
-
-        {/* Buttons to toggle between Users and Recipes */}
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              searchType === 'recipes' && styles.activeButton,
-            ]}
-            onPress={() => {
-              setSearchType('recipes');
-              setSearchQuery(''); // Clear the search query
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View
+          style={[
+            styles.container,
+            Platform.OS === 'android' && { marginTop: 50 },
+            Platform.OS === 'ios' && { marginTop: 20 },
+          ]}
+        >
+          <Searchbar
+            placeholder="Search"
+            onChangeText={(query) => {
+              setSearchQuery(query);
+              handleSearch(query);
             }}
-          >
-            <Text
+            value={searchQuery}
+            style={[styles.searchbar]}
+            inputStyle={{
+              fontFamily: 'Jost-Regular',
+              color: 'black',
+            }}
+          />
+          {/* Buttons to toggle between Users and Recipes */}
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
               style={[
-                styles.buttonText,
-                searchType === 'recipes' && styles.activeButtonText,
+                styles.button,
+                searchType === 'recipes' && styles.activeButton,
               ]}
+              onPress={() => {
+                setSearchType('recipes');
+                setSearchQuery(''); // Clear the search query
+              }}
             >
-              Recipes
-            </Text>
-          </TouchableOpacity>
-          <Text style={[styles.divider]}>|</Text>
-          <TouchableOpacity
-            style={[
-              styles.button,
-              searchType === 'users' && styles.activeButton,
-            ]}
-            onPress={() => {
-              setSearchType('users');
-              setSearchQuery(''); // Clear the search query
-            }}
-          >
-            <Text
+              <Text
+                style={[
+                  styles.buttonText,
+                  searchType === 'recipes' && styles.activeButtonText,
+                ]}
+              >
+                Recipes
+              </Text>
+            </TouchableOpacity>
+            <Text style={[styles.divider]}>|</Text>
+            <TouchableOpacity
               style={[
-                styles.buttonText,
-                searchType === 'users' && styles.activeButtonText,
+                styles.button,
+                searchType === 'users' && styles.activeButton,
               ]}
+              onPress={() => {
+                setSearchType('users');
+                setSearchQuery(''); // Clear the search query
+              }}
             >
-              Users
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Display Users or Recipes based on the active section */}
-        {isSearchLoading ? (
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '70%',
-            }}
-          >
-            <ActivityIndicator size="large" color="#D6DED1" />
+              <Text
+                style={[
+                  styles.buttonText,
+                  searchType === 'users' && styles.activeButtonText,
+                ]}
+              >
+                Users
+              </Text>
+            </TouchableOpacity>
           </View>
-        ) : (
-          <>
-            {searchQuery.length > 0 && filteredResults.length > 0 ? (
-              <ScrollView style={{ width: '100%', paddingHorizontal: 10 }}>
-                <View
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    paddingBottom: 300,
-                  }}
-                >
+
+          {/* Display Users or Recipes based on the active section */}
+          {isSearchLoading ? (
+            <View
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '70%',
+              }}
+            >
+              <ActivityIndicator size="large" color="#D6DED1" />
+            </View>
+          ) : (
+            <>
+              {searchQuery.length > 0 && filteredResults.length > 0 ? (
+                <ScrollView style={{ width: '100%', paddingHorizontal: 10 }}>
                   <View
                     style={{
-                      flexDirection: 'column',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                      gap: 10,
-                      paddingHorizontal: 10,
+                      width: '100%',
+                      height: '100%',
+                      paddingBottom: 300,
                     }}
                   >
-                    {filteredUsers.map((result) => (
-                      <View key={result.id}>
-                        <View style={[styles.userLayout]}>
-                          <View style={[styles.userBox]}>
-                            <Avatar.Image
-                              size={50}
+                    <View
+                      style={{
+                        flexDirection: 'column',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-between',
+                        gap: 10,
+                        paddingHorizontal: 10,
+                      }}
+                    >
+                      {filteredUsers.map((result) => (
+                        <View key={result.id}>
+                          <View style={[styles.userLayout]}>
+                            <View style={[styles.userBox]}>
+                              <Avatar.Image
+                                size={50}
+                                source={{
+                                  uri:
+                                    (result as CustomUser).photoURL ||
+                                    'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
+                                }}
+                              />
+                              <Text style={[styles.userName]}>
+                                {(result as CustomUser).displayName}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      ))}
+                    </View>
+                    {/* // Render filtered results for recipes */}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-between',
+                        gap: 10,
+                      }}
+                    >
+                      {filteredRecipes.map((result) => (
+                        <TouchableOpacity
+                          key={result.id}
+                          style={{ width: '48%', marginBottom: 10 }}
+                          onPress={() => handleRecipePress(result.id)}
+                        >
+                          <View style={[styles.recipeBox]}>
+                            <Image
+                              style={[styles.recipeImage]}
                               source={{
                                 uri:
-                                  (result as CustomUser).photoURL ||
+                                  (result as RecipeWithId).imageUrl ||
                                   'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
                               }}
                             />
-                            <Text style={[styles.userName]}>
-                              {(result as CustomUser).displayName}
+                            <Text style={[styles.recipeText]}>
+                              {(result as RecipeWithId).title}
                             </Text>
                           </View>
-                        </View>
-                      </View>
-                    ))}
+                        </TouchableOpacity>
+                      ))}
+                    </View>
                   </View>
-                  {/* // Render filtered results for recipes */}
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                      gap: 10,
-                    }}
-                  >
-                    {filteredRecipes.map((result) => (
-                      <View
-                        key={result.id}
-                        style={{ width: '48%', marginBottom: 10 }}
-                      >
-                        <View style={[styles.recipeBox]}>
-                          <Image
-                            style={[styles.recipeImage]}
-                            source={{ uri: (result as Recipe).image }}
-                          />
-                          <Text style={[styles.recipeText]}>
-                            {(result as Recipe).title}
-                          </Text>
-                        </View>
-                      </View>
-                    ))}
-                  </View>
+                </ScrollView>
+              ) : (
+                <View style={[styles.emptySearchTextContainer]}>
+                  <Text style={[styles.emptySearchText]}>
+                    {searchQuery.length > 0
+                      ? searchType === 'users'
+                        ? 'No matching users found'
+                        : 'No matching recipes found'
+                      : searchType === 'users'
+                      ? 'Discover amazing users and connect with them!'
+                      : 'Explore delicious recipes and get inspired!'}
+                  </Text>
                 </View>
-              </ScrollView>
-            ) : (
-              <View style={[styles.emptySearchTextContainer]}>
-                <Text style={[styles.emptySearchText]}>
-                  {searchQuery.length > 0
-                    ? searchType === 'users'
-                      ? 'No matching users found'
-                      : 'No matching recipes found'
-                    : searchType === 'users'
-                    ? 'Discover amazing users and connect with them!'
-                    : 'Explore delicious recipes and get inspired!'}
-                </Text>
-              </View>
-            )}
-          </>
-        )}
-      </View>
+              )}
+            </>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
