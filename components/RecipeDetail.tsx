@@ -70,11 +70,13 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
     <ScrollView contentContainerStyle={styles.container}>
       <View>
         <View style={styles.user}>
-          <Avatar.Image
-            size={50}
-            source={require('../assets/cupcakeprofile.png')}
-          />
-          <Text style={styles.username}>{user?.displayName}</Text>
+          <View style={styles.userInfo}>
+            <Avatar.Image
+              size={50}
+              source={require('../assets/cupcakeprofile.png')}
+            />
+            <Text style={styles.username}>{user?.displayName}</Text>
+          </View>
           {user?.id === userId && (
             <TouchableOpacity onPress={toggleDeleteModal}>
               <DotsIcon size={32} fill={'#232323'} />
@@ -382,10 +384,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
     paddingTop: 10,
     paddingBottom: 10,
     marginHorizontal: 16,
+    justifyContent: 'space-between',
+  },
+  userInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    justifyContent: 'space-between',
   },
   username: {
     fontFamily: 'Jost-Medium',
