@@ -2,6 +2,7 @@ import { Recipe, RecipeWithId } from '../../api/model/recipeModel';
 import {
   addRecipeToFirestore,
   getAllRecipes,
+  getAllSearchedRecipes,
   getRecipeById,
   uploadImageToFirestore,
 } from '../../api/service/recipeService';
@@ -79,6 +80,32 @@ export const fetchRecipes =
       });
     } finally {
       dispatch(setLoading(false)); // Reset loading state
+    }
+  };
+
+export const fetchSearchedRecipes =
+  (lastFetchedRecipeId: string | null) => async (dispatch: AppDispatch) => {
+    dispatch(setLoading(true));
+
+    try {
+      const fetchedData = await getAllSearchedRecipes(lastFetchedRecipeId);
+      dispatch(
+        fetchRecipesSuccess({
+          recipes: fetchedData.recipes,
+          lastFetchedRecipeId: fetchedData.lastFetchedRecipeId,
+        })
+      );
+      dispatch(setHasMoreRecipes(fetchedData.lastFetchedRecipeId != null));
+    } catch (error) {
+      dispatch({
+        type: FETCH_RECIPE_ERROR,
+        payload:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred',
+      });
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
