@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import bookmarksReducer from './reducers/bookmarks';
 import recipesReducer from './reducers/recipes';
 import userReducer from './reducers/users';
 
@@ -6,6 +7,7 @@ export const store = configureStore({
   reducer: {
     user: userReducer,
     recipes: recipesReducer,
+    bookmarks: bookmarksReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
