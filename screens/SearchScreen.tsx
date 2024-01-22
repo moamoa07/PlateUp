@@ -75,6 +75,10 @@ function SearchScreen({ navigation }: { navigation: any }) {
     navigation.navigate('RecipeDetail', { recipeId });
   };
 
+  const handleUserPress = (userId: string) => {
+    navigation.navigate('UserProfile', { userId });
+  };
+
   return (
     <SafeAreaView>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -174,7 +178,10 @@ function SearchScreen({ navigation }: { navigation: any }) {
                       }}
                     >
                       {filteredUsers.map((result) => (
-                        <View key={result.id}>
+                        <TouchableOpacity
+                          key={result.id}
+                          onPress={() => handleUserPress(result.id)}
+                        >
                           <View style={[styles.userLayout]}>
                             <View style={[styles.userBox]}>
                               <Avatar.Image
@@ -190,7 +197,7 @@ function SearchScreen({ navigation }: { navigation: any }) {
                               </Text>
                             </View>
                           </View>
-                        </View>
+                        </TouchableOpacity>
                       ))}
                     </View>
                     {/* // Render filtered results for recipes */}
