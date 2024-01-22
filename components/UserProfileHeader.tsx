@@ -21,13 +21,7 @@ function UserProfileHeader() {
   const navigation = useNavigation<any>();
 
   const navigateToScreen = (screenName: string) => {
-    if (screenName === 'Settings') {
-      navigation.navigate('ProfileStackNavigator', { screen: 'Settings' });
-    } else if (screenName === 'Bookmarks') {
-      navigation.navigate('ProfileStackNavigator', { screen: 'Bookmarks' });
-    } else {
-      navigation.navigate(screenName);
-    }
+    navigation.navigate(screenName);
   };
 
   return (
@@ -37,10 +31,10 @@ function UserProfileHeader() {
           <TouchableOpacity>
             <LikeIcon size={32} fill={'#232323'} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
+          <TouchableOpacity onPress={() => navigateToScreen('Bookmarks')}>
             <BookmarkIcon size={32} fill={'#232323'} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
+          <TouchableOpacity onPress={() => navigateToScreen('Settings')}>
             <SettingsIcon size={32} fill={'#232323'} />
           </TouchableOpacity>
         </View>
