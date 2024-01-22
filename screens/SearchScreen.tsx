@@ -71,9 +71,9 @@ function SearchScreen({ navigation }: { navigation: any }) {
     (result) => searchType === 'recipes'
   );
 
-  // const handleRecipePress = (recipeId: string) => {
-  //   navigation.navigate('RecipeDetailScreen', { recipeId });
-  // };
+  const handleRecipePress = (recipeId: string) => {
+    navigation.navigate('RecipeDetail', { recipeId });
+  };
 
   return (
     <SafeAreaView>
@@ -206,14 +206,14 @@ function SearchScreen({ navigation }: { navigation: any }) {
                         <TouchableOpacity
                           key={result.id}
                           style={{ width: '48%', marginBottom: 10 }}
-                          // onPress={() => handleRecipePress(result.id)}
+                          onPress={() => handleRecipePress(result.id)}
                         >
                           <View style={[styles.recipeBox]}>
                             <Image
                               style={[styles.recipeImage]}
                               source={{
                                 uri:
-                                  // (result as RecipeWithId).imageUrl ||
+                                  (result as RecipeWithId).imageUrl ||
                                   'https://github.com/moamoa07/PlateUp/assets/113519935/a3aa104c-d5ff-4d1b-bcd5-54a10fd00fd7',
                               }}
                             />
