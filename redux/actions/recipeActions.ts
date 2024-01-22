@@ -1,6 +1,13 @@
-import { getAllRecipes, getRecipeById } from '../../api/service/recipeService';
+import { Recipe, RecipeWithId } from '../../api/model/recipeModel';
+import {
+  addRecipeToFirestore,
+  getAllRecipes,
+  getRecipeById,
+  uploadImageToFirestore,
+} from '../../api/service/recipeService';
 import { FETCH_RECIPE_ERROR, FETCH_RECIPE_START } from '../../types/Action';
 import {
+  addRecipeSuccess,
   fetchRecipeSuccess,
   fetchRecipesSuccess,
   fetchUserRecipesError,
@@ -9,9 +16,44 @@ import {
   setHasMoreRecipes,
   setLoading,
 } from '../reducers/recipes';
-import { AppDispatch } from '../store';
+import { currentUser } from '../reducers/users';
+import { AppDispatch, RootState } from '../store';
 
 // THUNK ACTION CREATOR
+
+// Thunk action creator for adding a recipe
+export const addRecipe =
+  (recipeData: Recipe, localImagePath: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      dispatch(setLoading(true));
+      const userId = currentUser(getState())?.id;
+      if (!userId) {
+        console.error('No user ID found');
+        return;
+      }
+
+      const recipeId = await addRecipeToFirestore(recipeData, userId);
+      let downloadURL = null;
+
+      if (localImagePath) {
+        downloadURL = await uploadImageToFirestore(localImagePath, recipeId);
+      }
+
+      const newRecipe: RecipeWithId = {
+        ...recipeData,
+        id: recipeId,
+        imageUrl: downloadURL,
+        userId, // userId is added here
+      };
+
+      dispatch(addRecipeSuccess({ recipe: newRecipe, userId }));
+    } catch (error) {
+      console.error('Error in addRecipe thunk:', error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
 
 // Adjust the fetchRecipes thunk action
 export const fetchRecipes =
