@@ -113,6 +113,14 @@ export const recipesSlice = createSlice({
       state.loadingUserRecipes = false;
       state.error = action.payload;
     },
+    // Reducer to handle the deletion of a recipe
+    deleteRecipeSuccess: (state, action: PayloadAction<string>) => {
+      const recipeId = action.payload;
+      state.recipes = state.recipes.filter((recipe) => recipe.id !== recipeId);
+      state.userRecipes = state.userRecipes.filter(
+        (recipe) => recipe.id !== recipeId
+      );
+    },
   },
 });
 
@@ -127,6 +135,7 @@ export const {
   fetchUserRecipesStart,
   fetchUserRecipesSuccess,
   fetchUserRecipesError,
+  deleteRecipeSuccess,
 } = recipesSlice.actions;
 
 // Update your selector and other parts of the code where you use this reducer
