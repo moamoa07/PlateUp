@@ -5,7 +5,6 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
 } from 'react-native';
 import theme from '../Theme';
@@ -50,7 +49,7 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
         style={styles.thumbnail}
         resizeMode="cover"
       />
-      <Text style={styles.titleText}>{item.title}</Text>
+      {/* <Text style={styles.titleText}>{item.title}</Text> */}
     </TouchableOpacity>
   );
 
