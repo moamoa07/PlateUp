@@ -1,6 +1,6 @@
 // RootStackParamList.ts
 export type RootStackParamList = {
-  UserProfile: undefined;
+  UserProfile: { userId: string };
   Setting: undefined;
   Bookmark: undefined;
   ExploreScreen: undefined;
