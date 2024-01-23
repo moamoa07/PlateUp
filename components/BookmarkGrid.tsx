@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -26,7 +26,6 @@ const imageSize =
   (width - totalMarginSpace - containerPadding * 2) / numColumns;
 
 const BookmarkGrid = ({ navigation }: { navigation: any }) => {
-  const [isBookmarked, setIsBookmarked] = useState(false);
   const dispatch = useAppDispatch();
   const bookmarks = useAppSelector(selectBookmarks);
   const auth = getAuth();
