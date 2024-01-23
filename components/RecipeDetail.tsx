@@ -50,14 +50,25 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
   }, [bookmarks, recipe.id]);
 
   const handleBookmarkToggle = () => {
-    if (isBookmarked) {
-      dispatch(removeBookmark(userId, recipe.id));
-    } else {
-      dispatch(addBookmark(userId, recipe.id));
-    }
-    // Update the bookmark status immediately for a responsive UI
+    const previousBookmarkState = isBookmarked;
+    // Optimistically update the UI
     setIsBookmarked(!isBookmarked);
+
+    dispatch(
+      isBookmarked
+        ? removeBookmark(userId, recipe.id)
+        : addBookmark(userId, recipe.id)
+    )
+      .then(() => {
+        // Action was successful, no additional handling needed
+      })
+      .catch((error) => {
+        // Revert the UI change if the action fails
+        setIsBookmarked(previousBookmarkState);
+        console.error('Error toggling bookmark:', error);
+      });
   };
+
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
   };
