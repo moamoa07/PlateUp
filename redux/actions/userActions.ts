@@ -1,6 +1,5 @@
-import { getAllUsers, getLoggedInUser } from '../../api/service/userService';
+import { getAllUsers, getLoggedInUser, getUserProfile } from '../../api/service/userService';
 import {
-  getUserProfile,
   setLoading,
   setUser,
   setUserProfile,
@@ -40,17 +39,17 @@ export const fetchUsers = () => async (dispatch: AppDispatch) => {
   }
 };
 
-// export const fetchUserProfile =
-//   (userId: string) => async (dispatch: AppDispatch) => {
-//     try {
-//       dispatch(setLoading(true));
+export const fetchUserProfile =
+  (userId: string) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(setLoading(true));
 
-//       const userProfile = getUserProfile(userId);
+      const userProfile = getUserProfile(userId);
 
-//       dispatch(setUserProfile(userProfile));
-//     } catch (error) {
-//       console.error('Error fetching user profile:', error);
-//     } finally {
-//       dispatch(setLoading(false));
-//     }
-//   };
+      dispatch(setUserProfile(await userProfile));
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
