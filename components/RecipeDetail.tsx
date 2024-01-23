@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
-import { deleteRecipe } from '../api/service/recipeService';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { deleteRecipe } from '../redux/actions/recipeActions';
 import { fetchUsers } from '../redux/actions/userActions';
 import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
@@ -21,7 +21,6 @@ import DotsIcon from './icons/DotsIcon';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
-
 interface RecipeComponentProps {
   recipe: RecipeWithId;
 }
@@ -51,18 +50,18 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
     setOverlayVisible(!isOverlayVisible);
   };
 
-  async function handleDeleteRecipe() {
-    try {
-      // Call the deleteRecipe function with the recipeId and userId
-      await deleteRecipe(recipe.id, user?.id);
-      // Close the delete modal after successful deletion
-      setDeleteModalVisible(false);
-      navigation.goBack();
-    } catch (error) {
-      console.error('Error deleting recipe:', error);
-      // Handle error (e.g., show an error message)
-    }
-  }
+  const handleDeleteRecipe = () => {
+    dispatch(deleteRecipe(recipe.id))
+      .then(() => {
+        // Close the delete modal and navigate back
+        setDeleteModalVisible(false);
+        navigation.goBack(); // or navigate to a different screen if needed
+      })
+      .catch((error) => {
+        console.error('Error deleting recipe:', error);
+        // Optionally handle the error, e.g., show a message
+      });
+  };
 
   if (!recipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
