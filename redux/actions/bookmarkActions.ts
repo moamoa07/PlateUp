@@ -3,9 +3,11 @@ import { RecipeWithId } from '../../api/model/recipeModel';
 import {
   addBookmarkToFirestore,
   getBookmarksFromFirestore,
+  removeBookmarkFromFirestore,
+} from '../../api/service/bookmarkService';
+import {
   getRecipeById,
   getRecipesByIdsFromFirestore,
-  removeBookmarkFromFirestore,
 } from '../../api/service/recipeService';
 import {
   setBookmarks,
