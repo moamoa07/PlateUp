@@ -232,7 +232,7 @@ export async function uploadImageToFirestore(
   }
 }
 
-export async function deleteRecipe(
+export async function deleteRecipeFromFirestore(
   recipeId: string,
   userId: string | undefined
 ): Promise<void> {
