@@ -13,14 +13,17 @@ import {
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { addBookmark, removeBookmark } from '../redux/actions/bookmarkActions';
 import { deleteRecipe } from '../redux/actions/recipeActions';
 import { fetchUsers } from '../redux/actions/userActions';
+import { selectBookmarks } from '../redux/reducers/bookmarks';
 import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
 import ChevronDownIcon from './icons/ChevronIconDown';
 import ChevronRightIcon from './icons/ChevronIconRight';
 import DotsIcon from './icons/DotsIcon';
 import EatIcon from './icons/EatIcon';
+import FilledBookmarkIcon from './icons/FilledBookmarkIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
 
@@ -38,11 +41,20 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
   const navigation = useNavigation();
   const users = useAppSelector(getUsers);
   const dispatch = useAppDispatch();
+  const bookmarks = useAppSelector(selectBookmarks);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const auth = getAuth();
+  const userId = auth.currentUser?.uid ?? '';
+  const user = users.find((user) => user.id === recipe.userId);
 
   useEffect(() => {
     // Fetch users when the component mounts
     dispatch(fetchUsers());
   }, [dispatch]);
+
+  useEffect(() => {
+    setIsBookmarked(bookmarks.some((b) => b.id === recipe.id));
+  }, [bookmarks, recipe.id]);
 
   const toggleWholeRecipe = () => {
     setShowWholeRecipe(!showWholeRecipe);
@@ -50,6 +62,18 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
+  };
+
+  const handleBookmarkToggle = () => {
+    const wasBookmarked = isBookmarked;
+    // Optimistically update the UI
+    setIsBookmarked(!isBookmarked);
+
+    if (wasBookmarked) {
+      dispatch(removeBookmark(userId, recipe.id));
+    } else {
+      dispatch(addBookmark(userId, recipe.id));
+    }
   };
 
   const toggleDeleteModal = () => {
@@ -72,8 +96,6 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
   if (!recipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
-
-  const user = users.find((user) => user.id === recipe.userId);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -105,7 +127,13 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
         <View style={styles.textContainer}>
           <View style={styles.actions}>
             <LikeIcon size={32} fill={'#232323'} />
-            <BookmarkIcon size={32} fill={'#232323'} />
+            <TouchableOpacity onPress={handleBookmarkToggle}>
+              {isBookmarked ? (
+                <FilledBookmarkIcon size={32} fill={'#232323'} />
+              ) : (
+                <BookmarkIcon size={32} fill={'#232323'} />
+              )}
+            </TouchableOpacity>
           </View>
           <View style={styles.recipeInfo}>
             <Text style={styles.textMedium}>801 Likes</Text>
