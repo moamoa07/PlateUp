@@ -63,7 +63,7 @@ function ProfileStackNavigator() {
         name="Bookmarks"
         component={BookmarkScreen}
         options={{
-          headerTitle: 'Saved Recipes',
+          headerTitle: 'Bookmarks',
           headerTitleStyle: {
             color: '#232323',
             fontFamily: 'Crake-Regular',
