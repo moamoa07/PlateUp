@@ -1,6 +1,7 @@
 import { Recipe, RecipeWithId } from '../../api/model/recipeModel';
 import {
   addRecipeToFirestore,
+  deleteRecipeFromFirestore,
   getAllRecipes,
   getAllSearchedRecipes,
   getRecipeById,
@@ -9,6 +10,7 @@ import {
 import { FETCH_RECIPE_ERROR, FETCH_RECIPE_START } from '../../types/Action';
 import {
   addRecipeSuccess,
+  deleteRecipeSuccess,
   fetchRecipeSuccess,
   fetchRecipesSuccess,
   fetchUserRecipesError,
@@ -164,5 +166,25 @@ export const fetchUserRecipes =
       } else {
         dispatch(fetchUserRecipesError('An unexpected error occurred'));
       }
+    }
+  };
+
+export const deleteRecipe =
+  (recipeId: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      const userId = currentUser(getState())?.id;
+      if (!userId) {
+        console.error('No user ID found');
+        return;
+      }
+
+      await deleteRecipeFromFirestore(recipeId, userId);
+
+      // Dispatch an action to remove the recipe from state
+      dispatch(deleteRecipeSuccess(recipeId));
+    } catch (error) {
+      console.error('Error deleting recipe:', error);
+      // Dispatch an error action if needed
     }
   };
