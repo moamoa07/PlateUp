@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { fetchUsers } from '../redux/actions/userActions';
+import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
 import EatIcon from './icons/EatIcon';
 import LikeIcon from './icons/LikeIcon';
@@ -20,6 +23,13 @@ interface RecipeComponentProps {
 
 function RecipeComponent({ recipe }: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
+  const users = useAppSelector(getUsers);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    // Fetch users when the component mounts
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   const toggleSection = (section: 'ingredients' | 'instructions') => {
     setShowIngredients(section === 'ingredients');
@@ -29,6 +39,8 @@ function RecipeComponent({ recipe }: RecipeComponentProps) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
 
+  const user = users.find((user) => user.id === recipe.userId);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View>
@@ -37,7 +49,7 @@ function RecipeComponent({ recipe }: RecipeComponentProps) {
             size={50}
             source={require('../assets/cupcakeprofile.png')}
           />
-          <Text style={styles.username}>moa</Text>
+          <Text style={styles.username}>{user?.displayName}</Text>
         </View>
         {recipe.imageUrl && (
           <Image
