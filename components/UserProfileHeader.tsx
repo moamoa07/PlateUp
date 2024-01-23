@@ -13,12 +13,20 @@ import BookmarkIcon from './icons/BookmarkIcon';
 import LikeIcon from './icons/LikeIcon';
 import SettingsIcon from './icons/SettingsIcon';
 
-function UserProfileHeader() {
-  const user = useAppSelector((state) => state.user.user);
-
-  console.log(user);
-
+function UserProfileHeader({ route }: { route: any }) {
   const navigation = useNavigation<any>();
+  const userId = route.params?.userId;
+
+  const user = useAppSelector((state) => {
+    if (userId) {
+      return state.user.userProfile; // Använd UserProfile för andra användare
+    } else {
+      return state.user.user; // Använd inloggad användare för den aktuella användaren
+    }
+  });
+
+  console.log('ANVÄNDARE I HEADERN', user?.id, user?.displayName);
+
 
   const navigateToScreen = (screenName: string) => {
     if (screenName === 'Settings') {
