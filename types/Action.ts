@@ -12,6 +12,7 @@ export const FETCH_USER_RECIPES_ERROR = 'FETCH_USER_RECIPES_ERROR';
 export const GENERAL_RECIPES_LIMIT = 3;
 export const USER_RECIPES_LIMIT = 9;
 
+
 // Define RecipeState type
 export interface RecipeState {
   recipes: RecipeWithId[];
