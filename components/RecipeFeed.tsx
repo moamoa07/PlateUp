@@ -43,8 +43,6 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
   const dispatch = useAppDispatch();
   const bookmarks = useAppSelector(selectBookmarks);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const auth = getAuth();
-  const userId = auth.currentUser?.uid ?? '';
   const user = users.find((user) => user.id === recipe.userId);
 
   useEffect(() => {
