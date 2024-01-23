@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchBookmarks } from '../redux/actions/bookmarkActions';
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   thumbnail: {
-    backgroundColor: 'mistyrose',
+    backgroundColor: theme.colors.secondary,
     width: imageSize,
     height: imageSize,
     margin: marginSize / 2, // Apply half margin size to each side
