@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   thumbnail: {
-    backgroundColor: 'mistyrose',
+    backgroundColor: theme.colors.secondary,
     width: imageSize,
     height: imageSize,
     margin: marginSize / 2, // Apply half margin size to each side
