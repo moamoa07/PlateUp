@@ -1,4 +1,3 @@
-import { getAuth } from 'firebase/auth';
 import React, { useEffect } from 'react';
 import {
   Dimensions,
@@ -20,6 +19,8 @@ import {
   selectUserRecipes,
 } from '../redux/reducers/recipes';
 import UserProfileHeader from './UserProfileHeader';
+import { selectUserId } from '../redux/reducers/users';
+import { getLoggedInUser } from '../api/service/userService';
 
 // Get the screen width
 // Calculation for styling of grid container
@@ -34,15 +35,22 @@ const totalMarginSpace = (numColumns - 1) * marginSize;
 const imageSize =
   (width - totalMarginSpace - containerPadding * 2) / numColumns;
 
-function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
+function UserProfileRecipeGrid({
+  navigation,
+  route,
+}: {
+  navigation: any;
+  route: any;
+}) {
   const dispatch = useAppDispatch();
   const userRecipes = useAppSelector(selectUserRecipes);
   const loadingUserRecipes = useAppSelector(selectLoadingUserRecipes);
   const userLastFetchedRecipeId = useAppSelector(selectUserLastFetchedRecipeId);
   const hasMoreUserRecipes = useAppSelector(selectHasMoreUserRecipes);
   const INITIAL_FETCH_LIMIT = 9;
-  const auth = getAuth();
-  const userId = auth.currentUser?.uid ?? '';
+  const userId = route.params?.userId;
+
+  console.log('USERID I USERPROFILEGRID' + userId)
 
   useEffect(() => {
     if (userId) {
@@ -51,7 +59,7 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
   }, [userId, dispatch]);
 
   const handleLoadMore = () => {
-    if (hasMoreUserRecipes && !loadingUserRecipes) {
+    if (hasMoreUserRecipes && !loadingUserRecipes && userId) {
       dispatch(
         fetchUserRecipes(userId, userLastFetchedRecipeId, INITIAL_FETCH_LIMIT)
       );
@@ -59,7 +67,7 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
   };
 
   const renderHeader = () => {
-    return <UserProfileHeader />;
+    return <UserProfileHeader route={route}/>;
   };
 
   const renderRecipeThumbnail = ({ item }: { item: RecipeWithId }) => (
