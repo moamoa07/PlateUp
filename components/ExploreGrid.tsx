@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
@@ -19,6 +18,7 @@ import {
   selectLastFetchedRecipeId,
   selectRecipes,
 } from '../redux/reducers/recipes';
+import CustomLoader from './CustomLoader';
 import RecipeComponent from './RecipeComponent';
 
 const thinBorder = 1 / PixelRatio.get();
@@ -84,7 +84,7 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
       contentContainerStyle={styles.gridContainer}
       ListFooterComponent={
         isLoading ? (
-          <ActivityIndicator size={'large'} />
+          <CustomLoader />
         ) : !hasMoreRecipes ? (
           <Text style={styles.endOfListMessage}>
             You've reached the last recipe!
