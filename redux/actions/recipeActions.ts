@@ -9,6 +9,7 @@ import {
 import { FETCH_RECIPE_ERROR, FETCH_RECIPE_START } from '../../types/Action';
 import {
   addRecipeSuccess,
+  clearUserRecipes,
   fetchRecipeSuccess,
   fetchRecipesSuccess,
   fetchUserRecipesError,
@@ -137,7 +138,9 @@ export const fetchRecipeById =
 export const fetchUserRecipes =
   (userId: string, lastFetchedRecipeId: string | null, limit: number) =>
   async (dispatch: AppDispatch) => {
-    console.log('Dispatching fetchUserRecipes', {
+    dispatch(clearUserRecipes());
+    console.log('Dispatching fetchUserRecipes', 
+    {
       userId,
       lastFetchedRecipeId,
       limit,
