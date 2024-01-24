@@ -19,7 +19,6 @@ import {
   selectLastFetchedRecipeId,
   selectRecipes,
 } from '../redux/reducers/recipes';
-import RecipeComponent from './RecipeComponent';
 
 const thinBorder = 1 / PixelRatio.get();
 
