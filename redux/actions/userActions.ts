@@ -4,6 +4,7 @@ import {
   getLoggedInUser,
 } from '../../api/service/userService';
 import {
+  clearUserProfile,
   setLoading,
   setUser,
   setUserProfile,
@@ -47,6 +48,7 @@ export const fetchUserProfile =
   (userId: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(setLoading(true));
+      dispatch(clearUserProfile());
 
       const userProfile = await findUserById(userId);
 
