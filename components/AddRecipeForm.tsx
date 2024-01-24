@@ -225,7 +225,7 @@ const AddRecipeForm = () => {
       setFormSubmitted((prev) => !prev);
       setFormErrors({});
 
-      navigateToScreen('Home');
+      navigateToScreen('Profile');
 
       // Alert user of success
       Alert.alert('Success', 'Your recipe has been shared!', [{ text: 'OK' }]);
