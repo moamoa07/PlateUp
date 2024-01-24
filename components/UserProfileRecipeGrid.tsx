@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
@@ -82,14 +83,14 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
   const renderNoRecipesMessage = () => {
     if (userRecipes.length === 0 && !loadingUserRecipes) {
       return (
-        <>
+        <View>
           <Text style={styles.noRecipeMessage}>
             You haven't added any recipes yet.
           </Text>
           <Text style={[styles.noRecipeMessage, styles.gap]}>
             Get stated by clicking the '+' to share your recipes!
           </Text>
-        </>
+        </View>
       );
     }
     return null;
