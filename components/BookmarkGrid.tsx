@@ -6,7 +6,9 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
+import { Text } from 'react-native-paper';
 import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
@@ -53,6 +55,19 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
     </TouchableOpacity>
   );
 
+  const renderNoBookmarksMessage = () => {
+    if (bookmarks.length === 0) {
+      return (
+        <View style={styles.noRecipeMessageContainer}>
+          <Text style={styles.noRecipeMessage}>
+            You haven't bookmarked any recipes yet.
+          </Text>
+        </View>
+      );
+    }
+    return null;
+  };
+
   return (
     <FlatList
       data={bookmarks}
@@ -60,6 +75,7 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
       keyExtractor={(item) => item.id}
       numColumns={numColumns}
       contentContainerStyle={styles.gridContainer}
+      ListEmptyComponent={renderNoBookmarksMessage}
     />
   );
 };
@@ -87,6 +103,20 @@ const styles = StyleSheet.create({
     width: imageSize,
     height: imageSize,
     margin: marginSize / 2, // Apply half margin size to each side
+  },
+  noRecipeMessage: {
+    fontFamily: 'Crake-Regular',
+    fontSize: 35,
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  noRecipeMessageContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    marginTop: 240,
   },
 });
 
