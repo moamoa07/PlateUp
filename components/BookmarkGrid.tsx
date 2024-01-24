@@ -14,6 +14,7 @@ import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchBookmarks } from '../redux/actions/bookmarkActions';
 import { selectBookmarks } from '../redux/reducers/bookmarks';
+import BookmarkIcon from './icons/BookmarkIcon';
 
 // Get the screen width
 // Calculation for styling of grid container
@@ -62,6 +63,10 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
           <Text style={styles.noRecipeMessage}>
             You haven't bookmarked any recipes yet.
           </Text>
+          <Text style={styles.noRecipeMessage}>
+            Bookmark a recipe by clicking on the
+          </Text>
+          <BookmarkIcon size={40} fill={'#232323'} />
         </View>
       );
     }
@@ -108,15 +113,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Crake-Regular',
     fontSize: 35,
     textAlign: 'center',
-    display: 'flex',
-    alignItems: 'center',
+    marginHorizontal: 24,
+    marginVertical: 24,
   },
   noRecipeMessageContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    marginTop: 240,
   },
 });
 
