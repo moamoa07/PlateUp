@@ -91,10 +91,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   imageContainer: {
-    marginBottom: 10,
+    marginBottom: 12,
     width: '100%',
     height: 400,
-    // height: 40,
   },
   errorMessage: {
     fontFamily: 'Jost-Regular',
