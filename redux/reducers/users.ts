@@ -52,7 +52,7 @@ export const { setUser, setSignOutState, setLoading, setUsers, setUserProfile } 
 export const currentUser = (state: RootState) => state.user.user;
 export const isLoading = (state: RootState) => state.user.loading;
 export const getUsers = (state: RootState) => state.user.users;
-export const getUserProfile = (state: RootState) => state.user.userProfile;
+export const selectUserProfile = (state: RootState) => state.user.userProfile;
 export const selectUserId = (state: RootState) => state.user.user?.id;
 
 export default userSlice.reducer;
