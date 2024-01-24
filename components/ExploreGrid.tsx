@@ -55,7 +55,7 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
 
   const handleLoadMore = () => {
     if (hasMoreRecipes) {
-      dispatch(fetchRecipes(lastFetchedRecipeId, numColumns * 3));
+      dispatch(fetchRecipes(lastFetchedRecipeId, numColumns * 2));
     }
   };
 
