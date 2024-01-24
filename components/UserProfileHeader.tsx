@@ -30,8 +30,8 @@ function UserProfileHeader({ route }: { route: any }) {
     }
   });
 
-  console.log('inloggad användare' + loggedInUser);
-  console.log('annan användare' + userId);
+  // console.log('inloggad användare' + loggedInUser);
+  // console.log('annan användare' + userId);
 
   const navigateToScreen = (screenName: string) => {
     if (screenName === 'Settings') {
