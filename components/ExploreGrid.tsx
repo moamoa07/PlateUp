@@ -43,10 +43,6 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
   const isLoading = useAppSelector(selectIsLoading);
   const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
 
-  // For optimizing performance
-  // Prevents unnecessary re-renders of list items when the data hasn't changed
-  const RecipeComponentMemo = React.memo(RecipeComponent);
-
   useEffect(() => {
     if (!recipes.length) {
       dispatch(fetchRecipes(null, numColumns * 2)); // Fetch more items for the initial load
