@@ -1,3 +1,4 @@
+import { getAuth } from 'firebase/auth';
 import React, { useEffect } from 'react';
 import {
   Dimensions,
@@ -12,15 +13,16 @@ import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchUserRecipes } from '../redux/actions/recipeActions';
+import { fetchUserProfile } from '../redux/actions/userActions';
 import {
+  clearUserRecipes,
   selectHasMoreUserRecipes,
   selectLoadingUserRecipes,
   selectUserLastFetchedRecipeId,
   selectUserRecipes,
 } from '../redux/reducers/recipes';
+import { clearUserProfile } from '../redux/reducers/users';
 import UserProfileHeader from './UserProfileHeader';
-import { selectUserId } from '../redux/reducers/users';
-import { getLoggedInUser } from '../api/service/userService';
 
 // Get the screen width
 // Calculation for styling of grid container
@@ -42,21 +44,48 @@ function UserProfileRecipeGrid({
   navigation: any;
   route: any;
 }) {
-  const dispatch = useAppDispatch();
   const userRecipes = useAppSelector(selectUserRecipes);
   const loadingUserRecipes = useAppSelector(selectLoadingUserRecipes);
   const userLastFetchedRecipeId = useAppSelector(selectUserLastFetchedRecipeId);
   const hasMoreUserRecipes = useAppSelector(selectHasMoreUserRecipes);
   const INITIAL_FETCH_LIMIT = 9;
-  const userId = route.params?.userId;
+  const dispatch = useAppDispatch();
+  const auth = getAuth();
+  const loggedInUser = auth.currentUser?.uid ?? '';
 
-  console.log('USERID I USERPROFILEGRID' + userId)
+  // Använd userIdFromParams om det finns, annars använd id från hela användaren
+  const userIdFromParams = route.params?.userId;
+  const userId = userIdFromParams || loggedInUser;
+
+  console.log('Detta är den inloggade användaren: ' + loggedInUser);
+  console.log('Här har vi USERID ' + userId);
 
   useEffect(() => {
     if (userId) {
+      // Dispatch to fetch user profile and recipes
+      dispatch(fetchUserProfile(userId));
       dispatch(fetchUserRecipes(userId, null, INITIAL_FETCH_LIMIT));
     }
+
+    // Cleanup function to dispatch clearUserProfile when the component is unmounted
+    return () => {
+      dispatch(clearUserProfile());
+      dispatch(clearUserRecipes());
+    };
   }, [userId, dispatch]);
+
+  // Handle navigation changes
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // Fetch the user's recipes when the tab is focused
+      if (userId) {
+        dispatch(fetchUserRecipes(userId, null, INITIAL_FETCH_LIMIT));
+      }
+    });
+
+    // Cleanup function to remove the listener when the component is unmounted
+    return unsubscribe;
+  }, [navigation, userId, dispatch]);
 
   const handleLoadMore = () => {
     if (hasMoreUserRecipes && !loadingUserRecipes && userId) {
@@ -66,8 +95,9 @@ function UserProfileRecipeGrid({
     }
   };
 
+
   const renderHeader = () => {
-    return <UserProfileHeader route={route}/>;
+    return <UserProfileHeader route={route} />;
   };
 
   const renderRecipeThumbnail = ({ item }: { item: RecipeWithId }) => (
