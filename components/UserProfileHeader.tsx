@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth';
 import React from 'react';
 import {
   SafeAreaView,
@@ -16,6 +17,10 @@ import SettingsIcon from './icons/SettingsIcon';
 function UserProfileHeader({ route }: { route: any }) {
   const navigation = useNavigation<any>();
   const userId = route.params?.userId;
+  const auth = getAuth();
+  const loggedInUser = auth.currentUser?.uid ?? '';
+
+  const isOwnProfile = userId ? userId === loggedInUser : true;
 
   const user = useAppSelector((state) => {
     if (userId) {
@@ -25,8 +30,8 @@ function UserProfileHeader({ route }: { route: any }) {
     }
   });
 
-  console.log('ANVÄNDARE I HEADERN', user?.id, user?.displayName);
-
+  console.log('inloggad användare' + loggedInUser);
+  console.log('annan användare' + userId);
 
   const navigateToScreen = (screenName: string) => {
     if (screenName === 'Settings') {
@@ -41,17 +46,19 @@ function UserProfileHeader({ route }: { route: any }) {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity>
-            <LikeIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
-            <BookmarkIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
-            <SettingsIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-        </View>
+        {isOwnProfile && ( // Visa bara när användaren är på sin egen profil
+          <View style={styles.iconContainer}>
+            <TouchableOpacity>
+              <LikeIcon size={32} fill={'#232323'} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
+              <BookmarkIcon size={32} fill={'#232323'} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
+              <SettingsIcon size={32} fill={'#232323'} />
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.avatar}>
           <Avatar.Image
             size={120}
