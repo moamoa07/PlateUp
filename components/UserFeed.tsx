@@ -64,10 +64,10 @@ const UserFeed = () => {
 
 const styles = StyleSheet.create({
   screenHeader: {
-    marginTop: 32,
-    paddingBottom: 16,
+    marginTop: 4,
+    paddingBottom: 6,
     borderBottomWidth: thinBorder,
-    borderBottomColor: theme.colors.primary,
+    borderBottomColor: '#D9D9D9',
   },
   h3: {
     fontSize: 28,
