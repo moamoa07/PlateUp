@@ -42,11 +42,20 @@ export const userSlice = createSlice({
     setUserProfile: (state, action: PayloadAction<CustomUser | null>) => {
       state.userProfile = action.payload;
     },
+    clearUserProfile: (state) => {
+      state.userProfile = null;
+    },
   },
 });
 
-export const { setUser, setSignOutState, setLoading, setUsers, setUserProfile } =
-  userSlice.actions;
+export const {
+  setUser,
+  setSignOutState,
+  setLoading,
+  setUsers,
+  setUserProfile,
+  clearUserProfile,
+} = userSlice.actions;
 
 // Selector to get the user from the state
 export const currentUser = (state: RootState) => state.user.user;
