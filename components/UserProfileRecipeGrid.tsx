@@ -85,10 +85,10 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
       return (
         <View>
           <Text style={styles.noRecipeMessage}>
-            You haven't added any recipes yet.
+            You haven't added any recipes yet!
           </Text>
           <Text style={[styles.noRecipeMessage, styles.gap]}>
-            Get stated by clicking the '+' to share your recipes!
+            Click on the '+' to add a new recipe!
           </Text>
         </View>
       );
@@ -153,6 +153,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
+    marginHorizontal: 24,
+    marginTop: 24,
   },
   gap: {
     marginTop: 40,
