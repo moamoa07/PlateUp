@@ -41,6 +41,8 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
   const auth = getAuth();
   const userId = auth.currentUser?.uid ?? '';
   const navigation = useNavigation();
+  const bookmarks = useAppSelector(selectBookmarks);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   const users = useAppSelector(getUsers);
   const dispatch = useAppDispatch();
@@ -48,8 +50,6 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
     // Fetch users when the component mounts
     dispatch(fetchUsers());
   }, [dispatch]);
-  const bookmarks = useAppSelector(selectBookmarks);
-  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -57,6 +57,8 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
       dispatch(fetchBookmarks(userId)).finally(() => setIsLoading(false));
     }
   }, [dispatch, userId]);
+
+  const user = users.find((user) => user.id === recipe.userId);
 
   useEffect(() => {
     const bookmarkIds = bookmarks.map((bookmark) => bookmark.id);
@@ -113,8 +115,6 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
   if (!recipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
-
-  const user = users.find((user) => user.id === recipe.userId);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
