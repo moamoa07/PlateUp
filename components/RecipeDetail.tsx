@@ -22,6 +22,7 @@ import { deleteRecipe } from '../redux/actions/recipeActions';
 import { fetchUsers } from '../redux/actions/userActions';
 import { selectBookmarks } from '../redux/reducers/bookmarks';
 import { getUsers } from '../redux/reducers/users';
+import CustomLoader from './CustomLoader';
 import BookmarkIcon from './icons/BookmarkIcon';
 import DotsIcon from './icons/DotsIcon';
 import EatIcon from './icons/EatIcon';
@@ -36,6 +37,7 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
   const [showIngredients, setShowIngredients] = useState(true);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isOverlayVisible, setOverlayVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth();
   const userId = auth.currentUser?.uid ?? '';
   const navigation = useNavigation();
@@ -50,8 +52,9 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     if (userId) {
-      dispatch(fetchBookmarks(userId));
+      dispatch(fetchBookmarks(userId)).finally(() => setIsLoading(false));
     }
   }, [dispatch, userId]);
 
@@ -101,6 +104,11 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
         // Optionally handle the error, e.g., show a message
       });
   };
+
+  // Waits for the fetch of the recipe to return a promise
+  if (isLoading) {
+    return <CustomLoader />;
+  }
 
   if (!recipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
@@ -333,14 +341,11 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 10,
   },
   button: {
-    // paddingHorizontal: 10,
     paddingVertical: 5,
-    // marginHorizontal: 5,
     borderRadius: 5,
   },
   activeButton: {
