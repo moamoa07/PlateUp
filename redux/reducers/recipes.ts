@@ -113,6 +113,12 @@ export const recipesSlice = createSlice({
       state.loadingUserRecipes = false;
       state.error = action.payload;
     },
+    clearUserRecipes: (state) => {
+      state.userRecipes = [];
+      state.userLastFetchedRecipeId = null;
+      state.loadingUserRecipes = false;
+      state.hasMoreUserRecipes = false;
+    },
   },
 });
 
@@ -127,6 +133,7 @@ export const {
   fetchUserRecipesStart,
   fetchUserRecipesSuccess,
   fetchUserRecipesError,
+  clearUserRecipes,
 } = recipesSlice.actions;
 
 // Update your selector and other parts of the code where you use this reducer
