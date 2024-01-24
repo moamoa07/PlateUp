@@ -1,4 +1,8 @@
-import { getAllUsers, getLoggedInUser, getUserProfile } from '../../api/service/userService';
+import {
+  findUserById,
+  getAllUsers,
+  getLoggedInUser,
+} from '../../api/service/userService';
 import {
   setLoading,
   setUser,
@@ -44,9 +48,17 @@ export const fetchUserProfile =
     try {
       dispatch(setLoading(true));
 
-      const userProfile = getUserProfile(userId);
+      const userProfile = await findUserById(userId);
 
-      dispatch(setUserProfile(await userProfile));
+      if (userProfile) {
+        // Användaren finns i databasen, gör något med userProfile
+        console.log('User Profile:', userProfile);
+        // ... din kod för att uppdatera användarprofilen
+        dispatch(setUserProfile(userProfile));
+      } else {
+        // Användaren hittades inte i databasen
+        console.error('Användaren finns inte i databasen');
+      }
     } catch (error) {
       console.error('Error fetching user profile:', error);
     } finally {
