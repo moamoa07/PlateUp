@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -14,6 +14,7 @@ import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchBookmarks } from '../redux/actions/bookmarkActions';
 import { selectBookmarks } from '../redux/reducers/bookmarks';
+import CustomLoader from './CustomLoader';
 import BookmarkIcon from './icons/BookmarkIcon';
 
 // Get the screen width
@@ -30,11 +31,13 @@ const imageSize =
 const BookmarkGrid = ({ navigation }: { navigation: any }) => {
   const dispatch = useAppDispatch();
   const bookmarks = useAppSelector(selectBookmarks);
+  const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth();
   const userId = auth.currentUser?.uid ?? '';
 
   useEffect(() => {
-    dispatch(fetchBookmarks(userId));
+    setIsLoading(true); // Start loading
+    dispatch(fetchBookmarks(userId)).finally(() => setIsLoading(false)); // Stop loading once bookmarks are fetched
   }, [dispatch, userId]);
 
   const renderBookmarkItem = ({ item }: { item: RecipeWithId }) => (
@@ -52,9 +55,14 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
         style={styles.thumbnail}
         resizeMode="cover"
       />
-      {/* <Text style={styles.titleText}>{item.title}</Text> */}
     </TouchableOpacity>
   );
+
+  if (isLoading) {
+    <View style={styles.loaderContainer}>
+      <CustomLoader />
+    </View>;
+  }
 
   const renderNoBookmarksMessage = () => {
     if (bookmarks.length === 0) {
@@ -66,7 +74,7 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
           <Text style={styles.noRecipeMessage}>
             Bookmark a recipe by clicking on the
           </Text>
-          <BookmarkIcon size={40} fill={'#232323'} />
+          <BookmarkIcon size={60} fill={'#232323'} />
         </View>
       );
     }
@@ -86,12 +94,17 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
 };
 
 const styles = StyleSheet.create({
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 100,
+  },
   gridContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     padding: containerPadding,
     width: '100%',
-    // backgroundColor: 'mistyrose',
   },
   titleText: {
     maxWidth: 100,
