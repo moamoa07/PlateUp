@@ -10,9 +10,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { ActivityIndicator, Avatar, Searchbar, Text } from 'react-native-paper';
+import { Avatar, Searchbar, Text } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { CustomUser } from '../api/model/userModel';
+import CustomLoader from '../components/CustomLoader';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchSearchedRecipes } from '../redux/actions/recipeActions';
 import { fetchUsers } from '../redux/actions/userActions';
@@ -151,7 +152,7 @@ function SearchScreen({ navigation }: { navigation: any }) {
                 height: '70%',
               }}
             >
-              <ActivityIndicator size="large" color="#D6DED1" />
+              <CustomLoader />
             </View>
           ) : (
             <>

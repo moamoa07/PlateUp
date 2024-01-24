@@ -7,8 +7,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
 import theme from '../Theme';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
@@ -19,6 +19,7 @@ import {
   selectUserLastFetchedRecipeId,
   selectUserRecipes,
 } from '../redux/reducers/recipes';
+import CustomLoader from './CustomLoader';
 import UserProfileHeader from './UserProfileHeader';
 
 // Get the screen width
@@ -79,6 +80,22 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
     </TouchableOpacity>
   );
 
+  const renderNoRecipesMessage = () => {
+    if (userRecipes.length === 0 && !loadingUserRecipes) {
+      return (
+        <View>
+          <Text style={styles.noRecipeMessage}>
+            You haven't added any recipes yet.
+          </Text>
+          <Text style={[styles.noRecipeMessage, styles.gap]}>
+            Get stated by clicking the '+' to share your recipes!
+          </Text>
+        </View>
+      );
+    }
+    return null;
+  };
+
   return (
     <FlatList
       ListHeaderComponent={renderHeader}
@@ -92,13 +109,14 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
       onEndReachedThreshold={0.5}
       ListFooterComponent={
         loadingUserRecipes ? (
-          <ActivityIndicator size={'large'} color="#D6DED1" />
-        ) : !hasMoreUserRecipes ? (
+          <CustomLoader />
+        ) : !hasMoreUserRecipes && userRecipes.length > 0 ? (
           <Text style={styles.endOfListMessage}>
             You've loaded all recipes!
           </Text>
         ) : null
       }
+      ListEmptyComponent={renderNoRecipesMessage}
     />
   );
 }
@@ -128,6 +146,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     width: imageSize,
+  },
+  noRecipeMessage: {
+    fontFamily: 'Crake-Regular',
+    fontSize: 35,
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  gap: {
+    marginTop: 40,
   },
 });
 

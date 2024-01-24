@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   Alert,
@@ -39,6 +40,11 @@ const AddRecipeForm = () => {
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const navigation = useNavigation<any>();
+
+  const navigateToScreen = (screenName: string) => {
+    navigation.navigate(screenName);
+  };
 
   // Function to add ingredient group
   const addIngredientGroup = () => {
@@ -218,6 +224,8 @@ const AddRecipeForm = () => {
       setAdditionalNotes('');
       setFormSubmitted((prev) => !prev);
       setFormErrors({});
+
+      navigateToScreen('Profile');
 
       // Alert user of success
       Alert.alert('Success', 'Your recipe has been shared!', [{ text: 'OK' }]);

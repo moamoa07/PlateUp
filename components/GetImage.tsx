@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
-import { ActivityIndicator, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { Images } from '../api/model/imageModel';
 import { getImageById } from '../api/service/recipeService';
+import CustomLoader from './CustomLoader';
 
 function GetImage() {
   const [image, setImage] = useState<Images | null>(null);
@@ -19,7 +20,7 @@ function GetImage() {
   }, []);
 
   if (isLoading) {
-    return <ActivityIndicator />;
+    return <CustomLoader />;
   }
 
   if (!image) {

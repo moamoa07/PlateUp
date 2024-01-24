@@ -27,7 +27,7 @@ const thinBorder = 1 / PixelRatio.get();
 // Calculation for styling of grid container
 const { width } = Dimensions.get('window');
 const containerPadding = 10; // This is the padding you want for the grid container
-const numColumns = 3;
+const numColumns = 2;
 const marginSize = 8;
 // Subtract container padding from the total width before dividing by the number of columns
 // Total margin space taken by the gaps between thumbnails
@@ -49,13 +49,13 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
 
   useEffect(() => {
     if (!recipes.length) {
-      dispatch(fetchRecipes(null, numColumns * 3)); // Fetch more items for the initial load
+      dispatch(fetchRecipes(null, numColumns * 2)); // Fetch more items for the initial load
     }
   }, [dispatch]);
 
   const handleLoadMore = () => {
     if (hasMoreRecipes) {
-      dispatch(fetchRecipes(lastFetchedRecipeId, numColumns * 3));
+      dispatch(fetchRecipes(lastFetchedRecipeId, numColumns * 2));
     }
   };
 
@@ -84,7 +84,7 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
       contentContainerStyle={styles.gridContainer}
       ListFooterComponent={
         isLoading ? (
-          <ActivityIndicator size={'large'} />
+          <ActivityIndicator size={'large'} color="#D6DED1" />
         ) : !hasMoreRecipes ? (
           <Text style={styles.endOfListMessage}>
             You've reached the last recipe!
