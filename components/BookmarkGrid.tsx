@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -31,13 +31,12 @@ const imageSize =
 const BookmarkGrid = ({ navigation }: { navigation: any }) => {
   const dispatch = useAppDispatch();
   const bookmarks = useAppSelector(selectBookmarks);
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = useAppSelector((state) => state.bookmarks.loading);
   const auth = getAuth();
   const userId = auth.currentUser?.uid ?? '';
 
   useEffect(() => {
-    setIsLoading(true); // Start loading
-    dispatch(fetchBookmarks(userId)).finally(() => setIsLoading(false)); // Stop loading once bookmarks are fetched
+    dispatch(fetchBookmarks(userId)); // Dispatch action to fetch bookmarks
   }, [dispatch, userId]);
 
   const renderBookmarkItem = ({ item }: { item: RecipeWithId }) => (
