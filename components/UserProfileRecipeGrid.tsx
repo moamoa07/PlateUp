@@ -1,6 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import React, { useEffect } from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
@@ -19,7 +20,6 @@ import {
   selectUserLastFetchedRecipeId,
   selectUserRecipes,
 } from '../redux/reducers/recipes';
-import CustomLoader from './CustomLoader';
 import UserProfileHeader from './UserProfileHeader';
 
 // Get the screen width
@@ -109,7 +109,7 @@ function UserProfileRecipeGrid({ navigation }: { navigation: any }) {
       onEndReachedThreshold={0.5}
       ListFooterComponent={
         loadingUserRecipes ? (
-          <CustomLoader />
+          <ActivityIndicator size={'large'} color="#D6DED1" />
         ) : !hasMoreUserRecipes && userRecipes.length > 0 ? (
           <Text style={styles.endOfListMessage}>
             You've loaded all recipes!
