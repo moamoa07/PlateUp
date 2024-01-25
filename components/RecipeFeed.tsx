@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   ingredientQuantity: {
-    width: 60,
+    width: 64,
     marginRight: 8,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
