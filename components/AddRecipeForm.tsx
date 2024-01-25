@@ -1,8 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
+  PixelRatio,
   Platform,
   ScrollView,
   StyleSheet,
@@ -22,6 +24,8 @@ import PickImage from './PickImage';
 import RemoveIcon from './icons/RemoveIcon';
 import TimerIcon from './icons/TimerIcon';
 
+const thinBorder = 1 / PixelRatio.get();
+
 const AddRecipeForm = () => {
   const dispatch = useAppDispatch();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -39,6 +43,11 @@ const AddRecipeForm = () => {
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const navigation = useNavigation<any>();
+
+  const navigateToScreen = (screenName: string) => {
+    navigation.navigate(screenName);
+  };
 
   // Function to add ingredient group
   const addIngredientGroup = () => {
@@ -219,6 +228,8 @@ const AddRecipeForm = () => {
       setFormSubmitted((prev) => !prev);
       setFormErrors({});
 
+      navigateToScreen('Profile');
+
       // Alert user of success
       Alert.alert('Success', 'Your recipe has been shared!', [{ text: 'OK' }]);
     } catch (error) {
@@ -249,7 +260,9 @@ const AddRecipeForm = () => {
     >
       <ScrollView contentContainerStyle={styles.container}>
         {/* Add Recipe Headline */}
-        <Text style={styles.h3}>Add New Recipe</Text>
+        <View style={styles.screenHeader}>
+          <Text style={styles.h3}>Add New Recipe</Text>
+        </View>
 
         {/* ImageUrl */}
         <PickImage
@@ -645,9 +658,14 @@ const AddRecipeForm = () => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    padding: 16,
-    marginTop: 16,
+    paddingHorizontal: 16,
     gap: 24,
+  },
+  screenHeader: {
+    marginTop: 4,
+    paddingBottom: 6,
+    borderBottomWidth: thinBorder,
+    borderBottomColor: '#D9D9D9',
   },
   h3: {
     fontSize: 28,

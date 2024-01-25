@@ -1,12 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  PixelRatio,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { FlatList, PixelRatio, StyleSheet, Text, View } from 'react-native';
 import theme from '../Theme';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { fetchRecipes } from '../redux/actions/recipeActions';
@@ -16,6 +9,7 @@ import {
   selectLastFetchedRecipeId,
   selectRecipes,
 } from '../redux/reducers/recipes';
+import CustomLoader from './CustomLoader';
 import RecipeFeed from './RecipeFeed';
 
 const thinBorder = 1 / PixelRatio.get();
@@ -55,7 +49,7 @@ const UserFeed = () => {
       }
       ListFooterComponent={
         isLoading ? (
-          <ActivityIndicator size={'large'} />
+          <CustomLoader />
         ) : !hasMoreRecipes ? (
           <Text style={styles.endOfListMessage}>
             You've reached the last recipe!
@@ -70,10 +64,10 @@ const UserFeed = () => {
 
 const styles = StyleSheet.create({
   screenHeader: {
-    marginTop: 32,
-    paddingBottom: 16,
+    marginTop: 4,
+    paddingBottom: 6,
     borderBottomWidth: thinBorder,
-    borderBottomColor: theme.colors.primary,
+    borderBottomColor: '#D9D9D9',
   },
   h3: {
     fontSize: 28,

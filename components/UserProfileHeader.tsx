@@ -34,13 +34,7 @@ function UserProfileHeader({ route }: { route: any }) {
   // console.log('annan användare' + userId);
 
   const navigateToScreen = (screenName: string) => {
-    if (screenName === 'Settings') {
-      navigation.navigate('ProfileStackNavigator', { screen: 'Settings' });
-    } else if (screenName === 'Bookmarks') {
-      navigation.navigate('ProfileStackNavigator', { screen: 'Bookmarks' });
-    } else {
-      navigation.navigate(screenName);
-    }
+    navigation.navigate(screenName);
   };
 
   return (

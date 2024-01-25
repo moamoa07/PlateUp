@@ -5,7 +5,7 @@ const CustomLoader = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../assets/gif/toaster-loader.gif')}
+        source={require('../assets/gif/cupcakeloader.gif')}
         style={styles.loader}
       />
     </View>

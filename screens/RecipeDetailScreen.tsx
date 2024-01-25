@@ -23,7 +23,7 @@ interface RecipeDetailScreenProps {
 
 function RecipeDetailScreen({ route }: RecipeDetailScreenProps) {
   console.log(route.params.recipeId);
-  const { recipeId } = route.params;
+  const { recipeId } = route.params; 
   const dispatch = useAppDispatch();
   const currentRecipe = useAppSelector(selectCurrentRecipe);
   const isLoading = useAppSelector(selectIsLoading);

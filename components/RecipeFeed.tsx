@@ -1,6 +1,9 @@
+import { useNavigation } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import {
   Image,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,12 +13,17 @@ import {
 import { Avatar } from 'react-native-paper';
 import { RecipeWithId } from '../api/model/recipeModel';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
+import { addBookmark, removeBookmark } from '../redux/actions/bookmarkActions';
+import { deleteRecipe } from '../redux/actions/recipeActions';
 import { fetchUsers } from '../redux/actions/userActions';
+import { selectBookmarks } from '../redux/reducers/bookmarks';
 import { getUsers } from '../redux/reducers/users';
 import BookmarkIcon from './icons/BookmarkIcon';
 import ChevronDownIcon from './icons/ChevronIconDown';
 import ChevronRightIcon from './icons/ChevronIconRight';
+import DotsIcon from './icons/DotsIcon';
 import EatIcon from './icons/EatIcon';
+import FilledBookmarkIcon from './icons/FilledBookmarkIcon';
 import LikeIcon from './icons/LikeIcon';
 import TimerIcon from './icons/TimerIcon';
 
@@ -26,13 +34,25 @@ interface RecipeFeedProps {
 function RecipeFeed({ recipe }: RecipeFeedProps) {
   const [showIngredients, setShowIngredients] = useState(true);
   const [showWholeRecipe, setShowWholeRecipe] = useState(false);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [isOverlayVisible, setOverlayVisible] = useState(false);
+  const auth = getAuth();
+  const userId = auth.currentUser?.uid ?? '';
+  const navigation = useNavigation();
   const users = useAppSelector(getUsers);
   const dispatch = useAppDispatch();
+  const bookmarks = useAppSelector(selectBookmarks);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const user = users.find((user) => user.id === recipe.userId);
 
   useEffect(() => {
     // Fetch users when the component mounts
     dispatch(fetchUsers());
   }, [dispatch]);
+
+  useEffect(() => {
+    setIsBookmarked(bookmarks.some((b) => b.id === recipe.id));
+  }, [bookmarks, recipe.id]);
 
   const toggleWholeRecipe = () => {
     setShowWholeRecipe(!showWholeRecipe);
@@ -42,25 +62,59 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
     setShowIngredients(section === 'ingredients');
   };
 
+  const handleBookmarkToggle = () => {
+    const wasBookmarked = isBookmarked;
+    // Optimistically update the UI
+    setIsBookmarked(!isBookmarked);
+
+    if (wasBookmarked) {
+      dispatch(removeBookmark(userId, recipe.id));
+    } else {
+      dispatch(addBookmark(userId, recipe.id));
+    }
+  };
+
+  const toggleDeleteModal = () => {
+    setDeleteModalVisible(!isDeleteModalVisible);
+    setOverlayVisible(!isOverlayVisible);
+  };
+
+  const handleDeleteRecipe = () => {
+    dispatch(deleteRecipe(recipe.id))
+      .then(() => {
+        // Close the delete modal and navigate back
+        setDeleteModalVisible(false);
+      })
+      .catch((error) => {
+        console.error('Error deleting recipe:', error);
+        // Optionally handle the error, e.g., show a message
+      });
+  };
+
   if (!recipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
-
-  const user = users.find((user) => user.id === recipe.userId);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View>
         <View style={styles.user}>
-        <Avatar.Image
-            size={50}
-            source={
-              user?.photoURL
-                ? { uri: user.photoURL }
-                : require('../assets/cupcakeprofile.png')
-            }
-          />
-          <Text style={styles.username}>{user?.displayName}</Text>
+          <View style={styles.userInfo}>
+            <Avatar.Image
+              size={50}
+              source={
+                user?.photoURL
+                  ? { uri: user.photoURL }
+                  : require('../assets/cupcakeprofile.png')
+              }
+            />
+            <Text style={styles.username}>{user?.displayName}</Text>
+          </View>
+          {user?.id === userId && (
+            <TouchableOpacity onPress={toggleDeleteModal}>
+              <DotsIcon size={32} fill={'#232323'} />
+            </TouchableOpacity>
+          )}
         </View>
         {recipe.imageUrl && (
           <Image
@@ -71,7 +125,13 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
         <View style={styles.textContainer}>
           <View style={styles.actions}>
             <LikeIcon size={32} fill={'#232323'} />
-            <BookmarkIcon size={32} fill={'#232323'} />
+            <TouchableOpacity onPress={handleBookmarkToggle}>
+              {isBookmarked ? (
+                <FilledBookmarkIcon size={32} fill={'#232323'} />
+              ) : (
+                <BookmarkIcon size={32} fill={'#232323'} />
+              )}
+            </TouchableOpacity>
           </View>
           <View style={styles.recipeInfo}>
             <Text style={styles.textMedium}>801 Likes</Text>
@@ -218,6 +278,35 @@ function RecipeFeed({ recipe }: RecipeFeedProps) {
           )}
         </View>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isDeleteModalVisible}
+        onRequestClose={toggleDeleteModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
+              Are you sure you want to delete this recipe?
+            </Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                onPress={handleDeleteRecipe}
+                style={styles.deleteButton}
+              >
+                <Text style={styles.deleteButtonText}>Delete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={toggleDeleteModal}
+                style={styles.cancelButton}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {isOverlayVisible && <View style={styles.overlay} />}
     </ScrollView>
   );
 }
@@ -305,7 +394,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   ingredientQuantity: {
-    width: 60,
+    width: 64,
     marginRight: 8,
     fontFamily: 'Jost-Regular',
     fontSize: 16,
@@ -374,19 +463,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
   },
-  user: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginHorizontal: 16,
-  },
-  username: {
-    fontFamily: 'Jost-Medium',
-    fontSize: 20,
-  },
   usernameInRecipe: {
     fontFamily: 'Jost-Medium',
     fontSize: 20,
@@ -399,6 +475,76 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   group: { marginVertical: 5 },
+  user: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginHorizontal: 16,
+    justifyContent: 'space-between',
+  },
+  userInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    justifyContent: 'space-between',
+  },
+  username: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 20,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontFamily: 'Jost-Medium',
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  modalButtons: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+  },
+  deleteButton: {
+    backgroundColor: '#232323',
+    padding: 10,
+    width: 100,
+    borderRadius: 10,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontFamily: 'Jost-Medium',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#f1f1f1',
+    padding: 10,
+    width: 100,
+    borderRadius: 10,
+  },
+  cancelButtonText: {
+    color: '#000',
+    fontFamily: 'Jost-Regular',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.342)', // Adjust the opacity as needed
+    zIndex: 1,
+  },
 });
 
 export default RecipeFeed;
