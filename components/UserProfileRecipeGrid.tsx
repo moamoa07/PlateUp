@@ -24,6 +24,7 @@ import {
 import { clearUserProfile } from '../redux/reducers/users';
 import CustomLoader from './CustomLoader';
 import UserProfileHeader from './UserProfileHeader';
+import { ActivityIndicator } from 'react-native-paper';
 
 // Get the screen width
 // Calculation for styling of grid container
@@ -147,7 +148,7 @@ function UserProfileRecipeGrid({
       onEndReachedThreshold={0.5}
       ListFooterComponent={
         loadingUserRecipes ? (
-          <CustomLoader />
+          <ActivityIndicator size={'large'} color={'#D6DED1'}/>
         ) : !hasMoreUserRecipes && userRecipes.length > 0 ? (
           <Text style={styles.endOfListMessage}>
             You've loaded all recipes!

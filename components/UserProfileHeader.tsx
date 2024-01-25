@@ -45,10 +45,10 @@ function UserProfileHeader({ route }: { route: any }) {
             <TouchableOpacity>
               <LikeIcon size={32} fill={'#232323'} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigateToScreen('Bookmark')}>
+            <TouchableOpacity onPress={() => navigateToScreen('Bookmarks')}>
               <BookmarkIcon size={32} fill={'#232323'} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigateToScreen('Setting')}>
+            <TouchableOpacity onPress={() => navigateToScreen('Settings')}>
               <SettingsIcon size={32} fill={'#232323'} />
             </TouchableOpacity>
           </View>
