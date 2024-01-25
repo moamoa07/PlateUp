@@ -128,6 +128,23 @@ function TermsAndPrivacyModal({
                 of any significant changes.
               </Text>
             </View>
+            <View style={styles.textGroup}>
+              <Text
+                style={[
+                  styles.modalHeading,
+                  { marginTop: 20, marginBottom: 5 },
+                ]}
+              >
+                GDPR
+              </Text>
+              <Text style={styles.smallText}>
+                PlateUp is committed to complying with the General Data
+                Protection Regulation (GDPR). As a user, you have the right to
+                access, rectify, and erase your personal data. You can exercise
+                these rights by contacting us through mailing us at
+                contact@plateup.com
+              </Text>
+            </View>
             <Text
               style={[
                 styles.smallText,
