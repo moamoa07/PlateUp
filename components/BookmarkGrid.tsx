@@ -59,9 +59,11 @@ const BookmarkGrid = ({ navigation }: { navigation: any }) => {
   );
 
   if (isLoading) {
-    <View style={styles.loaderContainer}>
-      <CustomLoader />
-    </View>;
+    return (
+      <View style={styles.loaderContainer}>
+        <CustomLoader />
+      </View>
+    );
   }
 
   const renderNoBookmarksMessage = () => {

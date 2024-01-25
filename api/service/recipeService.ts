@@ -79,7 +79,7 @@ export async function getAllRecipes(
     querySnapshot.docs.length === limitNumber
       ? querySnapshot.docs[querySnapshot.docs.length - 1].id
       : null;
-  console.log('Recipes fetched:', fetchedRecipes);
+  // console.log('Recipes fetched:', fetchedRecipes);
   return {
     recipes: fetchedRecipes,
     lastFetchedRecipeId: newLastFetchedRecipeId,
@@ -139,10 +139,8 @@ export async function getRecipeById(recipeId: string) {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      // Convert Firestore document to RecipeWithId type
       return convertFirestoreRecipeToAppRecipe(docSnap);
     } else {
-      console.log('No such document!');
       return null;
     }
   } catch (error) {

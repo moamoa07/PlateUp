@@ -139,11 +139,11 @@ export const fetchRecipeById =
 export const fetchUserRecipes =
   (userId: string, lastFetchedRecipeId: string | null, limit: number) =>
   async (dispatch: AppDispatch) => {
-    console.log('Dispatching fetchUserRecipes', {
-      userId,
-      lastFetchedRecipeId,
-      limit,
-    });
+    // console.log('Dispatching fetchUserRecipes', {
+    //   userId,
+    //   lastFetchedRecipeId,
+    //   limit,
+    // });
     dispatch(fetchUserRecipesStart());
     try {
       const fetchedData = await getAllRecipes(
@@ -151,7 +151,7 @@ export const fetchUserRecipes =
         limit,
         userId
       );
-      console.log('Fetched data:', fetchedData);
+      // console.log('Fetched data:', fetchedData);
       dispatch(
         fetchUserRecipesSuccess({
           userRecipes: fetchedData.recipes,
