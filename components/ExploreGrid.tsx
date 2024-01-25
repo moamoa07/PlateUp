@@ -19,7 +19,6 @@ import {
   selectLastFetchedRecipeId,
   selectRecipes,
 } from '../redux/reducers/recipes';
-import RecipeComponent from './RecipeComponent';
 
 const thinBorder = 1 / PixelRatio.get();
 
@@ -42,10 +41,6 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
   const lastFetchedRecipeId = useAppSelector(selectLastFetchedRecipeId);
   const isLoading = useAppSelector(selectIsLoading);
   const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
-
-  // For optimizing performance
-  // Prevents unnecessary re-renders of list items when the data hasn't changed
-  const RecipeComponentMemo = React.memo(RecipeComponent);
 
   useEffect(() => {
     if (!recipes.length) {

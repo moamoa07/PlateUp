@@ -21,7 +21,9 @@ export const fetchBookmarks =
     dispatch(setBookmarksLoading(true));
     try {
       const bookmarkIds = await getBookmarksFromFirestore(userId);
-      const bookmarkRecipes = await getRecipesByIdsFromFirestore(bookmarkIds);
+      const reversedBookmarkIds = [...bookmarkIds].reverse();
+
+      const bookmarkRecipes = await getRecipesByIdsFromFirestore(reversedBookmarkIds);
 
       // Filter out null values
       const validRecipes = bookmarkRecipes.filter(

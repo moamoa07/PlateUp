@@ -4,6 +4,7 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
+  PixelRatio,
   Platform,
   ScrollView,
   StyleSheet,
@@ -22,6 +23,8 @@ import { FormErrors } from '../types/FormErrors';
 import PickImage from './PickImage';
 import RemoveIcon from './icons/RemoveIcon';
 import TimerIcon from './icons/TimerIcon';
+
+const thinBorder = 1 / PixelRatio.get();
 
 const AddRecipeForm = () => {
   const dispatch = useAppDispatch();
@@ -257,7 +260,9 @@ const AddRecipeForm = () => {
     >
       <ScrollView contentContainerStyle={styles.container}>
         {/* Add Recipe Headline */}
-        <Text style={styles.h3}>Add New Recipe</Text>
+        <View style={styles.screenHeader}>
+          <Text style={styles.h3}>Add New Recipe</Text>
+        </View>
 
         {/* ImageUrl */}
         <PickImage
@@ -653,9 +658,14 @@ const AddRecipeForm = () => {
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
-    padding: 16,
-    marginTop: 16,
+    paddingHorizontal: 16,
     gap: 24,
+  },
+  screenHeader: {
+    marginTop: 4,
+    paddingBottom: 6,
+    borderBottomWidth: thinBorder,
+    borderBottomColor: '#D9D9D9',
   },
   h3: {
     fontSize: 28,
