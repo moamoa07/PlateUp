@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth';
 import React from 'react';
 import {
   SafeAreaView,
@@ -13,12 +14,24 @@ import BookmarkIcon from './icons/BookmarkIcon';
 import LikeIcon from './icons/LikeIcon';
 import SettingsIcon from './icons/SettingsIcon';
 
-function UserProfileHeader() {
-  const user = useAppSelector((state) => state.user.user);
-
-  console.log(user);
-
+function UserProfileHeader({ route }: { route: any }) {
   const navigation = useNavigation<any>();
+  const userId = route.params?.userId;
+  const auth = getAuth();
+  const loggedInUser = auth.currentUser?.uid ?? '';
+
+  const isOwnProfile = userId ? userId === loggedInUser : true;
+
+  const user = useAppSelector((state) => {
+    if (userId) {
+      return state.user.userProfile; // Använd UserProfile för andra användare
+    } else {
+      return state.user.user; // Använd inloggad användare för den aktuella användaren
+    }
+  });
+
+  // console.log('inloggad användare' + loggedInUser);
+  // console.log('annan användare' + userId);
 
   const navigateToScreen = (screenName: string) => {
     navigation.navigate(screenName);
@@ -27,17 +40,19 @@ function UserProfileHeader() {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity>
-            <LikeIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateToScreen('Bookmarks')}>
-            <BookmarkIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateToScreen('Settings')}>
-            <SettingsIcon size={32} fill={'#232323'} />
-          </TouchableOpacity>
-        </View>
+        {isOwnProfile && ( // Visa bara när användaren är på sin egen profil
+          <View style={styles.iconContainer}>
+            <TouchableOpacity>
+              <LikeIcon size={32} fill={'#232323'} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigateToScreen('Bookmarks')}>
+              <BookmarkIcon size={32} fill={'#232323'} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigateToScreen('Settings')}>
+              <SettingsIcon size={32} fill={'#232323'} />
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.avatar}>
           <Avatar.Image
             size={120}
