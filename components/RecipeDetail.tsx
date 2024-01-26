@@ -34,6 +34,7 @@ interface RecipeComponentProps {
 }
 
 function RecipeDetail({ recipe }: RecipeComponentProps) {
+  const dispatch = useAppDispatch();
   const [showIngredients, setShowIngredients] = useState(true);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isOverlayVisible, setOverlayVisible] = useState(false);
@@ -43,9 +44,8 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
   const navigation = useNavigation();
   const bookmarks = useAppSelector(selectBookmarks);
   const [isBookmarked, setIsBookmarked] = useState(false);
-
   const users = useAppSelector(getUsers);
-  const dispatch = useAppDispatch();
+
   useEffect(() => {
     // Fetch users when the component mounts
     dispatch(fetchUsers());
@@ -107,13 +107,9 @@ function RecipeDetail({ recipe }: RecipeComponentProps) {
       });
   };
 
-  // Waits for the fetch of the recipe to return a promise
+  // Used to await the rendering of different recipes
   if (isLoading) {
     return <CustomLoader />;
-  }
-
-  if (!recipe) {
-    return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
 
   return (
