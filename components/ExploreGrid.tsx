@@ -41,16 +41,17 @@ const ExploreGrid = ({ navigation }: { navigation: any }) => {
   const lastFetchedRecipeId = useAppSelector(selectLastFetchedRecipeId);
   const isLoading = useAppSelector(selectIsLoading);
   const hasMoreRecipes = useAppSelector(selectHasMoreRecipes);
+  const INITIAL_FETCH_LIMIT = 6;
 
   useEffect(() => {
     if (!recipes.length) {
-      dispatch(fetchRecipes(null, numColumns * 2)); // Fetch more items for the initial load
+      dispatch(fetchRecipes(null, INITIAL_FETCH_LIMIT)); // Fetch more items for the initial load
     }
   }, [dispatch]);
 
   const handleLoadMore = () => {
     if (hasMoreRecipes) {
-      dispatch(fetchRecipes(lastFetchedRecipeId, numColumns * 2));
+      dispatch(fetchRecipes(lastFetchedRecipeId, INITIAL_FETCH_LIMIT));
     }
   };
 

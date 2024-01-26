@@ -27,13 +27,13 @@ const UserFeed = () => {
 
   useEffect(() => {
     if (!recipes.length) {
-      dispatch(fetchRecipes(null, 3));
+      dispatch(fetchRecipes(null, 2));
     }
   }, [dispatch]);
 
   const handleLoadMore = () => {
     if (hasMoreRecipes) {
-      dispatch(fetchRecipes(lastFetchedRecipeId, 3));
+      dispatch(fetchRecipes(lastFetchedRecipeId, 2));
     }
   };
 

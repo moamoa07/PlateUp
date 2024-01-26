@@ -16,7 +16,7 @@ import SettingsIcon from './icons/SettingsIcon';
 function UserProfileHeader() {
   const user = useAppSelector((state) => state.user.user);
 
-  console.log(user);
+  // console.log(user);
 
   const navigation = useNavigation<any>();
 

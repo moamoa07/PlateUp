@@ -2,9 +2,12 @@
 
 # PlateUp
 
-## Mobile app built with React Native and Firebase
+## Mobile app built with React Native, Firebase and Redux
 
-We have built a mobile app where you can share and search for recipes.
+PlateUp is a mobile app designed to revolutionize the way users share and discover recipes. Users can contribute by uploading their own recipes, save and explore others' creations, and search for specific meals or desserts. The goal of PlateUp is to create a product that aligns with our passion for food, enhances our development skills, and provides a unique culinary experience.
+
+PlateUp addresses the gap in recipe-sharing platforms, particularly in the context of social media. Leveraging our interest in food and baking, PlateUp aims to provide a visually appealing and user-friendly space for individuals who share a love for cooking and exploring new recipes.
+
 <br>
 
 ### Contributors:

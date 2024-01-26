@@ -17,8 +17,11 @@ import BookmarkScreen from './screens/BookmarkScreen';
 import CreateProfileScreen from './screens/CreateProfileScreen';
 import SettingScreen from './screens/SettingScreen';
 import SignInScreen from './screens/SignInScreen';
+import { LogBox } from 'react-native';
 import WelcomeScreen from './screens/WelcomeScreen';
 
+
+LogBox.ignoreLogs(['Sending `onAnimatedValueUpdate` with no listeners registered']);
 const Stack = createNativeStackNavigator();
 const StartStack = createNativeStackNavigator();
 const InsideStack = createNativeStackNavigator();

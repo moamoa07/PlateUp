@@ -5,7 +5,6 @@ function ExploreScreen({ navigation }: { navigation: any }) {
   return (
     <SafeAreaView>
       <View>
-        {/* <RecipeList /> */}
         <ExploreGrid navigation={navigation} />
       </View>
     </SafeAreaView>
