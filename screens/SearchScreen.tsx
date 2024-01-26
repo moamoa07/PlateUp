@@ -120,7 +120,7 @@ function SearchScreen({ navigation }: { navigation: any }) {
                 Recipes
               </Text>
             </TouchableOpacity>
-            <Text style={[styles.divider]}>|</Text>
+            {/* <Text style={[styles.divider]}>|</Text>
             <TouchableOpacity
               style={[
                 styles.button,
@@ -139,7 +139,7 @@ function SearchScreen({ navigation }: { navigation: any }) {
               >
                 Users
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           {/* Display Users or Recipes based on the active section */}
