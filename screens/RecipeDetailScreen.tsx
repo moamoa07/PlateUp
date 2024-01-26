@@ -47,7 +47,7 @@ function RecipeDetailScreen({ route }: RecipeDetailScreenProps) {
   if (!currentRecipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
-  console.log(currentRecipe);
+  // console.log(currentRecipe);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
