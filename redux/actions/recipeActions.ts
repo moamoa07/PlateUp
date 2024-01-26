@@ -10,6 +10,7 @@ import {
 import { FETCH_RECIPE_ERROR, FETCH_RECIPE_START } from '../../types/Action';
 import {
   addRecipeSuccess,
+  clearUserRecipes,
   deleteRecipeSuccess,
   fetchRecipeSuccess,
   fetchRecipesSuccess,
@@ -144,6 +145,7 @@ export const fetchUserRecipes =
     //   lastFetchedRecipeId,
     //   limit,
     // });
+    dispatch(clearUserRecipes());
     dispatch(fetchUserRecipesStart());
     try {
       const fetchedData = await getAllRecipes(
