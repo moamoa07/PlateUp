@@ -22,8 +22,8 @@ interface RecipeDetailScreenProps {
 }
 
 function RecipeDetailScreen({ route }: RecipeDetailScreenProps) {
-  console.log(route.params.recipeId);
-  const { recipeId } = route.params; 
+  // console.log(route.params.recipeId);
+  const { recipeId } = route.params;
   const dispatch = useAppDispatch();
   const currentRecipe = useAppSelector(selectCurrentRecipe);
   const isLoading = useAppSelector(selectIsLoading);
@@ -31,7 +31,8 @@ function RecipeDetailScreen({ route }: RecipeDetailScreenProps) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      if (recipeId) {
+      // Only fetch if the currentRecipe is not available or different from the required recipeId
+      if (recipeId && (!currentRecipe || currentRecipe.id !== recipeId)) {
         dispatch(fetchRecipeById(recipeId));
       }
     });
@@ -39,21 +40,15 @@ function RecipeDetailScreen({ route }: RecipeDetailScreenProps) {
     return unsubscribe;
   }, [navigation, recipeId, dispatch]);
 
-  useEffect(() => {
-    if (recipeId) {
-      dispatch(fetchRecipeById(recipeId));
-    }
-  }, [recipeId, dispatch]);
-
   if (isLoading) {
     return <CustomLoader />;
   }
 
-  if (!currentRecipe || typeof currentRecipe === 'boolean') {
-    // Checking if currentRecipe is not an object
+  if (!currentRecipe) {
     return <Text style={styles.noRecipeFoundMessage}>No recipe found!</Text>;
   }
   console.log(currentRecipe);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
