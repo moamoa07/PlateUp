@@ -78,7 +78,7 @@ function CreateProfileScreen() {
         return;
       }
 
-      console.log('Before creating user');
+      // console.log('Before creating user');
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,

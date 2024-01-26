@@ -29,7 +29,7 @@ export async function addRecipeToFirestore(
       createdAt: new Date(), // Set the current date as the creation date
       updatedAt: new Date(), // Set the current date as the updated date
     });
-    console.log('Recipe added to Firestore');
+    // console.log('Recipe added to Firestore');
     return docRef.id; // Return the generated recipe ID
   } catch (error) {
     console.error('Error adding recipe to Firestore:', error);
@@ -124,7 +124,7 @@ export async function getAllSearchedRecipes(
       ? querySnapshot.docs[querySnapshot.docs.length - 1].id
       : null;
 
-  console.log('Searched recipes fetched:', fetchedRecipes);
+  // console.log('Searched recipes fetched:', fetchedRecipes);
 
   return {
     recipes: fetchedRecipes,
